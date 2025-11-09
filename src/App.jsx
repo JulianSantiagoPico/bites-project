@@ -1,47 +1,79 @@
 import "./App.css";
+import Colors from "./colors.js";
 
 function App() {
   return (
-    <div className="w-full min-h-screen bg-yellow-50">
+    <div
+      className="w-full min-h-screen"
+      style={{ backgroundColor: Colors.background }}
+    >
       {/* Header/Navbar */}
-      <header className="w-full h-20 bg-yellow-50 flex items-center justify-between px-8 md:px-16 lg:px-20">
-        <div className="text-fuchsia-950 text-xl font-bold">Bytes</div>
+      <header className="w-full h-20 flex items-center justify-between px-8 md:px-16 lg:px-20">
+        <div className="text-xl font-bold" style={{ color: Colors.primary }}>
+          Bytes
+        </div>
         <div className="flex gap-3">
-          <button className="px-5 py-2 text-fuchsia-950 text-sm font-medium hover:underline transition">
+          <button
+            className="px-5 py-2 text-sm font-medium hover:underline transition cursor-pointer"
+            style={{ color: Colors.primary }}
+          >
             Login
           </button>
-          <button className="px-5 py-2 bg-fuchsia-950 rounded-md text-white text-sm font-medium hover:bg-fuchsia-900 transition">
+          <button
+            className="px-5 py-2 rounded-md text-white text-sm font-medium transition cursor-pointer"
+            style={{ backgroundColor: Colors.primary }}
+          >
             Sign up
           </button>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-20 bg-yellow-50">
+      <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-16">
           <div className="flex-1 flex flex-col gap-6">
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-fuchsia-950">Titulo</span>
+              <span style={{ color: Colors.primary }}>Titulo</span>
               <br />
-              <span className="text-amber-400">Principal</span>
+              <span style={{ color: Colors.accent }}>Principal</span>
             </h1>
-            <p className="text-zinc-600 text-base">Propuesta de valor</p>
-            <button className="w-fit px-8 py-3 bg-fuchsia-950 rounded text-white text-base font-medium hover:bg-fuchsia-900 transition">
+            <p
+              className="text-zinc-600 text-base"
+              style={{ color: Colors.textSecondary }}
+            >
+              Propuesta de valor
+            </p>
+            <button
+              className="w-fit px-8 py-3 rounded text-white text-base font-medium transition cursor-pointer"
+              style={{ backgroundColor: Colors.primary }}
+            >
               Register
             </button>
           </div>
-          <div className="w-full lg:w-[400px] h-[300px] lg:h-[400px] bg-fuchsia-950 rounded-[30px]" />
+          <div
+            className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px]"
+            style={{ backgroundColor: Colors.primary }}
+          />
         </div>
       </section>
 
       {/* Clientes Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-16 bg-[#EDD9A3]">
+      <section
+        className="w-full px-8 md:px-16 lg:px-20 py-16"
+        style={{ backgroundColor: Colors.backgroundSecondary }}
+      >
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-10">
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-fuchsia-950 text-4xl font-bold text-center">
+            <h2
+              className="text-4xl font-semibold text-center"
+              style={{ color: Colors.primary }}
+            >
               Seccion: Nuestros clientes
             </h2>
-            <p className="text-neutral-600 text-base text-center">
+            <p
+              className="text-base text-center"
+              style={{ color: Colors.textSecondary }}
+            >
               Algunos ejemplos de clientes
             </p>
           </div>
@@ -57,15 +89,18 @@ function App() {
       </section>
 
       {/* Por que elegirnos Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-20 bg-yellow-50">
+      <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-fuchsia-950 text-4xl font-bold text-center">
+            <h2
+              className="text-4xl font-semibold text-center"
+              style={{ color: Colors.primary }}
+            >
               Sección:
               <br />
               ¿Por que elegirnos?
             </h2>
-            <p className="text-neutral-500 text-base text-center">
+            <p className="text-base text-center" style={{ color: Colors.text }}>
               Who is Nextcent suitable for?
             </p>
           </div>
@@ -77,13 +112,20 @@ function App() {
             ].map((title, i) => (
               <div
                 key={i}
-                className="px-6 py-8 bg-[#EDD9A3] rounded-lg flex flex-col items-center gap-4 hover:shadow-lg transition"
+                className="px-6 py-8 rounded-lg flex flex-col items-center gap-4 hover:shadow-lg transition"
+                style={{ backgroundColor: Colors.backgroundSecondary }}
               >
                 <div className="w-16 h-16 bg-gray-700 rounded-lg" />
-                <h3 className="text-fuchsia-950 text-xl font-bold text-center">
+                <h3
+                  className="text-xl font-bold text-center"
+                  style={{ color: Colors.primary }}
+                >
                   {title}
                 </h3>
-                <p className="text-zinc-500 text-sm text-center leading-relaxed">
+                <p
+                  className="text-sm text-center leading-relaxed"
+                  style={{ color: Colors.textSecondary }}
+                >
                   Our membership management software provides full automation of
                   membership renewals and payments
                 </p>
@@ -94,14 +136,24 @@ function App() {
       </section>
 
       {/* Caracteristicas Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-20 bg-yellow-50">
+      <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-16">
-          <div className="w-full lg:w-[400px] h-[300px] lg:h-[400px] bg-fuchsia-950 rounded-[30px]" />
+          <div
+            className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px]"
+            style={{ backgroundColor: Colors.primary }}
+          />
           <div className="flex-1 flex flex-col gap-6 max-w-[600px]">
-            <h2 className="text-fuchsia-950 text-4xl font-bold">
+            <h2
+              className="text-4xl font-bold"
+              style={{ color: Colors.primary }}
+            >
               Seccion: Caracteristicas principales
             </h2>
-            <p className="text-neutral-600 text-base leading-relaxed">
+            <p
+              className="text-neutral-600 text-base leading-relaxed"
+              style={{ color: Colors.text }}
+            >
+              {" "}
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
               amet justo ipsum. Sed accumsan quam vitae est varius fringilla.
               Pellentesque placerat vestibulum lorem sed porta. Nullam mattis
@@ -112,19 +164,24 @@ function App() {
       </section>
 
       {/* Estadisticas Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-16 bg-[#EDD9A3]">
+      <section
+        className="w-full px-8 md:px-16 lg:px-20 py-16"
+        style={{ backgroundColor: Colors.backgroundSecondary }}
+      >
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-20">
           <div className="flex-1 flex flex-col gap-3 max-w-[400px]">
             <h2 className="text-4xl font-bold leading-tight">
-              <span className="text-neutral-700">Seccion:</span>
+              <span style={{ color: Colors.text }}>Seccion:</span>
               <br />
-              <span className="text-amber-500">Estadisticas (simuladas)</span>
+              <span style={{ color: Colors.accent }}>
+                Estadisticas (simuladas)
+              </span>
             </h2>
-            <p className="text-neutral-700 text-base">
+            <p className="text-base" style={{ color: Colors.textSecondary }}>
               We reached here with our hard work and dedication
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-x-16 gap-y-10">
+          <div className="grid md:grid-cols-2 gap-x-16 gap-y-10">
             {[
               { number: "2,245,341", label: "Members" },
               { number: "46,328", label: "Clubs" },
@@ -132,12 +189,21 @@ function App() {
               { number: "1,926,436", label: "Payments" },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-amber-400 rounded shrink-0" />
+                <div
+                  className="w-12 h-12 bg-amber-400 rounded shrink-0"
+                  style={{ backgroundColor: Colors.accent }}
+                />
                 <div className="flex flex-col">
-                  <span className="text-neutral-700 text-3xl font-bold">
+                  <span
+                    className="text-3xl font-bold"
+                    style={{ color: Colors.text }}
+                  >
                     {stat.number}
                   </span>
-                  <span className="text-neutral-600 text-base">
+                  <span
+                    className="text-base"
+                    style={{ color: Colors.textSecondary }}
+                  >
                     {stat.label}
                   </span>
                 </div>
@@ -148,13 +214,19 @@ function App() {
       </section>
 
       {/* Beneficios Section */}
-      <section className="w-full px-8 md:px-16 lg:px-20 py-20 bg-yellow-50">
+      <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-2 max-w-[700px]">
-            <h2 className="text-fuchsia-950 text-4xl font-bold text-center">
+            <h2
+              className="text-4xl font-bold text-center"
+              style={{ color: Colors.primary }}
+            >
               Seccion: Beneficios
             </h2>
-            <p className="text-neutral-600 text-base text-center leading-relaxed">
+            <p
+              className="text-base text-center leading-relaxed"
+              style={{ color: Colors.text }}
+            >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit
               amet justo ipsum. Sed accumsan quam vitae est varius fringilla.
               Pellentesque placerat vestibulum lorem sed porta.
@@ -164,12 +236,21 @@ function App() {
             {["Beneficio #1", "Beneficio #2", "Beneficio #3"].map(
               (title, i) => (
                 <div key={i} className="flex flex-col items-stretch">
-                  <div className="w-full h-72 bg-fuchsia-950 rounded-lg" />
-                  <div className="w-[90%] mt-[-80px] p-6 bg-[#EDD9A3] rounded-lg shadow-lg flex flex-col items-center justify-center gap-3 relative z-10 mx-auto">
+                  <div
+                    className="w-full h-72 rounded-lg"
+                    style={{ backgroundColor: Colors.primary }}
+                  />
+                  <div
+                    className="w-[90%] -mt-20 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center gap-3 relative z-10 mx-auto"
+                    style={{ backgroundColor: Colors.backgroundSecondary }}
+                  >
                     <h3 className="text-neutral-700 text-xl font-bold text-center">
                       {title}
                     </h3>
-                    <button className="flex items-center gap-2 text-fuchsia-950 font-semibold hover:gap-3 transition-all">
+                    <button
+                      className="flex items-center gap-2 font-semibold hover:gap-3 transition-all"
+                      style={{ color: Colors.primary }}
+                    >
                       <span>Readmore</span>
                       <span>→</span>
                     </button>
@@ -182,7 +263,10 @@ function App() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full px-8 md:px-16 lg:px-20 py-16 bg-fuchsia-950">
+      <footer
+        className="w-full px-8 md:px-16 lg:px-20 py-16"
+        style={{ backgroundColor: Colors.primary }}
+      >
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between gap-12">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
