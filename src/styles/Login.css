@@ -1,0 +1,23 @@
+/* Estilos personalizados para el formulario de login */
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(88, 24, 69, 0.2);
+}
+
+input::placeholder {
+  color: #b0b0b0;
+}
+
+/* Animación suave para hover en botones */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
