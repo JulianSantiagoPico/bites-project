@@ -18,7 +18,11 @@ const fetchAPI = async (endpoint, options = {}) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Error en la petición");
+    // Crear un error personalizado que incluya los detalles del backend
+    const error = new Error(data.message || "Error en la petición");
+    error.errors = data.errors; // Errores específicos de validación
+    error.status = response.status;
+    throw error;
   }
 
   return data;

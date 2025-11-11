@@ -41,7 +41,11 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.message,
+        errors: error.errors, // Errores de validación específicos
+      };
     }
   };
 
@@ -53,7 +57,11 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       return { success: true, data: response.data };
     } catch (error) {
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.message,
+        errors: error.errors, // Errores de validación específicos
+      };
     }
   };
 

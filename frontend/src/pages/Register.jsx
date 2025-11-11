@@ -65,7 +65,7 @@ function Register() {
         // Separar nombre y apellido
         const nameParts = formData.name.trim().split(" ");
         const nombre = nameParts[0] || "";
-        const apellido = nameParts.slice(1).join(" ") || "";
+        const apellido = nameParts.slice(1).join(" ") || "N/A"; // Usar "N/A" si no hay apellido
 
         // Preparar datos para el backend
         const userData = {
@@ -86,7 +86,19 @@ function Register() {
           // Redirigir al dashboard después del registro exitoso
           navigate("/dashboard", { replace: true });
         } else {
-          setErrors({ general: result.error || "Error al registrar usuario" });
+          // Procesar errores de validación del backend
+          if (result.errors && Array.isArray(result.errors)) {
+            const fieldErrors = {};
+            result.errors.forEach((err) => {
+              fieldErrors[err.field] = err.message;
+            });
+            setErrors(fieldErrors);
+          } else {
+            // Error general
+            setErrors({
+              general: result.error || "Error al registrar usuario",
+            });
+          }
         }
       } catch (error) {
         setErrors({
@@ -146,9 +158,14 @@ function Register() {
                   onChange={handleChange}
                   placeholder="Juan Pérez"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                    errors.nombre ? "border-red-500" : "border-gray-300"
+                  }`}
                   style={{ color: Colors.text }}
                 />
+                {errors.nombre && (
+                  <span className="text-xs text-red-600">{errors.nombre}</span>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -168,9 +185,14 @@ function Register() {
                   onChange={handleChange}
                   placeholder="tu@email.com"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
                   style={{ color: Colors.text }}
                 />
+                {errors.email && (
+                  <span className="text-xs text-red-600">{errors.email}</span>
+                )}
               </div>
             </div>
 
@@ -193,9 +215,18 @@ function Register() {
                   onChange={handleChange}
                   placeholder="Mi Restaurante"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                    errors["restaurante.nombre"]
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
                   style={{ color: Colors.text }}
                 />
+                {errors["restaurante.nombre"] && (
+                  <span className="text-xs text-red-600">
+                    {errors["restaurante.nombre"]}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -214,9 +245,18 @@ function Register() {
                   onChange={handleChange}
                   placeholder="+57 300 123 4567"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                    errors["restaurante.telefono"]
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
                   style={{ color: Colors.text }}
                 />
+                {errors["restaurante.telefono"] && (
+                  <span className="text-xs text-red-600">
+                    {errors["restaurante.telefono"]}
+                  </span>
+                )}
               </div>
             </div>
 
