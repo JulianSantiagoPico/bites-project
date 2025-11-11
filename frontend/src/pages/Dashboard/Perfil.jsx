@@ -1,5 +1,4 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
 
 const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -39,13 +38,12 @@ const Perfil = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold" style={{ color: colors.primary }}>
+          <h3 className="text-2xl font-bold text-primary">
             Cambiar Contraseña
           </h3>
           <button
             onClick={() => setShowPasswordModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            style={{ color: colors.text }}
+            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
           >
             <svg
               className="w-6 h-6"
@@ -65,56 +63,36 @@ const Perfil = () => {
 
         <form className="space-y-4">
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Contraseña Actual
             </label>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                backgroundColor: colors.background,
-              }}
+              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
+              q
             />
           </div>
 
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Nueva Contraseña
             </label>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                backgroundColor: colors.background,
-              }}
+              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
             />
           </div>
 
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Confirmar Nueva Contraseña
             </label>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                backgroundColor: colors.background,
-              }}
+              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
             />
           </div>
 
@@ -122,18 +100,13 @@ const Perfil = () => {
             <button
               type="button"
               onClick={() => setShowPasswordModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: colors.primary }}
+              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
               Cambiar Contraseña
             </button>
@@ -148,18 +121,15 @@ const Perfil = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Mi Perfil
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Mi Perfil</h2>
+          <p className="text-textSecondary">
             Gestiona tu información personal y configuración
           </p>
         </div>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2"
-            style={{ backgroundColor: colors.primary }}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
           >
             <svg
               className="w-5 h-5"
@@ -180,18 +150,13 @@ const Perfil = () => {
           <div className="flex gap-2">
             <button
               onClick={handleCancel}
-              className="px-6 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="px-6 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
-              className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2"
-              style={{ backgroundColor: colors.accent, color: colors.primary }}
+              className="px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity flex items-center gap-2 bg-accent text-primary"
             >
               <svg
                 className="w-5 h-5"
@@ -221,14 +186,11 @@ const Perfil = () => {
         <div
           className="h-32 relative"
           style={{
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+            background: `linear-gradient(135deg, #581845 0%, #35524a 100%)`,
           }}
         >
           <div className="absolute -bottom-16 left-8">
-            <div
-              className="w-32 h-32 rounded-full flex items-center justify-center text-6xl border-4 border-white shadow-lg"
-              style={{ backgroundColor: colors.accent }}
-            >
+            <div className="w-32 h-32 rounded-full flex items-center justify-center text-6xl border-4 border-white shadow-lg bg-accent">
               {userData.foto}
             </div>
           </div>
@@ -238,26 +200,14 @@ const Perfil = () => {
         <div className="pt-20 px-8 pb-8">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
             <div>
-              <h2
-                className="text-2xl font-bold"
-                style={{ color: colors.primary }}
-              >
+              <h2 className="text-2xl font-bold text-primary">
                 {userData.nombre}
               </h2>
               <div className="flex items-center gap-3 mt-2">
-                <span
-                  className="px-4 py-1 rounded-full text-sm font-medium"
-                  style={{
-                    backgroundColor: colors.accent + "20",
-                    color: colors.accent,
-                  }}
-                >
+                <span className="px-4 py-1 rounded-full text-sm font-medium bg-accent/20 text-accent">
                   {userData.rol}
                 </span>
-                <span
-                  className="text-sm"
-                  style={{ color: colors.textSecondary }}
-                >
+                <span className="text-sm text-textSecondary">
                   Miembro desde{" "}
                   {new Date(userData.fechaIngreso).toLocaleDateString("es-ES", {
                     year: "numeric",
@@ -268,11 +218,7 @@ const Perfil = () => {
             </div>
             <button
               onClick={() => setShowPasswordModal(true)}
-              className="px-4 py-2 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors flex items-center gap-2"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="px-4 py-2 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors flex items-center gap-2 border-secondary/40 text-textMain"
             >
               <svg
                 className="w-5 h-5"
@@ -294,14 +240,8 @@ const Perfil = () => {
           {/* Information Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Personal Information */}
-            <div
-              className="rounded-xl p-6"
-              style={{ backgroundColor: colors.background }}
-            >
-              <h3
-                className="text-lg font-bold mb-4 flex items-center gap-2"
-                style={{ color: colors.primary }}
-              >
+            <div className="rounded-xl p-6 bg-background">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-primary">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -320,10 +260,7 @@ const Perfil = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label
-                    className="block text-sm font-medium mb-2"
-                    style={{ color: colors.textSecondary }}
-                  >
+                  <label className="block text-sm font-medium mb-2 text-textSecondary">
                     Nombre Completo
                   </label>
                   {isEditing ? (
@@ -333,27 +270,17 @@ const Perfil = () => {
                       onChange={(e) =>
                         setEditData({ ...editData, nombre: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                      style={{
-                        borderColor: colors.secondary + "40",
-                        backgroundColor: "white",
-                      }}
+                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-white"
                     />
                   ) : (
-                    <p
-                      className="font-medium"
-                      style={{ color: colors.primary }}
-                    >
+                    <p className="font-medium text-primary">
                       {userData.nombre}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label
-                    className="block text-sm font-medium mb-2"
-                    style={{ color: colors.textSecondary }}
-                  >
+                  <label className="block text-sm font-medium mb-2 text-textSecondary">
                     Email
                   </label>
                   {isEditing ? (
@@ -363,27 +290,15 @@ const Perfil = () => {
                       onChange={(e) =>
                         setEditData({ ...editData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                      style={{
-                        borderColor: colors.secondary + "40",
-                        backgroundColor: "white",
-                      }}
+                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-white"
                     />
                   ) : (
-                    <p
-                      className="font-medium"
-                      style={{ color: colors.primary }}
-                    >
-                      {userData.email}
-                    </p>
+                    <p className="font-medium text-primary">{userData.email}</p>
                   )}
                 </div>
 
                 <div>
-                  <label
-                    className="block text-sm font-medium mb-2"
-                    style={{ color: colors.textSecondary }}
-                  >
+                  <label className="block text-sm font-medium mb-2 text-textSecondary">
                     Teléfono
                   </label>
                   {isEditing ? (
@@ -393,27 +308,17 @@ const Perfil = () => {
                       onChange={(e) =>
                         setEditData({ ...editData, telefono: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                      style={{
-                        borderColor: colors.secondary + "40",
-                        backgroundColor: "white",
-                      }}
+                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-white"
                     />
                   ) : (
-                    <p
-                      className="font-medium"
-                      style={{ color: colors.primary }}
-                    >
+                    <p className="font-medium text-primary">
                       {userData.telefono}
                     </p>
                   )}
                 </div>
 
                 <div>
-                  <label
-                    className="block text-sm font-medium mb-2"
-                    style={{ color: colors.textSecondary }}
-                  >
+                  <label className="block text-sm font-medium mb-2 text-textSecondary">
                     Dirección
                   </label>
                   {isEditing ? (
@@ -423,17 +328,10 @@ const Perfil = () => {
                         setEditData({ ...editData, direccion: e.target.value })
                       }
                       rows="2"
-                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                      style={{
-                        borderColor: colors.secondary + "40",
-                        backgroundColor: "white",
-                      }}
+                      className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-white"
                     />
                   ) : (
-                    <p
-                      className="font-medium"
-                      style={{ color: colors.primary }}
-                    >
+                    <p className="font-medium text-primary">
                       {userData.direccion}
                     </p>
                   )}
@@ -444,14 +342,8 @@ const Perfil = () => {
             {/* Statistics & Activity */}
             <div className="space-y-6">
               {/* Stats Card */}
-              <div
-                className="rounded-xl p-6"
-                style={{ backgroundColor: colors.background }}
-              >
-                <h3
-                  className="text-lg font-bold mb-4 flex items-center gap-2"
-                  style={{ color: colors.primary }}
-                >
+              <div className="rounded-xl p-6 bg-background">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-primary">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -474,25 +366,14 @@ const Perfil = () => {
                     style={{ backgroundColor: "white" }}
                   >
                     <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: colors.accent + "20" }}
-                      >
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-accent/20">
                         <span className="text-xl">📝</span>
                       </div>
                       <div>
-                        <p
-                          className="text-sm"
-                          style={{ color: colors.textSecondary }}
-                        >
+                        <p className="text-sm text-textSecondary">
                           Órdenes Procesadas
                         </p>
-                        <p
-                          className="text-xl font-bold"
-                          style={{ color: colors.primary }}
-                        >
-                          1,247
-                        </p>
+                        <p className="text-xl font-bold text-primary">1,247</p>
                       </div>
                     </div>
                   </div>
@@ -509,46 +390,24 @@ const Perfil = () => {
                         <span className="text-xl">✅</span>
                       </div>
                       <div>
-                        <p
-                          className="text-sm"
-                          style={{ color: colors.textSecondary }}
-                        >
+                        <p className="text-sm text-textSecondary">
                           Tareas Completadas
                         </p>
-                        <p
-                          className="text-xl font-bold"
-                          style={{ color: colors.primary }}
-                        >
-                          856
-                        </p>
+                        <p className="text-xl font-bold text-primary">856</p>
                       </div>
                     </div>
                   </div>
 
-                  <div
-                    className="flex items-center justify-between p-3 rounded-lg"
-                    style={{ backgroundColor: "white" }}
-                  >
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-white">
                     <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: "#3B82F620" }}
-                      >
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[##3B82F620]">
                         <span className="text-xl">⏰</span>
                       </div>
                       <div>
-                        <p
-                          className="text-sm"
-                          style={{ color: colors.textSecondary }}
-                        >
+                        <p className="text-sm text-textSecondary">
                           Horas Trabajadas
                         </p>
-                        <p
-                          className="text-xl font-bold"
-                          style={{ color: colors.primary }}
-                        >
-                          1,840
-                        </p>
+                        <p className="text-xl font-bold text-primary">1,840</p>
                       </div>
                     </div>
                   </div>
@@ -556,14 +415,8 @@ const Perfil = () => {
               </div>
 
               {/* Quick Actions */}
-              <div
-                className="rounded-xl p-6"
-                style={{ backgroundColor: colors.background }}
-              >
-                <h3
-                  className="text-lg font-bold mb-4 flex items-center gap-2"
-                  style={{ color: colors.primary }}
-                >
+              <div className="rounded-xl p-6 bg-background">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-primary">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -586,8 +439,7 @@ const Perfil = () => {
                     style={{ backgroundColor: "white" }}
                   >
                     <svg
-                      className="w-5 h-5"
-                      style={{ color: colors.accent }}
+                      className="w-5 h-5 text-accent"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -599,12 +451,7 @@ const Perfil = () => {
                         d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
                       />
                     </svg>
-                    <span
-                      className="font-medium"
-                      style={{ color: colors.text }}
-                    >
-                      Configuración
-                    </span>
+                    <span className="font-medium text-text">Configuración</span>
                   </button>
 
                   <button
@@ -612,8 +459,7 @@ const Perfil = () => {
                     style={{ backgroundColor: "white" }}
                   >
                     <svg
-                      className="w-5 h-5"
-                      style={{ color: colors.accent }}
+                      className="w-5 h-5 text-accent"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -625,21 +471,14 @@ const Perfil = () => {
                         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                       />
                     </svg>
-                    <span
-                      className="font-medium"
-                      style={{ color: colors.text }}
-                    >
+                    <span className="font-medium text-textMain">
                       Notificaciones
                     </span>
                   </button>
 
-                  <button
-                    className="w-full flex items-center gap-3 p-3 rounded-lg hover:shadow-md transition-all"
-                    style={{ backgroundColor: "white" }}
-                  >
+                  <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:shadow-md transition-all bg-white">
                     <svg
-                      className="w-5 h-5"
-                      style={{ color: "#EF4444" }}
+                      className="w-5 h-5 bg-[#EF4444]"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -651,10 +490,7 @@ const Perfil = () => {
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                       />
                     </svg>
-                    <span
-                      className="font-medium"
-                      style={{ color: colors.text }}
-                    >
+                    <span className="font-medium text-textMain">
                       Cerrar Sesión
                     </span>
                   </button>
@@ -670,14 +506,8 @@ const Perfil = () => {
         className="rounded-xl shadow-md"
         style={{ backgroundColor: "white" }}
       >
-        <div
-          className="p-6 border-b"
-          style={{ borderColor: colors.secondary + "20" }}
-        >
-          <h3
-            className="text-xl font-bold flex items-center gap-2"
-            style={{ color: colors.primary }}
-          >
+        <div className="p-6 border-b bg-secondary/10">
+          <h3 className="text-xl font-bold flex items-center gap-2 text-primary">
             <svg
               className="w-6 h-6"
               fill="none"
@@ -701,7 +531,7 @@ const Perfil = () => {
                 action: "Procesó orden #ORD-245",
                 time: "Hace 10 minutos",
                 icon: "📝",
-                color: colors.accent,
+                color: "#e6af2e",
               },
               {
                 action: "Actualizó información de Mesa 12",
@@ -725,13 +555,12 @@ const Perfil = () => {
                 action: "Actualizó inventario",
                 time: "Hace 5 horas",
                 icon: "📦",
-                color: colors.secondary,
+                color: "#35524a",
               },
             ].map((activity, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow"
-                style={{ backgroundColor: colors.background }}
+                className="flex items-center gap-4 p-4 rounded-lg hover:shadow-md transition-shadow bg-background"
               >
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
@@ -740,15 +569,8 @@ const Perfil = () => {
                   <span className="text-2xl">{activity.icon}</span>
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium" style={{ color: colors.primary }}>
-                    {activity.action}
-                  </p>
-                  <p
-                    className="text-sm"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    {activity.time}
-                  </p>
+                  <p className="font-medium text-primary">{activity.action}</p>
+                  <p className="text-sm text-textSecondary">{activity.time}</p>
                 </div>
               </div>
             ))}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
 
 const Mesas = () => {
   const [selectedTable, setSelectedTable] = useState(null);
@@ -210,13 +209,12 @@ const Mesas = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold" style={{ color: colors.primary }}>
+          <h3 className="text-2xl font-bold text-primary">
             Mesa {table.numero}
           </h3>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            style={{ color: colors.text }}
+            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
           >
             <svg
               className="w-6 h-6"
@@ -236,33 +234,14 @@ const Mesas = () => {
 
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
-            <div
-              className="p-4 rounded-lg text-center"
-              style={{ backgroundColor: colors.background }}
-            >
-              <p
-                className="text-sm mb-1"
-                style={{ color: colors.textSecondary }}
-              >
-                Capacidad
-              </p>
-              <p
-                className="text-2xl font-bold"
-                style={{ color: colors.primary }}
-              >
+            <div className="p-4 rounded-lg text-center bg-background">
+              <p className="text-sm mb-1 text-textSecondary">Capacidad</p>
+              <p className="text-2xl font-bold text-primary">
                 {table.capacidad}
               </p>
             </div>
-            <div
-              className="p-4 rounded-lg text-center"
-              style={{ backgroundColor: colors.background }}
-            >
-              <p
-                className="text-sm mb-1"
-                style={{ color: colors.textSecondary }}
-              >
-                Estado
-              </p>
+            <div className="p-4 rounded-lg text-center bg-background">
+              <p className="text-sm mb-1 text-textSecondary">Estado</p>
               <p
                 className="text-lg font-bold"
                 style={{ color: getStatusColor(table.estado).color }}
@@ -273,26 +252,16 @@ const Mesas = () => {
           </div>
 
           {table.tiempo && (
-            <div
-              className="p-4 rounded-lg"
-              style={{ backgroundColor: colors.accent + "20" }}
-            >
-              <p
-                className="text-sm mb-1"
-                style={{ color: colors.textSecondary }}
-              >
+            <div className="p-4 rounded-lg bg-accent/20">
+              <p className="text-sm mb-1 text-textSecondary">
                 Tiempo de ocupación
               </p>
-              <p className="text-xl font-bold" style={{ color: colors.accent }}>
-                {table.tiempo}
-              </p>
+              <p className="text-xl font-bold text-accent">{table.tiempo}</p>
             </div>
           )}
 
           <div>
-            <h4 className="font-bold mb-3" style={{ color: colors.primary }}>
-              Cambiar Estado
-            </h4>
+            <h4 className="font-bold mb-3 text-primary">Cambiar Estado</h4>
             <div className="grid grid-cols-2 gap-2">
               {["Disponible", "Ocupada", "Reservada", "Mantenimiento"].map(
                 (status) => (
@@ -307,11 +276,11 @@ const Mesas = () => {
                       backgroundColor:
                         table.estado === status
                           ? getStatusColor(status).bg
-                          : colors.background,
+                          : "#faf3e0",
                       color:
                         table.estado === status
                           ? getStatusColor(status).color
-                          : colors.text,
+                          : "#4a4a4a",
                       border: `2px solid ${
                         table.estado === status
                           ? getStatusColor(status).border
@@ -326,10 +295,7 @@ const Mesas = () => {
             </div>
           </div>
 
-          <button
-            className="w-full py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: colors.primary }}
-          >
+          <button className="w-full py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary">
             Ver Orden Actual
           </button>
         </div>
@@ -342,10 +308,8 @@ const Mesas = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Gestión de Mesas
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Gestión de Mesas</h2>
+          <p className="text-textSecondary">
             Control de ocupación y estado de las mesas
           </p>
         </div>
@@ -357,21 +321,15 @@ const Mesas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Total Mesas
-          </p>
-          <p className="text-3xl font-bold" style={{ color: colors.primary }}>
-            {stats.total}
-          </p>
+          <p className="text-sm mb-1 text-textSecondary">Total Mesas</p>
+          <p className="text-3xl font-bold text-primary">{stats.total}</p>
         </div>
         <div
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Disponibles
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#10B981" }}>
+          <p className="text-sm mb-1 text-textSecondary">Disponibles</p>
+          <p className="text-3xl font-bold text-[#10B981]">
             {stats.disponibles}
           </p>
         </div>
@@ -379,21 +337,15 @@ const Mesas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Ocupadas
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#EF4444" }}>
-            {stats.ocupadas}
-          </p>
+          <p className="text-sm mb-1 text-textSecondary">Ocupadas</p>
+          <p className="text-3xl font-bold text-[#EF4444]">{stats.ocupadas}</p>
         </div>
         <div
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Reservadas
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#3B82F6" }}>
+          <p className="text-sm mb-1 text-textSecondary">Reservadas</p>
+          <p className="text-3xl font-bold text-[#3B82F6]">
             {stats.reservadas}
           </p>
         </div>
@@ -405,21 +357,15 @@ const Mesas = () => {
         style={{ backgroundColor: "white" }}
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-bold" style={{ color: colors.primary }}>
-            Ocupación del Restaurante
-          </h3>
-          <span className="font-bold" style={{ color: colors.accent }}>
+          <h3 className="font-bold text-primary">Ocupación del Restaurante</h3>
+          <span className="font-bold text-accent">
             {Math.round((stats.ocupadas / stats.total) * 100)}%
           </span>
         </div>
-        <div
-          className="w-full h-4 rounded-full overflow-hidden"
-          style={{ backgroundColor: colors.background }}
-        >
+        <div className="w-full h-4 rounded-full overflow-hidden bg-background">
           <div
-            className="h-full transition-all duration-300"
+            className="h-full transition-all duration-300 bg-accent"
             style={{
-              backgroundColor: colors.accent,
               width: `${(stats.ocupadas / stats.total) * 100}%`,
             }}
           />
@@ -450,16 +396,10 @@ const Mesas = () => {
                     ? "📅"
                     : "🔧"}
                 </div>
-                <h3
-                  className="font-bold text-xl"
-                  style={{ color: colors.primary }}
-                >
+                <h3 className="font-bold text-xl text-primary">
                   Mesa {table.numero}
                 </h3>
-                <div
-                  className="flex items-center justify-center gap-1 text-sm"
-                  style={{ color: colors.textSecondary }}
-                >
+                <div className="flex items-center justify-center gap-1 text-sm text-textSecondary">
                   <svg
                     className="w-4 h-4"
                     fill="none"
@@ -485,10 +425,7 @@ const Mesas = () => {
                   {table.estado}
                 </span>
                 {table.tiempo && (
-                  <p
-                    className="text-sm font-medium"
-                    style={{ color: colors.accent }}
-                  >
+                  <p className="text-sm font-medium text-accent">
                     ⏱️ {table.tiempo}
                   </p>
                 )}
@@ -503,9 +440,7 @@ const Mesas = () => {
         className="rounded-xl p-6 shadow-md"
         style={{ backgroundColor: "white" }}
       >
-        <h3 className="font-bold mb-4" style={{ color: colors.primary }}>
-          Leyenda
-        </h3>
+        <h3 className="font-bold mb-4 text-primary">Leyenda</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {["Disponible", "Ocupada", "Reservada", "Mantenimiento"].map(
             (status) => {
@@ -516,9 +451,7 @@ const Mesas = () => {
                     className="w-4 h-4 rounded"
                     style={{ backgroundColor: statusColor.color }}
                   />
-                  <span className="text-sm" style={{ color: colors.text }}>
-                    {status}
-                  </span>
+                  <span className="text-sm text-textMain">{status}</span>
                 </div>
               );
             }

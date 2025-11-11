@@ -1,31 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import Colors from "../styles/colors.js";
 
 function Home() {
   const navigate = useNavigate();
 
   return (
-    <div
-      className="w-full min-h-screen"
-      style={{ backgroundColor: Colors.background }}
-    >
+    <div className="w-full min-h-screen bg-background">
       {/* Header/Navbar */}
-      <header className="w-full h-20 flex items-center justify-between px-8 md:px-16 lg:px-20">
-        <div className="text-xl font-bold" style={{ color: Colors.primary }}>
-          Bites
-        </div>
+      <header className="w-full h-20 flex items-center justify-between px-8 md:px-16 lg:px-20 text-primary">
+        <div className="text-xl font-bold">Bites</div>
         <div className="flex gap-3">
           <button
             onClick={() => navigate("/login")}
-            className="px-5 py-2 text-sm font-medium hover:underline transition cursor-pointer"
-            style={{ color: Colors.primary }}
+            className="px-5 py-2 text-sm font-medium hover:underline transition cursor-pointer text-primary"
           >
             Iniciar sesión
           </button>
           <button
             onClick={() => navigate("/register")}
-            className="px-5 py-2 rounded-md text-white text-sm font-medium transition cursor-pointer"
-            style={{ backgroundColor: Colors.primary }}
+            className="px-5 py-2 rounded-md text-white text-sm font-medium transition cursor-pointer bg-primary"
           >
             Registrarse
           </button>
@@ -37,51 +29,35 @@ function Home() {
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-16">
           <div className="flex-1 flex flex-col gap-6">
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              <span style={{ color: Colors.primary }}>Mas control</span>
+              <span className="text-primary">Mas control</span>
               <br />
-              <span style={{ color: Colors.accent }}>
+              <span className="text-accent">
                 menos esfuerzo en tu restaurante
               </span>
             </h1>
-            <p
-              className="text-zinc-600 text-xl"
-              style={{ color: Colors.textSecondary }}
-            >
+            <p className="text-textSecondary text-xl">
               Centraliza pedidos, inventario, reservas, ventas y facturación
               desde una sola plataforma, en tiempo real y con total control.
             </p>
             <button
               onClick={() => navigate("/register")}
-              className="w-fit px-8 py-3 rounded text-white text-base font-medium transition cursor-pointer"
-              style={{ backgroundColor: Colors.primary }}
+              className="w-fit px-8 py-3 rounded text-white text-base font-medium transition cursor-pointer bg-primary"
             >
               Registrarse
             </button>
           </div>
-          <div
-            className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px]"
-            style={{ backgroundColor: Colors.primary }}
-          />
+          <div className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px] bg-primary" />
         </div>
       </section>
 
       {/* Clientes Section */}
-      <section
-        className="w-full px-8 md:px-16 lg:px-20 py-16"
-        style={{ backgroundColor: Colors.backgroundSecondary }}
-      >
+      <section className="w-full px-8 md:px-16 lg:px-20 py-16 bg-backgroundSecondary">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-10">
           <div className="flex flex-col items-center gap-2">
-            <h2
-              className="text-4xl font-semibold text-center"
-              style={{ color: Colors.primary }}
-            >
+            <h2 className="text-4xl font-semibold text-center text-primary">
               Restaurantes que confían en Bites
             </h2>
-            <p
-              className="text-xl text-center"
-              style={{ color: Colors.textSecondary }}
-            >
+            <p className="text-xl text-center text-textSecondary">
               Desde restaurantes gourmet hasta cadenas de comida rápida, Bites
               impulsa la eficiencia operativa en negocios gastronómicos de todos
               los tamaños.
@@ -102,13 +78,10 @@ function Home() {
       <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-2">
-            <h2
-              className="text-4xl font-semibold text-center"
-              style={{ color: Colors.primary }}
-            >
+            <h2 className="text-4xl font-semibold text-center text-primary">
               Gestión completa, sin complicaciones
             </h2>
-            <p className="text-base text-center" style={{ color: Colors.text }}>
+            <p className="text-base text-center text-text">
               Bites combina tecnología moderna y experiencia en la industria
               para ofrecerte una solución ERP sólida, escalable y fácil de usar.
             </p>
@@ -133,20 +106,13 @@ function Home() {
             ].map((item, i) => (
               <div
                 key={i}
-                className="px-6 py-8 rounded-lg flex flex-col items-center gap-4 hover:shadow-lg transition"
-                style={{ backgroundColor: Colors.backgroundSecondary }}
+                className="px-6 py-8 rounded-lg flex flex-col items-center gap-4 hover:shadow-lg transition bg-backgroundSecondary"
               >
                 <div className="w-16 h-16 bg-gray-700 rounded-lg" />
-                <h3
-                  className="text-xl font-bold text-center"
-                  style={{ color: Colors.primary }}
-                >
+                <h3 className="text-xl font-bold text-center text-primary">
                   {item.title}
                 </h3>
-                <p
-                  className="text-md text-center leading-relaxed"
-                  style={{ color: Colors.textSecondary }}
-                >
+                <p className="text-md text-center leading-relaxed text-textSecondary">
                   {item.description}
                 </p>
               </div>
@@ -158,21 +124,12 @@ function Home() {
       {/* Caracteristicas Section */}
       <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-16">
-          <div
-            className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px]"
-            style={{ backgroundColor: Colors.primary }}
-          />
+          <div className="w-full lg:w-[400px] h-[300px] lg:h-[400px] rounded-[30px] bg-primary" />
           <div className="flex-1 flex flex-col gap-6 max-w-[600px]">
-            <h2
-              className="text-4xl font-bold"
-              style={{ color: Colors.primary }}
-            >
+            <h2 className="text-4xl font-bold text-primary">
               Características principales
             </h2>
-            <p
-              className="text-neutral-600 text-xl leading-relaxed"
-              style={{ color: Colors.text }}
-            >
+            <p className="text-xl leading-relaxed text-textMain">
               {" "}
               Bites combina tecnología avanzada y una interfaz intuitiva para
               ofrecer una gestión integral de tu restaurante. Controla
@@ -184,18 +141,15 @@ function Home() {
       </section>
 
       {/* Estadisticas Section */}
-      <section
-        className="w-full px-8 md:px-16 lg:px-20 py-16"
-        style={{ backgroundColor: Colors.backgroundSecondary }}
-      >
+      <section className="w-full px-8 md:px-16 lg:px-20 py-16 bg-backgroundSecondary">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-20">
           <div className="flex-1 flex flex-col gap-6">
             <h2 className="text-4xl font-bold leading-tight">
-              <span style={{ color: Colors.accent }}>
+              <span className="text-accent">
                 Resultados que reflejan eficiencia
               </span>
             </h2>
-            <p className="text-lg" style={{ color: Colors.textSecondary }}>
+            <p className="text-lg text-textSecondary">
               Cifras que muestran el impacto de una gestión centralizada.
             </p>
           </div>
@@ -207,21 +161,12 @@ function Home() {
               { number: "1,926,436", label: "Transacciones procesadas" },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-4">
-                <div
-                  className="w-12 h-12 bg-amber-400 rounded shrink-0"
-                  style={{ backgroundColor: Colors.accent }}
-                />
+                <div className="w-12 h-12 bg-accent rounded shrink-0" />
                 <div className="flex flex-col">
-                  <span
-                    className="text-3xl font-bold"
-                    style={{ color: Colors.text }}
-                  >
+                  <span className="text-3xl font-bold text-textMain">
                     {stat.number}
                   </span>
-                  <span
-                    className="text-base"
-                    style={{ color: Colors.textSecondary }}
-                  >
+                  <span className="text-base text-textSecondary">
                     {stat.label}
                   </span>
                 </div>
@@ -235,16 +180,10 @@ function Home() {
       <section className="w-full px-8 md:px-16 lg:px-20 py-20">
         <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-2 max-w-[700px]">
-            <h2
-              className="text-4xl font-bold text-center"
-              style={{ color: Colors.primary }}
-            >
+            <h2 className="text-4xl font-bold text-center text-primary">
               Beneficios
             </h2>
-            <p
-              className="text-lg text-center leading-relaxed"
-              style={{ color: Colors.text }}
-            >
+            <p className="text-lg text-center leading-relaxed text-textMain">
               Con Bites, optimizas cada proceso y conviertes la gestión de tu
               restaurante en una experiencia eficiente y rentable.
             </p>
@@ -256,21 +195,12 @@ function Home() {
               "Toma decisiones con datos reales",
             ].map((title, i) => (
               <div key={i} className="flex flex-col items-stretch">
-                <div
-                  className="w-full h-72 rounded-lg"
-                  style={{ backgroundColor: Colors.primary }}
-                />
-                <div
-                  className="w-[90%] -mt-20 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center gap-3 relative z-10 mx-auto"
-                  style={{ backgroundColor: Colors.backgroundSecondary }}
-                >
+                <div className="w-full h-72 rounded-lg bg-primary" />
+                <div className="w-[90%] -mt-20 p-6 rounded-lg shadow-lg flex flex-col items-center justify-center gap-3 relative z-10 mx-auto bg-backgroundSecondary">
                   <h3 className="text-neutral-700 text-md font-bold text-center">
                     {title}
                   </h3>
-                  <button
-                    className="flex items-center gap-2 font-semibold hover:gap-3 transition-all"
-                    style={{ color: Colors.primary }}
-                  >
+                  <button className="flex items-center gap-2 font-semibold hover:gap-3 transition-all text-primary">
                     <span>Leer más</span>
                     <span>→</span>
                   </button>
@@ -282,10 +212,7 @@ function Home() {
       </section>
 
       {/* Footer */}
-      <footer
-        className="w-full px-8 md:px-16 lg:px-20 py-16"
-        style={{ backgroundColor: Colors.primary }}
-      >
+      <footer className="w-full px-8 md:px-16 lg:px-20 py-16 bg-primary">
         <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row justify-between gap-12">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">

@@ -9,6 +9,7 @@ import errorHandler from "./src/middlewares/errorHandler.js";
 // Importar rutas
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
+import restauranteRoutes from "./src/routes/restaurante.routes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
     endpoints: {
       auth: "/api/auth",
       users: "/api/users",
+      restaurante: "/api/restaurante",
     },
   });
 });
@@ -47,6 +49,7 @@ app.get("/", (req, res) => {
 // Rutas de la API
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/restaurante", restauranteRoutes);
 
 // Manejo de rutas no encontradas
 app.use("*", (req, res) => {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { authService } from "../services/api";
+import { authService, restauranteService } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -72,6 +72,30 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  // Completar configuración del restaurante
+  const completarConfiguracion = async (restauranteData) => {
+    try {
+      const response = await restauranteService.completarConfiguracion(
+        restauranteData
+      );
+
+      // Actualizar el usuario con el que devuelve el backend (incluye configuracionCompleta: true)
+      const updatedUser = response.data.usuario;
+      console.log("AuthContext - Usuario actualizado del backend:", updatedUser);
+      
+      setUser(updatedUser);
+      authService.updateCurrentUser(updatedUser);
+
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        errors: error.errors,
+      };
+    }
+  };
+
   const value = {
     user,
     isAuthenticated,
@@ -79,6 +103,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    completarConfiguracion,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

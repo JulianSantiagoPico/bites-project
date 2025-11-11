@@ -1,5 +1,4 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
 
 const Reservas = () => {
   const [showModal, setShowModal] = useState(false);
@@ -98,13 +97,10 @@ const Reservas = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold" style={{ color: colors.primary }}>
-            Nueva Reserva
-          </h3>
+          <h3 className="text-2xl font-bold text-primary">Nueva Reserva</h3>
           <button
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            style={{ color: colors.text }}
+            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
           >
             <svg
               className="w-6 h-6"
@@ -125,102 +121,64 @@ const Reservas = () => {
         <form className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Nombre del Cliente *
               </label>
               <input
                 type="text"
                 placeholder="Nombre completo"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Teléfono *
               </label>
               <input
                 type="tel"
                 placeholder="555-0000"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Email
               </label>
               <input
                 type="email"
                 placeholder="cliente@email.com"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Fecha *
               </label>
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Hora *
               </label>
               <input
                 type="time"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Número de Personas *
               </label>
               <input
@@ -228,28 +186,15 @@ const Reservas = () => {
                 min="1"
                 placeholder="0"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Mesa Asignada
               </label>
-              <select
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
-              >
+              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
                 <option value="">Asignar después...</option>
                 <option value="Mesa 1">Mesa 1 (4 personas)</option>
                 <option value="Mesa 2">Mesa 2 (2 personas)</option>
@@ -258,20 +203,13 @@ const Reservas = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Notas / Solicitudes Especiales
               </label>
               <textarea
                 rows="3"
                 placeholder="Alergias, preferencias de asiento, ocasión especial..."
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
           </div>
@@ -280,18 +218,13 @@ const Reservas = () => {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: colors.primary }}
+              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
               Crear Reserva
             </button>
@@ -306,17 +239,14 @@ const Reservas = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Reservas
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Reservas</h2>
+          <p className="text-textSecondary">
             Gestiona las reservaciones del restaurante
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2"
-          style={{ backgroundColor: colors.primary }}
+          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
           <svg
             className="w-5 h-5"
@@ -341,10 +271,8 @@ const Reservas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Total Hoy
-          </p>
-          <p className="text-3xl font-bold" style={{ color: colors.primary }}>
+          <p className="text-sm mb-1 text-textSecondary">Total Hoy</p>
+          <p className="text-3xl font-bold text-primary">
             {reservations.filter((r) => r.fecha === "2025-11-09").length}
           </p>
         </div>
@@ -352,10 +280,8 @@ const Reservas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Confirmadas
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#10B981" }}>
+          <p className="text-sm mb-1 text-textSecondary">Confirmadas</p>
+          <p className="text-3xl font-bold text-[#10B981]">
             {reservations.filter((r) => r.estado === "Confirmada").length}
           </p>
         </div>
@@ -363,10 +289,8 @@ const Reservas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Pendientes
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#F59E0B" }}>
+          <p className="text-sm mb-1 text-textSecondary">Pendientes</p>
+          <p className="text-3xl font-bold text-[#F59E0B]">
             {reservations.filter((r) => r.estado === "Pendiente").length}
           </p>
         </div>
@@ -374,10 +298,8 @@ const Reservas = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Total Personas
-          </p>
-          <p className="text-3xl font-bold" style={{ color: colors.accent }}>
+          <p className="text-sm mb-1 text-textSecondary">Total Personas</p>
+          <p className="text-3xl font-bold text-accent">
             {reservations.reduce((sum, r) => sum + r.personas, 0)}
           </p>
         </div>
@@ -391,9 +313,8 @@ const Reservas = () => {
             onClick={() => setSelectedDate(filter)}
             className="px-6 py-3 rounded-lg font-medium whitespace-nowrap transition-all duration-200"
             style={{
-              backgroundColor:
-                selectedDate === filter ? colors.accent : "white",
-              color: selectedDate === filter ? colors.primary : colors.text,
+              backgroundColor: selectedDate === filter ? "#e6af2e" : "white",
+              color: selectedDate === filter ? "#581845" : "#4a4a4a",
               boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
             }}
           >
@@ -409,7 +330,7 @@ const Reservas = () => {
       >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead style={{ backgroundColor: colors.primary }}>
+            <thead className="bg-primary">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">
                   ID
@@ -444,52 +365,39 @@ const Reservas = () => {
                   <tr
                     key={reservation.id}
                     style={{
-                      backgroundColor:
-                        index % 2 === 0 ? "white" : colors.background,
-                      borderBottom: `1px solid ${colors.secondary}20`,
+                      backgroundColor: index % 2 === 0 ? "white" : "#faf3e0",
+                      borderBottom: `1px solid #35524a20`,
                     }}
                   >
-                    <td
-                      className="px-6 py-4 font-medium"
-                      style={{ color: colors.primary }}
-                    >
+                    <td className="px-6 py-4 font-medium text-primary">
                       {reservation.id}
                     </td>
                     <td className="px-6 py-4">
                       <div>
-                        <p
-                          className="font-medium"
-                          style={{ color: colors.primary }}
-                        >
+                        <p className="font-medium text-primary">
                           {reservation.cliente}
                         </p>
                         {reservation.notas && (
-                          <p
-                            className="text-xs"
-                            style={{ color: colors.textSecondary }}
-                          >
+                          <p className="text-xs text-textSecondary">
                             📝 {reservation.notas}
                           </p>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm" style={{ color: colors.text }}>
+                      <div className="text-sm text-textSecondary">
                         <p>📞 {reservation.telefono}</p>
                         {reservation.email && <p>✉️ {reservation.email}</p>}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm" style={{ color: colors.text }}>
+                      <div className="text-sm text-textSecondary">
                         <p className="font-medium">📅 {reservation.fecha}</p>
                         <p>🕐 {reservation.hora}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div
-                        className="flex items-center gap-2"
-                        style={{ color: colors.text }}
-                      >
+                      <div className="flex items-center gap-2 text-textSecondary">
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -508,10 +416,7 @@ const Reservas = () => {
                         </span>
                       </div>
                     </td>
-                    <td
-                      className="px-6 py-4 font-medium"
-                      style={{ color: colors.accent }}
-                    >
+                    <td className="px-6 py-4 font-medium text-accent">
                       {reservation.mesa}
                     </td>
                     <td className="px-6 py-4">
@@ -535,8 +440,7 @@ const Reservas = () => {
                                 "Confirmada"
                               )
                             }
-                            className="p-2 rounded-lg hover:bg-green-50 transition-colors"
-                            style={{ color: "#10B981" }}
+                            className="p-2 rounded-lg hover:bg-green-50 transition-colors text-[#10B981]"
                             title="Confirmar"
                           >
                             <svg
@@ -555,8 +459,7 @@ const Reservas = () => {
                           </button>
                         )}
                         <button
-                          className="p-2 rounded-lg hover:bg-blue-50 transition-colors"
-                          style={{ color: "#3B82F6" }}
+                          className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-[#3B82F6]"
                           title="Editar"
                         >
                           <svg
@@ -577,8 +480,7 @@ const Reservas = () => {
                           onClick={() =>
                             updateReservationStatus(reservation.id, "Cancelada")
                           }
-                          className="p-2 rounded-lg hover:bg-red-50 transition-colors"
-                          style={{ color: "#EF4444" }}
+                          className="p-2 rounded-lg hover:bg-red-50 transition-colors text-[#EF4444]"
                           title="Cancelar"
                         >
                           <svg

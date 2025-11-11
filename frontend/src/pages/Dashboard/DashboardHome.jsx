@@ -1,5 +1,3 @@
-import colors from "../../styles/colors";
-
 const DashboardHome = () => {
   const metrics = [
     {
@@ -137,21 +135,14 @@ const DashboardHome = () => {
         {metrics.map((metric, index) => (
           <div
             key={index}
-            className="rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
-            style={{ backgroundColor: "white" }}
+            className="rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p
-                  className="text-sm font-medium"
-                  style={{ color: colors.textSecondary }}
-                >
+                <p className="text-sm font-medium text-textSecondary">
                   {metric.title}
                 </p>
-                <h3
-                  className="text-3xl font-bold mt-2"
-                  style={{ color: colors.primary }}
-                >
+                <h3 className="text-3xl font-bold mt-2 text-primary">
                   {metric.value}
                 </h3>
                 <div className="flex items-center mt-2 gap-1">
@@ -174,23 +165,14 @@ const DashboardHome = () => {
                   <span
                     className="text-sm font-medium"
                     style={{
-                      color:
-                        metric.trend === "up"
-                          ? "#10B981"
-                          : colors.textSecondary,
+                      color: metric.trend === "up" ? "#10B981" : "#7d7d7d",
                     }}
                   >
                     {metric.change}
                   </span>
                 </div>
               </div>
-              <div
-                className="p-3 rounded-lg"
-                style={{
-                  backgroundColor: colors.accent + "20",
-                  color: colors.accent,
-                }}
-              >
+              <div className="p-3 rounded-lg bg-accent-20 text-accent">
                 {metric.icon}
               </div>
             </div>
@@ -201,15 +183,9 @@ const DashboardHome = () => {
       {/* Recent Orders and Top Products */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
-        <div
-          className="lg:col-span-2 rounded-xl shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <div
-            className="p-6 border-b"
-            style={{ borderColor: colors.secondary + "20" }}
-          >
-            <h3 className="text-xl font-bold" style={{ color: colors.primary }}>
+        <div className="lg:col-span-2 rounded-xl shadow-md bg-white">
+          <div className="p-6 border-b border-secondary-20">
+            <h3 className="text-xl font-bold text-primary">
               Órdenes Recientes
             </h3>
           </div>
@@ -218,29 +194,18 @@ const DashboardHome = () => {
               {recentOrders.map((order) => (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between p-4 rounded-lg hover:shadow-md transition-shadow"
-                  style={{ backgroundColor: colors.background }}
+                  className="flex items-center justify-between p-4 rounded-lg hover:shadow-md transition-shadow bg-background"
                 >
                   <div className="flex items-center gap-4">
                     <div>
-                      <p
-                        className="font-semibold"
-                        style={{ color: colors.primary }}
-                      >
-                        {order.id}
-                      </p>
-                      <p
-                        className="text-sm"
-                        style={{ color: colors.textSecondary }}
-                      >
+                      <p className="font-semibold text-primary">{order.id}</p>
+                      <p className="text-sm text-textSecondary">
                         {order.mesa} • {order.items} items
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold" style={{ color: colors.primary }}>
-                      {order.total}
-                    </p>
+                    <p className="font-bold text-primary">{order.total}</p>
                     <span
                       className="inline-block px-3 py-1 rounded-full text-xs font-medium mt-1"
                       style={{
@@ -248,14 +213,14 @@ const DashboardHome = () => {
                           order.estado === "Listo"
                             ? "#10B98120"
                             : order.estado === "Preparando"
-                            ? colors.accent + "20"
-                            : colors.secondary + "20",
+                            ? "#e6af2e" + "20"
+                            : "#35524a" + "20",
                         color:
                           order.estado === "Listo"
                             ? "#10B981"
                             : order.estado === "Preparando"
-                            ? colors.accent
-                            : colors.secondary,
+                            ? "#e6af2e"
+                            : "#35524a",
                       }}
                     >
                       {order.estado}
@@ -268,17 +233,9 @@ const DashboardHome = () => {
         </div>
 
         {/* Top Products */}
-        <div
-          className="rounded-xl shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <div
-            className="p-6 border-b"
-            style={{ borderColor: colors.secondary + "20" }}
-          >
-            <h3 className="text-xl font-bold" style={{ color: colors.primary }}>
-              Productos Top
-            </h3>
+        <div className="rounded-xl shadow-md bg-white">
+          <div className="p-6 border-b border-secondary-20">
+            <h3 className="text-xl font-bold text-primary">Productos Top</h3>
           </div>
           <div className="p-6">
             <div className="space-y-4">
@@ -286,31 +243,17 @@ const DashboardHome = () => {
                 <div key={index} className="space-y-2">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <p
-                        className="font-medium"
-                        style={{ color: colors.primary }}
-                      >
-                        {product.name}
-                      </p>
-                      <p
-                        className="text-sm"
-                        style={{ color: colors.textSecondary }}
-                      >
+                      <p className="font-medium text-primary">{product.name}</p>
+                      <p className="text-sm text-textSecondary">
                         {product.ventas} ventas
                       </p>
                     </div>
-                    <p className="font-bold" style={{ color: colors.accent }}>
-                      {product.revenue}
-                    </p>
+                    <p className="font-bold text-accent">{product.revenue}</p>
                   </div>
-                  <div
-                    className="w-full h-2 rounded-full overflow-hidden"
-                    style={{ backgroundColor: colors.background }}
-                  >
+                  <div className="w-full h-2 rounded-full overflow-hidden bg-background">
                     <div
-                      className="h-full rounded-full transition-all duration-300"
+                      className="h-full rounded-full transition-all duration-300 bg-accent"
                       style={{
-                        backgroundColor: colors.accent,
                         width: `${(product.ventas / 50) * 100}%`,
                       }}
                     />
@@ -324,19 +267,13 @@ const DashboardHome = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <button
-          className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left"
-          style={{ backgroundColor: colors.primary }}
-        >
+        <button className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left bg-primary">
           <div className="flex items-center gap-4">
-            <div
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: colors.accent }}
-            >
+            <div className="p-3 rounded-lg bg-accent">
               <svg
                 className="w-6 h-6"
                 fill="none"
-                stroke={colors.primary}
+                stroke={"#581845"}
                 viewBox="0 0 24 24"
               >
                 <path
@@ -349,26 +286,18 @@ const DashboardHome = () => {
             </div>
             <div>
               <h4 className="font-bold text-white">Nuevo Pedido</h4>
-              <p className="text-sm" style={{ color: colors.accent }}>
-                Tomar orden de cliente
-              </p>
+              <p className="text-sm text-accent">Tomar orden de cliente</p>
             </div>
           </div>
         </button>
 
-        <button
-          className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left"
-          style={{ backgroundColor: colors.secondary }}
-        >
+        <button className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left bg-secondary">
           <div className="flex items-center gap-4">
-            <div
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: colors.accent }}
-            >
+            <div className="p-3 rounded-lg bg-accent">
               <svg
                 className="w-6 h-6"
                 fill="none"
-                stroke={colors.secondary}
+                stroke={"#581845"}
                 viewBox="0 0 24 24"
               >
                 <path
@@ -381,26 +310,18 @@ const DashboardHome = () => {
             </div>
             <div>
               <h4 className="font-bold text-white">Nueva Reserva</h4>
-              <p className="text-sm" style={{ color: colors.accent }}>
-                Agendar reservación
-              </p>
+              <p className="text-sm text-accent">Agendar reservación</p>
             </div>
           </div>
         </button>
 
-        <button
-          className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left"
-          style={{ backgroundColor: colors.accent }}
-        >
+        <button className="rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-left bg-accent">
           <div className="flex items-center gap-4">
-            <div
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: colors.primary }}
-            >
+            <div className="p-3 rounded-lg bg-primary">
               <svg
                 className="w-6 h-6"
                 fill="none"
-                stroke={colors.accent}
+                stroke={"#e6af2e"}
                 viewBox="0 0 24 24"
               >
                 <path
@@ -412,12 +333,8 @@ const DashboardHome = () => {
               </svg>
             </div>
             <div>
-              <h4 className="font-bold" style={{ color: colors.primary }}>
-                Ver Reportes
-              </h4>
-              <p className="text-sm" style={{ color: colors.primary + "CC" }}>
-                Análisis y estadísticas
-              </p>
+              <h4 className="font-bold text-primary">Ver Reportes</h4>
+              <p className="text-sm text-primary/80">Análisis y estadísticas</p>
             </div>
           </div>
         </button>

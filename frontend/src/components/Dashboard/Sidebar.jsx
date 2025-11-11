@@ -1,6 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import colors from "../../styles/colors";
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const location = useLocation();
@@ -169,15 +168,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
 
   return (
     <aside
-      className="transition-all duration-300 ease-in-out flex flex-col"
+      className="transition-all duration-300 ease-in-out flex flex-col bg-primary fixed left-0 top-0 z-40"
       style={{
         width: isCollapsed ? "80px" : "280px",
-        backgroundColor: colors.primary,
         minHeight: "100vh",
-        position: "fixed",
-        left: 0,
-        top: 0,
-        zIndex: 40,
       }}
     >
       {/* Header */}
@@ -187,8 +181,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-          style={{ color: colors.accent }}
+          className="p-2 rounded-lg hover:bg-white/10 transition-colors text-accent"
         >
           <svg
             className="w-6 h-6"
@@ -226,8 +219,8 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                   to={item.path}
                   className="flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-200 group relative"
                   style={{
-                    backgroundColor: isActive ? colors.accent : "transparent",
-                    color: isActive ? colors.primary : "white",
+                    backgroundColor: isActive ? "#e6af2e" : "transparent",
+                    color: isActive ? "#581845" : "white",
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
@@ -250,13 +243,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
 
                   {/* Tooltip for collapsed state */}
                   {isCollapsed && (
-                    <div
-                      className="absolute left-full ml-2 px-3 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      style={{
-                        backgroundColor: colors.secondary,
-                        color: "white",
-                      }}
-                    >
+                    <div className="absolute left-full ml-2 px-3 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-secondary text-white">
                       {item.name}
                     </div>
                   )}
@@ -273,14 +260,11 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           to="/dashboard/perfil"
           className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
         >
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-            style={{ backgroundColor: colors.accent }}
-          >
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-accent">
             <svg
               className="w-6 h-6"
               fill="none"
-              stroke={colors.primary}
+              stroke="#581845"
               viewBox="0 0 24 24"
             >
               <path
@@ -296,7 +280,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
               <p className="text-white font-medium truncate">
                 {user?.nombre || "Usuario"}
               </p>
-              <p className="text-xs truncate" style={{ color: colors.accent }}>
+              <p className="text-xs truncate text-accent">
                 {user?.rol || "Administrador"}
               </p>
             </div>
@@ -326,16 +310,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           {!isCollapsed && (
             <span className="text-white font-medium">Cerrar sesión</span>
           )}
-          
+
           {/* Tooltip for collapsed state */}
           {isCollapsed && (
-            <div
-              className="absolute left-full ml-2 px-3 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-              style={{
-                backgroundColor: colors.secondary,
-                color: "white",
-              }}
-            >
+            <div className="absolute left-full ml-2 px-3 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-secondary text-white">
               Cerrar sesión
             </div>
           )}

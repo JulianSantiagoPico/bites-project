@@ -1,0 +1,147 @@
+/* TomarPedido Styles */
+
+/* Category buttons */
+.category-button {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  color: var(--color-textMain);
+}
+
+.category-button.active {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+}
+
+/* Product card */
+.product-card {
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.product-card-title {
+  color: var(--color-primary);
+}
+
+.product-card-category {
+  color: var(--color-textSecondary);
+}
+
+.product-card-price {
+  color: var(--color-accent);
+}
+
+.product-card-badge {
+  background-color: rgba(230, 175, 46, 0.2);
+  color: var(--color-accent);
+}
+
+/* Order info card */
+.order-info-card {
+  background-color: white;
+}
+
+.order-info-title {
+  color: var(--color-primary);
+}
+
+.order-info-label {
+  color: var(--color-textMain);
+}
+
+.order-info-select,
+.order-info-input {
+  border: 2px solid rgba(53, 82, 74, 0.25);
+  background-color: var(--color-background);
+  color: var(--color-textMain);
+}
+
+.order-info-select:focus,
+.order-info-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Cart */
+.cart-card {
+  background-color: white;
+}
+
+.cart-header {
+  border-color: rgba(53, 82, 74, 0.13);
+}
+
+.cart-empty {
+  color: var(--color-textSecondary);
+}
+
+.cart-item {
+  background-color: var(--color-background);
+}
+
+.cart-item-title {
+  color: var(--color-primary);
+}
+
+.cart-item-price {
+  color: var(--color-accent);
+}
+
+.cart-item-quantity {
+  color: var(--color-primary);
+}
+
+.cart-btn-minus {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.cart-btn-minus:hover {
+  opacity: 0.8;
+}
+
+.cart-btn-plus {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+}
+
+.cart-btn-plus:hover {
+  opacity: 0.8;
+}
+
+.cart-btn-remove {
+  color: #ef4444;
+}
+
+.cart-btn-remove:hover {
+  background-color: #fee;
+}
+
+.cart-divider {
+  border-color: rgba(53, 82, 74, 0.13);
+}
+
+.cart-text {
+  color: var(--color-textMain);
+}
+
+.cart-total-label {
+  color: var(--color-primary);
+}
+
+.cart-total-amount {
+  color: var(--color-accent);
+}
+
+.cart-submit-btn {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.cart-submit-btn:hover {
+  opacity: 0.9;
+}
