@@ -1,0 +1,236 @@
+### Variables
+@baseUrl = http://localhost:5000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTI3ZGMwMWRkNGY4MzQ0Zjc0YWYyZCIsImlhdCI6MTc2MjgxOTY3MiwiZXhwIjoxNzYzNDI0NDcyfQ.ijxs9RwnclPKQV1bpNd8N0wxzISNE3tb0mJ2dpEOM2w
+
+### ==============================================
+### PRUEBAS DE AUTENTICACIÓN
+### ==============================================
+
+### 1. Test del servidor - Verificar que está corriendo
+GET http://localhost:5000
+
+### 2. Registrar nuevo restaurante y admin
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Carlos",
+  "apellido": "Ramírez",
+  "email": "admin@restaurante.com",
+  "password": "123456",
+  "restaurante": {
+    "nombre": "Restaurante El Sabor",
+    "descripcion": "El mejor restaurante de comida colombiana",
+    "telefono": "3001234567"
+  }
+}
+
+### 3. Login con admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@restaurante.com",
+  "password": "123456"
+}
+
+### 4. Obtener perfil del usuario actual (requiere token)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### 5. Actualizar perfil del usuario actual
+PUT {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "3009876543"
+}
+
+### ==============================================
+### PRUEBAS DE USUARIOS/EMPLEADOS
+### ==============================================
+
+### 6. Crear un empleado - Mesero (requiere token de admin)
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "María",
+  "apellido": "García",
+  "email": "maria@restaurante.com",
+  "password": "123456",
+  "rol": "mesero",
+  "telefono": "3101234567"
+}
+
+### 7. Crear un empleado - Cocinero
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Pedro",
+  "apellido": "López",
+  "email": "pedro@restaurante.com",
+  "password": "123456",
+  "rol": "cocinero",
+  "telefono": "3201234567"
+}
+
+### 8. Crear un empleado - Cajero
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Ana",
+  "apellido": "Martínez",
+  "email": "ana@restaurante.com",
+  "password": "123456",
+  "rol": "cajero",
+  "telefono": "3301234567"
+}
+
+### 9. Crear un empleado - Host
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Luis",
+  "apellido": "Hernández",
+  "email": "luis@restaurante.com",
+  "password": "123456",
+  "rol": "host",
+  "telefono": "3401234567"
+}
+
+### 10. Listar todos los empleados
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+### 11. Listar solo meseros
+GET {{baseUrl}}/users?rol=mesero
+Authorization: Bearer {{token}}
+
+### 12. Listar solo usuarios activos
+GET {{baseUrl}}/users?activo=true
+Authorization: Bearer {{token}}
+
+### 13. Obtener empleado por ID (cambiar el ID)
+GET {{baseUrl}}/users/69127dc41dd4f8344f74af31
+Authorization: Bearer {{token}}
+
+### 14. Actualizar empleado
+PUT {{baseUrl}}/users/69127dc41dd4f8344f74af31
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "María Fernanda",
+  "telefono": "3109876543"
+}
+
+### 15. Cambiar rol de un empleado
+PUT {{baseUrl}}/users/69127dc41dd4f8344f74af31
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "rol": "cajero"
+}
+
+### 16. Desactivar empleado
+DELETE {{baseUrl}}/users/69127dc41dd4f8344f74af31
+Authorization: Bearer {{token}}
+
+### ==============================================
+### PRUEBAS DE VALIDACIÓN (Deben fallar)
+### ==============================================
+
+### 17. Intentar registrarse sin nombre de restaurante
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Test",
+  "apellido": "User",
+  "email": "test@test.com",
+  "password": "123456",
+  "restaurante": {}
+}
+
+### 18. Intentar login con credenciales incorrectas
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@restaurante.com",
+  "password": "incorrecta"
+}
+
+### 19. Intentar crear empleado sin autenticación
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "nombre": "Test",
+  "apellido": "User",
+  "email": "test@restaurante.com",
+  "password": "123456",
+  "rol": "mesero"
+}
+
+### 20. Intentar crear empleado con rol admin (debe fallar)
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Hacker",
+  "apellido": "Admin",
+  "email": "hacker@restaurante.com",
+  "password": "123456",
+  "rol": "admin"
+}
+
+### ==============================================
+### PRUEBAS CON DIFERENTES ROLES
+### ==============================================
+
+### 21. Login como mesero
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "maria@restaurante.com",
+  "password": "123456"
+}
+
+### 22. Mesero intenta crear empleado (debe fallar)
+POST {{baseUrl}}/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Test",
+  "apellido": "Test",
+  "email": "test@restaurante.com",
+  "password": "123456",
+  "rol": "mesero"
+}
+
+### 23. Mesero puede ver su perfil
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### 24. Mesero puede actualizar su perfil
+PUT {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "3001112233"
+}
