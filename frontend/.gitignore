@@ -28,3 +28,6 @@ backend/.env
 
 # MongoDB data
 data/
+
+# Variables de entorno
+.env

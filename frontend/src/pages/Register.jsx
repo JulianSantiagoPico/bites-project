@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Register.css";
 import Colors from "../styles/colors.js";
 
 function Register() {
   const navigate = useNavigate();
+  const { register, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,6 +18,14 @@ function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Redirigir al dashboard si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,12 +54,47 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      // Aquí puedes agregar la lógica de registro
-      console.log("Registro exitoso:", formData);
+      setLoading(true);
+      setErrors({});
+
+      try {
+        // Separar nombre y apellido
+        const nameParts = formData.name.trim().split(" ");
+        const nombre = nameParts[0] || "";
+        const apellido = nameParts.slice(1).join(" ") || "";
+
+        // Preparar datos para el backend
+        const userData = {
+          nombre,
+          apellido,
+          email: formData.email,
+          password: formData.password,
+          restaurante: {
+            nombre: formData.restaurantName,
+            telefono: formData.phone,
+            email: formData.email,
+          },
+        };
+
+        const result = await register(userData);
+
+        if (result.success) {
+          // Redirigir al dashboard después del registro exitoso
+          navigate("/dashboard", { replace: true });
+        } else {
+          setErrors({ general: result.error || "Error al registrar usuario" });
+        }
+      } catch (error) {
+        setErrors({
+          general: "Error al registrar usuario. Por favor, intenta de nuevo.",
+        });
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -75,6 +120,13 @@ function Register() {
 
           {/* Register Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Mensaje de error general */}
+            {errors.general && (
+              <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-sm text-red-600">{errors.general}</p>
+              </div>
+            )}
+
             {/* Información Personal */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="flex flex-col gap-2">
@@ -95,6 +147,7 @@ function Register() {
                   placeholder="Juan Pérez"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
               </div>
 
@@ -116,6 +169,7 @@ function Register() {
                   placeholder="tu@email.com"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
               </div>
             </div>
@@ -140,6 +194,7 @@ function Register() {
                   placeholder="Mi Restaurante"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
               </div>
 
@@ -160,6 +215,7 @@ function Register() {
                   placeholder="+57 300 123 4567"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
               </div>
             </div>
@@ -183,6 +239,7 @@ function Register() {
                   placeholder="••••••••"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
                 {errors.password && (
                   <span className="text-xs" style={{ color: Colors.accent }}>
@@ -209,6 +266,7 @@ function Register() {
                   placeholder="••••••••"
                   required
                   className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                  style={{ color: Colors.text }}
                 />
                 {errors.confirmPassword && (
                   <span className="text-xs" style={{ color: Colors.accent }}>
@@ -258,10 +316,11 @@ function Register() {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90"
+              disabled={loading}
+              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: Colors.primary }}
             >
-              Crear cuenta
+              {loading ? "Creando cuenta..." : "Crear cuenta"}
             </button>
           </form>
 

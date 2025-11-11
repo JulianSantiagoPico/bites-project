@@ -1,8 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import colors from "../../styles/colors";
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   const menuItems = [
     {
@@ -260,7 +268,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       </nav>
 
       {/* Footer / User Info */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-white/10 space-y-2">
         <Link
           to="/dashboard/perfil"
           className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
@@ -285,13 +293,53 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-white font-medium truncate">Admin</p>
+              <p className="text-white font-medium truncate">
+                {user?.nombre || "Usuario"}
+              </p>
               <p className="text-xs truncate" style={{ color: colors.accent }}>
-                Administrador
+                {user?.rol || "Administrador"}
               </p>
             </div>
           )}
         </Link>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-red-500/20 transition-colors w-full group"
+        >
+          <div className="shrink-0">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="white"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+          </div>
+          {!isCollapsed && (
+            <span className="text-white font-medium">Cerrar sesión</span>
+          )}
+          
+          {/* Tooltip for collapsed state */}
+          {isCollapsed && (
+            <div
+              className="absolute left-full ml-2 px-3 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              style={{
+                backgroundColor: colors.secondary,
+                color: "white",
+              }}
+            >
+              Cerrar sesión
+            </div>
+          )}
+        </button>
       </div>
     </aside>
   );

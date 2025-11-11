@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -16,24 +18,36 @@ import "./App.css";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* Dashboard Routes */}
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<DashboardHome />} />
-        <Route path="pedidos" element={<TomarPedido />} />
-        <Route path="productos" element={<Productos />} />
-        <Route path="ordenes" element={<Ordenes />} />
-        <Route path="mesas" element={<Mesas />} />
-        <Route path="reservas" element={<Reservas />} />
-        <Route path="inventario" element={<Inventario />} />
-        <Route path="empleados" element={<Empleados />} />
-        <Route path="perfil" element={<Perfil />} />
-      </Route>
-    </Routes>
+        {/* Dashboard Routes - Protegidas */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DashboardHome />} />
+          <Route path="pedidos" element={<TomarPedido />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="ordenes" element={<Ordenes />} />
+          <Route path="mesas" element={<Mesas />} />
+          <Route path="reservas" element={<Reservas />} />
+          <Route path="inventario" element={<Inventario />} />
+          <Route path="empleados" element={<Empleados />} />
+          <Route path="perfil" element={<Perfil />} />
+        </Route>
+
+        {/* Ruta por defecto - Redirigir al login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

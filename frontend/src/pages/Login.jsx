@@ -1,17 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 import Colors from "../styles/colors.js";
 
 function Login() {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Redirigir al dashboard si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica de autenticación
-    console.log("Login attempt:", { email, password });
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await login(email, password);
+
+      if (result.success) {
+        // Redirigir al dashboard después del login exitoso
+        navigate("/dashboard", { replace: true });
+      } else {
+        setError(result.error || "Error al iniciar sesión");
+      }
+    } catch (err) {
+      setError("Error al iniciar sesión. Por favor, intenta de nuevo.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +62,13 @@ function Login() {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Mensaje de error */}
+            {error && (
+              <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="email"
@@ -55,6 +88,7 @@ function Login() {
                 style={{
                   borderColor: Colors.backgroundSecondary,
                   focusRingColor: Colors.primary,
+                  color: Colors.text,
                 }}
               />
             </div>
@@ -78,6 +112,7 @@ function Login() {
                 style={{
                   borderColor: Colors.backgroundSecondary,
                   focusRingColor: Colors.primary,
+                  color: Colors.text,
                 }}
               />
             </div>
@@ -102,10 +137,11 @@ function Login() {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90"
+              disabled={loading}
+              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: Colors.primary }}
             >
-              Iniciar sesión
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </form>
 
