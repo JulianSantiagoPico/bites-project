@@ -75,6 +75,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    // Indica si el usuario completó la configuración inicial del restaurante
+    configuracionCompleta: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true, // Agrega createdAt y updatedAt automáticamente
@@ -119,6 +125,7 @@ userSchema.methods.toPublicJSON = function () {
     foto: this.foto,
     activo: this.activo,
     ultimoAcceso: this.ultimoAcceso,
+    configuracionCompleta: this.configuracionCompleta,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
   };

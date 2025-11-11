@@ -1,5 +1,4 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
 
 const Productos = () => {
   const [showModal, setShowModal] = useState(false);
@@ -158,13 +157,12 @@ const Productos = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold" style={{ color: colors.primary }}>
+          <h3 className="text-2xl font-bold text-primary">
             {editingProduct ? "Editar Producto" : "Nuevo Producto"}
           </h3>
           <button
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            style={{ color: colors.text }}
+            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
           >
             <svg
               className="w-6 h-6"
@@ -185,37 +183,21 @@ const Productos = () => {
         <form className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Nombre del Producto
               </label>
               <input
                 type="text"
                 placeholder="Ej: Hamburguesa Especial"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Categoría
               </label>
-              <select
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
-              >
+              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
                 {categories
                   .filter((c) => c !== "Todo")
                   .map((cat) => (
@@ -227,76 +209,46 @@ const Productos = () => {
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Precio ($)
               </label>
               <input
                 type="number"
                 step="0.01"
                 placeholder="0.00"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Stock Inicial
               </label>
               <input
                 type="number"
                 placeholder="0"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Estado
               </label>
-              <select
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
-              >
+              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
                 <option value="Disponible">Disponible</option>
                 <option value="No Disponible">No Disponible</option>
               </select>
             </div>
 
             <div className="col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Descripción
               </label>
               <textarea
                 rows="3"
                 placeholder="Descripción del producto..."
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
           </div>
@@ -305,18 +257,13 @@ const Productos = () => {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: colors.primary }}
+              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
               {editingProduct ? "Guardar Cambios" : "Crear Producto"}
             </button>
@@ -331,10 +278,8 @@ const Productos = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Productos
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Productos</h2>
+          <p className="text-textSecondary">
             Gestiona el catálogo de productos del restaurante
           </p>
         </div>
@@ -343,8 +288,7 @@ const Productos = () => {
             setEditingProduct(null);
             setShowModal(true);
           }}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2"
-          style={{ backgroundColor: colors.primary }}
+          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
           <svg
             className="w-5 h-5"
@@ -369,13 +313,8 @@ const Productos = () => {
           className="rounded-xl p-4 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Total Productos
-          </p>
-          <p
-            className="text-2xl font-bold mt-1"
-            style={{ color: colors.primary }}
-          >
+          <p className="text-sm text-textSecondary">Total Productos</p>
+          <p className="text-2xl font-bold mt-1 text-primary">
             {products.length}
           </p>
         </div>
@@ -383,9 +322,7 @@ const Productos = () => {
           className="rounded-xl p-4 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Disponibles
-          </p>
+          <p className="text-sm text-textSecondary">Disponibles</p>
           <p className="text-2xl font-bold mt-1" style={{ color: "#10B981" }}>
             {products.filter((p) => p.status === "Disponible").length}
           </p>
@@ -394,9 +331,7 @@ const Productos = () => {
           className="rounded-xl p-4 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Bajo Stock
-          </p>
+          <p className="text-sm text-textSecondary">Bajo Stock</p>
           <p className="text-2xl font-bold mt-1" style={{ color: "#F59E0B" }}>
             {products.filter((p) => p.status === "Bajo Stock").length}
           </p>
@@ -405,13 +340,8 @@ const Productos = () => {
           className="rounded-xl p-4 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm" style={{ color: colors.textSecondary }}>
-            Categorías
-          </p>
-          <p
-            className="text-2xl font-bold mt-1"
-            style={{ color: colors.accent }}
-          >
+          <p className="text-sm text-textSecondary">Categorías</p>
+          <p className="text-2xl font-bold mt-1 text-accent">
             {categories.length - 1}
           </p>
         </div>
@@ -424,10 +354,7 @@ const Productos = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Buscar Producto
             </label>
             <div className="relative">
@@ -436,15 +363,10 @@ const Productos = () => {
                 placeholder="Buscar por nombre..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
               <svg
-                className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2"
-                style={{ color: colors.textSecondary }}
+                className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -460,20 +382,13 @@ const Productos = () => {
           </div>
 
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Filtrar por Categoría
             </label>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                backgroundColor: colors.background,
-              }}
+              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -492,7 +407,7 @@ const Productos = () => {
       >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead style={{ backgroundColor: colors.primary }}>
+            <thead className="bg-primary">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-white">
                   Producto
@@ -519,32 +434,25 @@ const Productos = () => {
                 <tr
                   key={product.id}
                   style={{
-                    backgroundColor:
-                      index % 2 === 0 ? "white" : colors.background,
-                    borderBottom: `1px solid ${colors.secondary}20`,
+                    backgroundColor: index % 2 === 0 ? "white" : "#faf3e0",
+                    borderBottom: `1px solid #35524a20`,
                   }}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <span className="text-3xl">{product.image}</span>
-                      <span
-                        className="font-medium"
-                        style={{ color: colors.primary }}
-                      >
+                      <span className="font-medium text-primary">
                         {product.name}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4" style={{ color: colors.text }}>
+                  <td className="px-6 py-4 text-textMain">
                     {product.category}
                   </td>
-                  <td
-                    className="px-6 py-4 font-semibold"
-                    style={{ color: colors.accent }}
-                  >
+                  <td className="px-6 py-4 font-semibold text-accent">
                     ${product.price.toFixed(2)}
                   </td>
-                  <td className="px-6 py-4" style={{ color: colors.text }}>
+                  <td className="px-6 py-4 text-textMain">
                     {product.stock} unidades
                   </td>
                   <td className="px-6 py-4">
@@ -572,8 +480,7 @@ const Productos = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(product)}
-                        className="p-2 rounded-lg hover:bg-blue-50 transition-colors"
-                        style={{ color: "#3B82F6" }}
+                        className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-blue-500"
                       >
                         <svg
                           className="w-5 h-5"
@@ -591,8 +498,7 @@ const Productos = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="p-2 rounded-lg hover:bg-red-50 transition-colors"
-                        style={{ color: "#EF4444" }}
+                        className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-500"
                       >
                         <svg
                           className="w-5 h-5"

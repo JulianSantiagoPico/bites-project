@@ -1,5 +1,4 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
 
 const Empleados = () => {
   const [showModal, setShowModal] = useState(false);
@@ -153,13 +152,10 @@ const Empleados = () => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold" style={{ color: colors.primary }}>
-            Nuevo Empleado
-          </h3>
+          <h3 className="text-2xl font-bold text-primary">Nuevo Empleado</h3>
           <button
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100"
-            style={{ color: colors.text }}
+            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
           >
             <svg
               className="w-6 h-6"
@@ -180,76 +176,46 @@ const Empleados = () => {
         <form className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Nombre Completo *
               </label>
               <input
                 type="text"
                 placeholder="Ej: Juan Pérez"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Email *
               </label>
               <input
                 type="email"
                 placeholder="empleado@bites.com"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Teléfono *
               </label>
               <input
                 type="tel"
                 placeholder="555-0000"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Rol / Puesto *
               </label>
-              <select
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
-              >
+              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
                 {roles
                   .filter((r) => r !== "Todos")
                   .map((role) => (
@@ -261,19 +227,10 @@ const Empleados = () => {
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Turno *
               </label>
-              <select
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
-              >
+              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
                 <option value="Matutino">Matutino (6:00 - 14:00)</option>
                 <option value="Vespertino">Vespertino (14:00 - 22:00)</option>
                 <option value="Nocturno">Nocturno (22:00 - 6:00)</option>
@@ -281,57 +238,36 @@ const Empleados = () => {
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Salario Mensual ($) *
               </label>
               <input
                 type="number"
                 placeholder="0.00"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div>
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Fecha de Ingreso *
               </label>
               <input
                 type="date"
                 required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label
-                className="block text-sm font-medium mb-2"
-                style={{ color: colors.text }}
-              >
+              <label className="block text-sm font-medium mb-2 text-textMain">
                 Dirección
               </label>
               <textarea
                 rows="2"
                 placeholder="Dirección completa del empleado..."
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
             </div>
           </div>
@@ -340,18 +276,13 @@ const Empleados = () => {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                color: colors.text,
-              }}
+              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: colors.primary }}
+              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
               Registrar Empleado
             </button>
@@ -366,17 +297,14 @@ const Empleados = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Empleados
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Empleados</h2>
+          <p className="text-textSecondary">
             Gestión del personal del restaurante
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2"
-          style={{ backgroundColor: colors.primary }}
+          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
           <svg
             className="w-5 h-5"
@@ -401,21 +329,15 @@ const Empleados = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Total Empleados
-          </p>
-          <p className="text-3xl font-bold" style={{ color: colors.primary }}>
-            {employees.length}
-          </p>
+          <p className="text-sm mb-1 text-textSecondary">Total Empleados</p>
+          <p className="text-3xl font-bold text-primary">{employees.length}</p>
         </div>
         <div
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Activos
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#10B981" }}>
+          <p className="text-sm mb-1 text-textSecondary">Activos</p>
+          <p className="text-3xl font-bold text-[#10B981]">
             {employees.filter((e) => e.estado === "Activo").length}
           </p>
         </div>
@@ -423,10 +345,8 @@ const Empleados = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            En Vacaciones
-          </p>
-          <p className="text-3xl font-bold" style={{ color: "#3B82F6" }}>
+          <p className="text-sm mb-1 text-textSecondary">En Vacaciones</p>
+          <p className="text-3xl font-bold text-[#3B82F6]">
             {employees.filter((e) => e.estado === "Vacaciones").length}
           </p>
         </div>
@@ -434,10 +354,8 @@ const Empleados = () => {
           className="rounded-xl p-6 shadow-md"
           style={{ backgroundColor: "white" }}
         >
-          <p className="text-sm mb-1" style={{ color: colors.textSecondary }}>
-            Nómina Total
-          </p>
-          <p className="text-2xl font-bold" style={{ color: colors.accent }}>
+          <p className="text-sm mb-1 text-textSecondary">Nómina Total</p>
+          <p className="text-2xl font-bold text-accent">
             ${employees.reduce((sum, e) => sum + e.salario, 0).toLocaleString()}
           </p>
         </div>
@@ -450,10 +368,7 @@ const Empleados = () => {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Buscar Empleado
             </label>
             <div className="relative">
@@ -462,15 +377,10 @@ const Empleados = () => {
                 placeholder="Buscar por nombre o ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors"
-                style={{
-                  borderColor: colors.secondary + "40",
-                  backgroundColor: colors.background,
-                }}
+                className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
               />
               <svg
-                className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2"
-                style={{ color: colors.textSecondary }}
+                className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -486,20 +396,13 @@ const Empleados = () => {
           </div>
 
           <div>
-            <label
-              className="block text-sm font-medium mb-2"
-              style={{ color: colors.text }}
-            >
+            <label className="block text-sm font-medium mb-2 text-textMain">
               Filtrar por Rol
             </label>
             <select
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-              style={{
-                borderColor: colors.secondary + "40",
-                backgroundColor: colors.background,
-              }}
+              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
             >
               {roles.map((role) => (
                 <option key={role} value={role}>
@@ -523,79 +426,42 @@ const Empleados = () => {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="text-4xl w-16 h-16 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: colors.background }}
-                  >
+                  <div className="text-4xl w-16 h-16 rounded-full flex items-center justify-center bg-background">
                     {employee.foto}
                   </div>
                   <div>
-                    <h3 className="font-bold" style={{ color: colors.primary }}>
+                    <h3 className="font-bold text-primary">
                       {employee.nombre}
                     </h3>
-                    <p
-                      className="text-sm"
-                      style={{ color: colors.textSecondary }}
-                    >
-                      {employee.id}
-                    </p>
+                    <p className="text-sm text-textSecondary">{employee.id}</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-sm"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Rol
-                  </span>
-                  <span
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{
-                      backgroundColor: colors.accent + "20",
-                      color: colors.accent,
-                    }}
-                  >
+                  <span className="text-sm text-textSecondary">Rol</span>
+                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent">
                     {employee.rol}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-sm"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Turno
-                  </span>
-                  <span
-                    className="text-sm font-medium flex items-center gap-1"
-                    style={{ color: colors.text }}
-                  >
+                  <span className="text-sm text-textSecondary">Turno</span>
+                  <span className="text-sm font-medium flex items-center gap-1 text-text">
                     {getTurnoIcon(employee.turno)} {employee.turno}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-sm"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Salario
-                  </span>
-                  <span className="font-bold" style={{ color: colors.primary }}>
+                  <span className="text-sm text-textSecondary">Salario</span>
+                  <span className="font-bold text-primary">
                     ${employee.salario.toLocaleString()}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-sm"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Estado
-                  </span>
+                  <span className="text-sm text-textSecondary">Estado</span>
                   <span
                     className="px-3 py-1 rounded-full text-xs font-medium"
                     style={{
@@ -607,14 +473,8 @@ const Empleados = () => {
                   </span>
                 </div>
 
-                <div
-                  className="pt-3 mt-3 border-t flex items-center justify-between"
-                  style={{ borderColor: colors.secondary + "20" }}
-                >
-                  <div
-                    className="text-xs"
-                    style={{ color: colors.textSecondary }}
-                  >
+                <div className="pt-3 mt-3 border-t flex items-center justify-between border-secondary/20">
+                  <div className="text-xs text-textSecondary">
                     <p>📧 {employee.email}</p>
                     <p>📞 {employee.telefono}</p>
                   </div>
@@ -622,18 +482,11 @@ const Empleados = () => {
               </div>
 
               <div className="flex gap-2 mt-4">
-                <button
-                  className="flex-1 py-2 rounded-lg font-medium border-2 hover:bg-blue-50 transition-colors text-sm"
-                  style={{
-                    borderColor: colors.secondary + "40",
-                    color: colors.primary,
-                  }}
-                >
+                <button className="flex-1 py-2 rounded-lg font-medium border-2 hover:bg-blue-50 transition-colors text-sm border-secondary/40 text-primary">
                   Ver Perfil
                 </button>
                 <button
-                  className="p-2 rounded-lg hover:bg-blue-50 transition-colors"
-                  style={{ color: "#3B82F6" }}
+                  className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-[#3B82F6]"
                   title="Editar"
                 >
                   <svg
@@ -662,10 +515,10 @@ const Empleados = () => {
           style={{ backgroundColor: "white" }}
         >
           <div className="text-6xl mb-4">👥</div>
-          <p className="text-lg font-medium" style={{ color: colors.text }}>
+          <p className="text-lg font-medium text-textMain">
             No se encontraron empleados
           </p>
-          <p style={{ color: colors.textSecondary }}>
+          <p className="text-textSecondary">
             Intenta con otros filtros de búsqueda
           </p>
         </div>

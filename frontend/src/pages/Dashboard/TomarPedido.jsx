@@ -1,5 +1,5 @@
 import { useState } from "react";
-import colors from "../../styles/colors";
+import "./TomarPedido.css";
 
 const TomarPedido = () => {
   const [selectedCategory, setSelectedCategory] = useState("Todo");
@@ -154,10 +154,8 @@ const TomarPedido = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold" style={{ color: colors.primary }}>
-            Tomar Pedido
-          </h2>
-          <p style={{ color: colors.textSecondary }}>
+          <h2 className="text-3xl font-bold text-primary">Tomar Pedido</h2>
+          <p className="text-textSecondary">
             Selecciona productos y asigna a una mesa
           </p>
         </div>
@@ -173,16 +171,9 @@ const TomarPedido = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className="px-6 py-3 rounded-lg font-medium whitespace-nowrap transition-all duration-200"
-                style={{
-                  backgroundColor:
-                    selectedCategory === category ? colors.accent : "white",
-                  color:
-                    selectedCategory === category
-                      ? colors.primary
-                      : colors.text,
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                }}
+                className={`category-button px-6 py-3 rounded-lg font-medium whitespace-nowrap transition-all duration-200 ${
+                  selectedCategory === category ? "active" : ""
+                }`}
               >
                 {category}
               </button>
@@ -195,36 +186,20 @@ const TomarPedido = () => {
               <button
                 key={product.id}
                 onClick={() => addToCart(product)}
-                className="rounded-xl p-4 text-left hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-                style={{ backgroundColor: "white" }}
+                className="product-card rounded-xl p-4 text-left"
               >
                 <div className="text-5xl mb-3 text-center">{product.image}</div>
-                <h3
-                  className="font-bold mb-1"
-                  style={{ color: colors.primary }}
-                >
+                <h3 className="product-card-title font-bold mb-1">
                   {product.name}
                 </h3>
-                <p
-                  className="text-sm mb-2"
-                  style={{ color: colors.textSecondary }}
-                >
+                <p className="product-card-category text-sm mb-2">
                   {product.category}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span
-                    className="text-xl font-bold"
-                    style={{ color: colors.accent }}
-                  >
+                  <span className="product-card-price text-xl font-bold">
                     ${product.price.toFixed(2)}
                   </span>
-                  <span
-                    className="px-3 py-1 rounded-full text-sm"
-                    style={{
-                      backgroundColor: colors.accent + "20",
-                      color: colors.accent,
-                    }}
-                  >
+                  <span className="product-card-badge px-3 py-1 rounded-full text-sm">
                     Agregar
                   </span>
                 </div>
@@ -236,33 +211,20 @@ const TomarPedido = () => {
         {/* Order Summary */}
         <div className="space-y-4">
           {/* Table and Customer Info */}
-          <div
-            className="rounded-xl p-6 shadow-md"
-            style={{ backgroundColor: "white" }}
-          >
-            <h3
-              className="text-lg font-bold mb-4"
-              style={{ color: colors.primary }}
-            >
+          <div className="order-info-card rounded-xl p-6 shadow-md">
+            <h3 className="order-info-title text-lg font-bold mb-4">
               Información del Pedido
             </h3>
 
             <div className="space-y-4">
               <div>
-                <label
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: colors.text }}
-                >
+                <label className="order-info-label block text-sm font-medium mb-2">
                   Mesa
                 </label>
                 <select
                   value={selectedTable}
                   onChange={(e) => setSelectedTable(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:border-opacity-100 transition-colors"
-                  style={{
-                    borderColor: colors.secondary + "40",
-                    backgroundColor: colors.background,
-                  }}
+                  className="order-info-select w-full px-4 py-3 rounded-lg focus:outline-none transition-colors"
                 >
                   <option value="">Seleccionar mesa...</option>
                   {tables
@@ -276,10 +238,7 @@ const TomarPedido = () => {
               </div>
 
               <div>
-                <label
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: colors.text }}
-                >
+                <label className="order-info-label block text-sm font-medium mb-2">
                   Nombre del Cliente (Opcional)
                 </label>
                 <input
@@ -287,29 +246,16 @@ const TomarPedido = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Nombre..."
-                  className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:border-opacity-100 transition-colors"
-                  style={{
-                    borderColor: colors.secondary + "40",
-                    backgroundColor: colors.background,
-                  }}
+                  className="order-info-input w-full px-4 py-3 rounded-lg focus:outline-none transition-colors"
                 />
               </div>
             </div>
           </div>
 
           {/* Cart */}
-          <div
-            className="rounded-xl shadow-md"
-            style={{ backgroundColor: "white" }}
-          >
-            <div
-              className="p-6 border-b"
-              style={{ borderColor: colors.secondary + "20" }}
-            >
-              <h3
-                className="text-lg font-bold"
-                style={{ color: colors.primary }}
-              >
+          <div className="cart-card rounded-xl shadow-md">
+            <div className="cart-header p-6 border-b">
+              <h3 className="order-info-title text-lg font-bold">
                 Resumen del Pedido
               </h3>
             </div>
@@ -318,62 +264,44 @@ const TomarPedido = () => {
               {cart.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-6xl mb-4">🛒</div>
-                  <p style={{ color: colors.textSecondary }}>
-                    No hay productos en el carrito
-                  </p>
+                  <p className="cart-empty">No hay productos en el carrito</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {cart.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center gap-3 p-3 rounded-lg"
-                      style={{ backgroundColor: colors.background }}
+                      className="cart-item flex items-center gap-3 p-3 rounded-lg"
                     >
                       <div className="text-2xl">{item.image}</div>
                       <div className="flex-1 min-w-0">
-                        <h4
-                          className="font-semibold text-sm truncate"
-                          style={{ color: colors.primary }}
-                        >
+                        <h4 className="cart-item-title font-semibold text-sm truncate">
                           {item.name}
                         </h4>
-                        <p className="text-sm" style={{ color: colors.accent }}>
+                        <p className="cart-item-price text-sm">
                           ${item.price.toFixed(2)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center font-bold hover:opacity-80 transition-opacity"
-                          style={{
-                            backgroundColor: colors.secondary,
-                            color: "white",
-                          }}
+                          className="cart-btn-minus w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-opacity"
                         >
                           -
                         </button>
-                        <span
-                          className="w-8 text-center font-bold"
-                          style={{ color: colors.primary }}
-                        >
+                        <span className="cart-item-quantity w-8 text-center font-bold">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center font-bold hover:opacity-80 transition-opacity"
-                          style={{
-                            backgroundColor: colors.accent,
-                            color: colors.primary,
-                          }}
+                          className="cart-btn-plus w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-opacity"
                         >
                           +
                         </button>
                       </div>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="p-2 rounded-lg hover:bg-red-100 transition-colors"
-                        style={{ color: "#EF4444" }}
+                        className="cart-btn-remove p-2 rounded-lg transition-colors"
                       >
                         <svg
                           className="w-5 h-5"
@@ -396,30 +324,18 @@ const TomarPedido = () => {
 
               {cart.length > 0 && (
                 <>
-                  <div
-                    className="border-t pt-4 mt-4"
-                    style={{ borderColor: colors.secondary + "20" }}
-                  >
+                  <div className="cart-divider border-t pt-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span style={{ color: colors.text }}>Subtotal</span>
-                      <span
-                        className="font-semibold"
-                        style={{ color: colors.primary }}
-                      >
+                      <span className="cart-text">Subtotal</span>
+                      <span className="cart-total-label font-semibold">
                         ${calculateTotal()}
                       </span>
                     </div>
                     <div className="flex items-center justify-between mb-4">
-                      <span
-                        className="text-lg font-bold"
-                        style={{ color: colors.primary }}
-                      >
+                      <span className="cart-total-label text-lg font-bold">
                         Total
                       </span>
-                      <span
-                        className="text-2xl font-bold"
-                        style={{ color: colors.accent }}
-                      >
+                      <span className="cart-total-amount text-2xl font-bold">
                         ${calculateTotal()}
                       </span>
                     </div>
@@ -427,8 +343,7 @@ const TomarPedido = () => {
 
                   <button
                     onClick={handleSubmitOrder}
-                    className="w-full py-4 rounded-lg font-bold text-white hover:opacity-90 transition-opacity"
-                    style={{ backgroundColor: colors.primary }}
+                    className="cart-submit-btn w-full py-4 rounded-lg font-bold transition-opacity"
                   >
                     Enviar Pedido
                   </button>

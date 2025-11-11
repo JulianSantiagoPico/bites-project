@@ -1,16 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import colors from "../../styles/colors";
+import RestaurantSetupModal from "../RestaurantSetupModal";
+import { useAuth } from "../../context/AuthContext";
 
 const DashboardLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { user, completarConfiguracion } = useAuth();
+
+  // Calcular si debe mostrar el modal directamente del estado del usuario
+  const showSetupModal = user && !user.configuracionCompleta;
+
+  // Manejar la finalización de la configuración
+  const handleSetupComplete = async (restauranteData) => {
+    const result = await completarConfiguracion(restauranteData);
+
+    if (result.success) {
+      console.log("DashboardLayout - Configuración exitosa");
+    } else {
+      console.error("DashboardLayout - Error en configuración:", result.error);
+      throw new Error(result.error || "Error al configurar restaurante");
+    }
+  };
 
   return (
-    <div
-      className="flex min-h-screen"
-      style={{ backgroundColor: colors.background }}
-    >
+    <div className="flex min-h-screen bg-background">
+      {/* Modal de configuración del restaurante */}
+      <RestaurantSetupModal
+        isOpen={showSetupModal}
+        onComplete={handleSetupComplete}
+        restaurantName={user?.restauranteId?.nombre || "tu restaurante"}
+      />
+
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
       <main
@@ -20,32 +41,18 @@ const DashboardLayout = () => {
         }}
       >
         {/* Top Bar */}
-        <header
-          className="sticky top-0 z-30 backdrop-blur-sm border-b"
-          style={{
-            backgroundColor: `${colors.background}95`,
-            borderColor: colors.secondary + "20",
-          }}
-        >
+        <header className="sticky top-0 z-30 backdrop-blur-sm border-b bg-background/95 border-secondary/20">
           <div className="flex items-center justify-between px-8 py-4">
             <div>
-              <h2
-                className="text-2xl font-bold"
-                style={{ color: colors.primary }}
-              >
-                Dashboard
-              </h2>
-              <p className="text-sm" style={{ color: colors.textSecondary }}>
+              <h2 className="text-2xl font-bold text-primary">Dashboard</h2>
+              <p className="text-sm text-textSecondary">
                 Bienvenido al panel de control
               </p>
             </div>
 
             <div className="flex items-center gap-4">
               {/* Notifications */}
-              <button
-                className="p-2 rounded-lg hover:bg-white/50 transition-colors relative"
-                style={{ color: colors.secondary }}
-              >
+              <button className="p-2 rounded-lg hover:bg-white/50 transition-colors relative text-secondary">
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -59,17 +66,11 @@ const DashboardLayout = () => {
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                   />
                 </svg>
-                <span
-                  className="absolute top-1 right-1 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: colors.accent }}
-                ></span>
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent"></span>
               </button>
 
               {/* Settings */}
-              <button
-                className="p-2 rounded-lg hover:bg-white/50 transition-colors"
-                style={{ color: colors.secondary }}
-              >
+              <button className="p-2 rounded-lg hover:bg-white/50 transition-colors text-secondary">
                 <svg
                   className="w-6 h-6"
                   fill="none"

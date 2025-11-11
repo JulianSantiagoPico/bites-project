@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import RestaurantSetupModal from "../components/RestaurantSetupModal";
 import "../styles/Register.css";
-import Colors from "../styles/colors.js";
 
 function Register() {
   const navigate = useNavigate();
-  const { register, isAuthenticated } = useAuth();
+  const { register, isAuthenticated, completarConfiguracion } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,13 +19,17 @@ function Register() {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showSetupModal, setShowSetupModal] = useState(false);
+  const [registeredRestaurantName, setRegisteredRestaurantName] = useState("");
+  const [skipDashboardRedirect, setSkipDashboardRedirect] = useState(false);
 
-  // Redirigir al dashboard si ya está autenticado
+  // Redirigir al dashboard si ya está autenticado (pero no si está configurando el restaurante)
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !showSetupModal && !skipDashboardRedirect) {
+      console.log("Register - Redirigiendo al dashboard");
       navigate("/dashboard", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, showSetupModal, skipDashboardRedirect, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -83,8 +87,11 @@ function Register() {
         const result = await register(userData);
 
         if (result.success) {
-          // Redirigir al dashboard después del registro exitoso
-          navigate("/dashboard", { replace: true });
+          // Guardar el nombre del restaurante y mostrar modal de configuración
+          console.log("Register - Registro exitoso, mostrando modal");
+          setSkipDashboardRedirect(true); // Prevenir redirección mientras el modal está activo
+          setRegisteredRestaurantName(formData.restaurantName);
+          setShowSetupModal(true);
         } else {
           // Procesar errores de validación del backend
           if (result.errors && Array.isArray(result.errors)) {
@@ -110,22 +117,44 @@ function Register() {
     }
   };
 
+  // Manejar la finalización de la configuración del restaurante
+  const handleSetupComplete = async (restauranteData) => {
+    console.log("Register - Completando configuración:", restauranteData);
+    const result = await completarConfiguracion(restauranteData);
+
+    if (result.success) {
+      console.log(
+        "Register - Configuración exitosa, cerrando modal y redirigiendo"
+      );
+      setShowSetupModal(false);
+      setSkipDashboardRedirect(false); // Permitir redirección ahora
+      // Redirigir al dashboard
+      navigate("/dashboard", { replace: true });
+    } else {
+      console.error("Register - Error en configuración:", result.error);
+      throw new Error(result.error || "Error al configurar restaurante");
+    }
+  };
+
+  console.log(
+    `Register - showSetupModal: ${showSetupModal}, registeredRestaurantName: ${registeredRestaurantName}`
+  );
+
   return (
-    <div
-      className="w-full min-h-screen flex items-center justify-center py-12"
-      style={{ backgroundColor: Colors.background }}
-    >
+    <div className="w-full min-h-screen flex items-center justify-center py-12 bg-background">
+      {/* Modal de configuración del restaurante */}
+      <RestaurantSetupModal
+        isOpen={showSetupModal}
+        onComplete={handleSetupComplete}
+        restaurantName={registeredRestaurantName}
+      />
+
       <div className="w-full max-w-2xl px-8">
         <div className="bg-white rounded-2xl shadow-lg p-8">
           {/* Logo/Title */}
           <div className="flex flex-col items-center mb-8">
-            <h1
-              className="text-4xl font-bold mb-2"
-              style={{ color: Colors.primary }}
-            >
-              Bites
-            </h1>
-            <p className="text-base" style={{ color: Colors.textSecondary }}>
+            <h1 className="text-4xl font-bold mb-2 text-primary">Bites</h1>
+            <p className="text-base text-textSecondary">
               Crea tu cuenta y empieza a gestionar tu restaurante
             </p>
           </div>
@@ -144,11 +173,9 @@ function Register() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="name"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Nombre completo{" "}
-                  <span style={{ color: Colors.accent }}>*</span>
+                  Nombre completo <span className="text-accent">*</span>
                 </label>
                 <input
                   type="text"
@@ -158,10 +185,9 @@ function Register() {
                   onChange={handleChange}
                   placeholder="Juan Pérez"
                   required
-                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  className={`text-textMain px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
                     errors.nombre ? "border-red-500" : "border-gray-300"
                   }`}
-                  style={{ color: Colors.text }}
                 />
                 {errors.nombre && (
                   <span className="text-xs text-red-600">{errors.nombre}</span>
@@ -171,11 +197,9 @@ function Register() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="email"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Correo electrónico{" "}
-                  <span style={{ color: Colors.accent }}>*</span>
+                  Correo electrónico <span className="text-accent">*</span>
                 </label>
                 <input
                   type="email"
@@ -185,10 +209,9 @@ function Register() {
                   onChange={handleChange}
                   placeholder="tu@email.com"
                   required
-                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  className={`text-textMain px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   }`}
-                  style={{ color: Colors.text }}
                 />
                 {errors.email && (
                   <span className="text-xs text-red-600">{errors.email}</span>
@@ -201,11 +224,9 @@ function Register() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="restaurantName"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Nombre del restaurante{" "}
-                  <span style={{ color: Colors.accent }}>*</span>
+                  Nombre del restaurante <span className="text-accent">*</span>
                 </label>
                 <input
                   type="text"
@@ -215,12 +236,11 @@ function Register() {
                   onChange={handleChange}
                   placeholder="Mi Restaurante"
                   required
-                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  className={`text-textMain px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
                     errors["restaurante.nombre"]
                       ? "border-red-500"
                       : "border-gray-300"
                   }`}
-                  style={{ color: Colors.text }}
                 />
                 {errors["restaurante.nombre"] && (
                   <span className="text-xs text-red-600">
@@ -232,10 +252,9 @@ function Register() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="phone"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Teléfono <span style={{ color: Colors.accent }}>*</span>
+                  Teléfono <span className="text-accent">*</span>
                 </label>
                 <input
                   type="tel"
@@ -245,12 +264,11 @@ function Register() {
                   onChange={handleChange}
                   placeholder="+57 300 123 4567"
                   required
-                  className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  className={`text-textMain px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
                     errors["restaurante.telefono"]
                       ? "border-red-500"
                       : "border-gray-300"
                   }`}
-                  style={{ color: Colors.text }}
                 />
                 {errors["restaurante.telefono"] && (
                   <span className="text-xs text-red-600">
@@ -265,10 +283,9 @@ function Register() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Contraseña <span style={{ color: Colors.accent }}>*</span>
+                  Contraseña <span className="text-accent">*</span>
                 </label>
                 <input
                   type="password"
@@ -278,24 +295,19 @@ function Register() {
                   onChange={handleChange}
                   placeholder="••••••••"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
-                  style={{ color: Colors.text }}
+                  className="text-textMain px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
                 {errors.password && (
-                  <span className="text-xs" style={{ color: Colors.accent }}>
-                    {errors.password}
-                  </span>
+                  <span className="text-xs text-accent">{errors.password}</span>
                 )}
               </div>
 
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="confirmPassword"
-                  className="text-sm font-medium"
-                  style={{ color: Colors.text }}
+                  className="text-sm font-medium text-textMain"
                 >
-                  Confirmar contraseña{" "}
-                  <span style={{ color: Colors.accent }}>*</span>
+                  Confirmar contraseña <span className="text-accent">*</span>
                 </label>
                 <input
                   type="password"
@@ -305,11 +317,10 @@ function Register() {
                   onChange={handleChange}
                   placeholder="••••••••"
                   required
-                  className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
-                  style={{ color: Colors.text }}
+                  className="text-textMain px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary transition"
                 />
                 {errors.confirmPassword && (
-                  <span className="text-xs" style={{ color: Colors.accent }}>
+                  <span className="text-xs text-accent">
                     {errors.confirmPassword}
                   </span>
                 )}
@@ -324,30 +335,21 @@ function Register() {
                   name="acceptTerms"
                   checked={formData.acceptTerms}
                   onChange={handleChange}
-                  className="w-5 h-5 mt-0.5 rounded cursor-pointer"
-                  style={{ accentColor: Colors.primary }}
+                  className="w-5 h-5 mt-0.5 rounded cursor-pointer accent-primary"
                 />
-                <span className="text-sm" style={{ color: Colors.text }}>
+                <span className="text-sm text-textMain">
                   Acepto los{" "}
-                  <a
-                    href="#"
-                    className="hover:underline"
-                    style={{ color: Colors.primary }}
-                  >
+                  <a href="#" className="hover:underline text-primary">
                     términos y condiciones
                   </a>{" "}
                   y la{" "}
-                  <a
-                    href="#"
-                    className="hover:underline"
-                    style={{ color: Colors.primary }}
-                  >
+                  <a href="#" className="hover:underline text-primary">
                     política de privacidad
                   </a>
                 </span>
               </label>
               {errors.acceptTerms && (
-                <span className="text-xs" style={{ color: Colors.accent }}>
+                <span className="text-xs text-accent">
                   {errors.acceptTerms}
                 </span>
               )}
@@ -357,8 +359,7 @@ function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: Colors.primary }}
+              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed bg-primary"
             >
               {loading ? "Creando cuenta..." : "Crear cuenta"}
             </button>
@@ -366,32 +367,21 @@ function Register() {
 
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
-            <div
-              className="flex-1 h-px"
-              style={{ backgroundColor: Colors.backgroundSecondary }}
-            />
-            <span className="text-sm" style={{ color: Colors.textSecondary }}>
-              o
-            </span>
-            <div
-              className="flex-1 h-px"
-              style={{ backgroundColor: Colors.backgroundSecondary }}
-            />
+            <div className="flex-1 h-px bg-backgroundSecondary" />
+            <span className="text-sm text-textSecondary">o</span>
+            <div className="flex-1 h-px bg-backgroundSecondary" />
           </div>
 
           {/* Login link */}
           <div className="text-center text-sm">
-            <span style={{ color: Colors.textSecondary }}>
-              ¿Ya tienes una cuenta?{" "}
-            </span>
+            <span className="text-textSecondary">¿Ya tienes una cuenta? </span>
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 navigate("/login");
               }}
-              className="font-medium hover:underline"
-              style={{ color: Colors.primary }}
+              className="font-medium hover:underline text-primary"
             >
               Inicia sesión
             </a>
@@ -401,8 +391,7 @@ function Register() {
           <div className="text-center mt-6">
             <button
               onClick={() => navigate("/")}
-              className="text-sm hover:underline"
-              style={{ color: Colors.textSecondary }}
+              className="text-sm hover:underline text-textSecondary"
             >
               ← Volver al inicio
             </button>
