@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 import Colors from "../styles/colors.js";
 
 function Login() {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  // Redirigir al dashboard si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica de autenticación
-    console.log("Login attempt:", { email, password });
+    setErrors({});
+    setLoading(true);
+
+    try {
+      const result = await login(email, password);
+
+      if (result.success) {
+        // Redirigir al dashboard después del login exitoso
+        navigate("/dashboard", { replace: true });
+      } else {
+        // Procesar errores de validación del backend
+        if (result.errors && Array.isArray(result.errors)) {
+          const fieldErrors = {};
+          result.errors.forEach((err) => {
+            fieldErrors[err.field] = err.message;
+          });
+          setErrors(fieldErrors);
+        } else {
+          // Error general
+          setErrors({ general: result.error || "Error al iniciar sesión" });
+        }
+      }
+    } catch (err) {
+      setErrors({
+        general: "Error al iniciar sesión. Por favor, intenta de nuevo.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +74,13 @@ function Login() {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Mensaje de error general */}
+            {errors.general && (
+              <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-sm text-red-600">{errors.general}</p>
+              </div>
+            )}
+
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="email"
@@ -51,12 +96,20 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tu@email.com"
                 required
-                className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
                 style={{
-                  borderColor: Colors.backgroundSecondary,
+                  borderColor: errors.email
+                    ? "#ef4444"
+                    : Colors.backgroundSecondary,
                   focusRingColor: Colors.primary,
+                  color: Colors.text,
                 }}
               />
+              {errors.email && (
+                <span className="text-xs text-red-600">{errors.email}</span>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -74,12 +127,20 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 transition"
+                className={`px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                }`}
                 style={{
-                  borderColor: Colors.backgroundSecondary,
+                  borderColor: errors.password
+                    ? "#ef4444"
+                    : Colors.backgroundSecondary,
                   focusRingColor: Colors.primary,
+                  color: Colors.text,
                 }}
               />
+              {errors.password && (
+                <span className="text-xs text-red-600">{errors.password}</span>
+              )}
             </div>
 
             <div className="flex items-center justify-between text-sm">
@@ -102,10 +163,11 @@ function Login() {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90"
+              disabled={loading}
+              className="w-full py-3 rounded-lg text-white font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: Colors.primary }}
             >
-              Iniciar sesión
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </form>
 
