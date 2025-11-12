@@ -172,7 +172,7 @@ const DashboardHome = () => {
                   </span>
                 </div>
               </div>
-              <div className="p-3 rounded-lg bg-accent-20 text-accent">
+              <div className="p-3 rounded-lg bg-accent/20 text-accent">
                 {metric.icon}
               </div>
             </div>
@@ -184,7 +184,7 @@ const DashboardHome = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders */}
         <div className="lg:col-span-2 rounded-xl shadow-md bg-white">
-          <div className="p-6 border-b border-secondary-20">
+          <div className="p-6 border-b border-secondary/20">
             <h3 className="text-xl font-bold text-primary">
               Órdenes Recientes
             </h3>
@@ -234,7 +234,7 @@ const DashboardHome = () => {
 
         {/* Top Products */}
         <div className="rounded-xl shadow-md bg-white">
-          <div className="p-6 border-b border-secondary-20">
+          <div className="p-6 border-b border-secondary/20">
             <h3 className="text-xl font-bold text-primary">Productos Top</h3>
           </div>
           <div className="p-6">
