@@ -1,0 +1,342 @@
+### Variables
+@baseUrl = http://localhost:5000/api
+@token = YOUR_TOKEN_HERE
+
+### ============================================
+### AUTENTICACIÓN (Obtener token primero)
+### ============================================
+
+### Login como Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+### ============================================
+### INVENTARIO - GET (Listar)
+### ============================================
+
+### Obtener todo el inventario
+GET {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+
+### Obtener inventario filtrado por categoría
+GET {{baseUrl}}/inventario?categoria=Carnes
+Authorization: Bearer {{token}}
+
+### Obtener solo items activos
+GET {{baseUrl}}/inventario?activo=true
+Authorization: Bearer {{token}}
+
+### Obtener inventario filtrado por categoría y activos
+GET {{baseUrl}}/inventario?categoria=Vegetales&activo=true
+Authorization: Bearer {{token}}
+
+### ============================================
+### INVENTARIO - GET Estadísticas y Alertas
+### ============================================
+
+### Obtener estadísticas del inventario
+GET {{baseUrl}}/inventario/estadisticas
+Authorization: Bearer {{token}}
+
+### Obtener alertas del inventario
+GET {{baseUrl}}/inventario/alertas
+Authorization: Bearer {{token}}
+
+### ============================================
+### INVENTARIO - POST (Crear)
+### ============================================
+
+### Crear item de inventario - Carne
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Carne de Res Premium",
+  "descripcion": "Carne de res de alta calidad para parrilla",
+  "categoria": "Carnes",
+  "cantidad": 50,
+  "unidadMedida": "kg",
+  "cantidadMinima": 20,
+  "precioUnitario": 15.50,
+  "proveedor": "Carnes Premium S.A.",
+  "lote": "LOT-2024-001"
+}
+
+### Crear item de inventario - Vegetales
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Lechuga Romana",
+  "descripcion": "Lechuga fresca para ensaladas",
+  "categoria": "Vegetales",
+  "cantidad": 15,
+  "unidadMedida": "kg",
+  "cantidadMinima": 10,
+  "precioUnitario": 2.50,
+  "proveedor": "Verduras Frescas",
+  "fechaVencimiento": "2025-11-20"
+}
+
+### Crear item de inventario - Lácteos
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Queso Mozzarella",
+  "categoria": "Lácteos",
+  "cantidad": 25,
+  "unidadMedida": "kg",
+  "cantidadMinima": 10,
+  "precioUnitario": 8.00,
+  "proveedor": "Lácteos La Granja",
+  "fechaVencimiento": "2025-11-25"
+}
+
+### Crear item de inventario - Bebidas
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Coca Cola 2L",
+  "categoria": "Bebidas",
+  "cantidad": 48,
+  "unidadMedida": "unidades",
+  "cantidadMinima": 24,
+  "precioUnitario": 1.50,
+  "proveedor": "Distribuidora Bebidas del Sur"
+}
+
+### Crear item de inventario - Especias
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Pimienta Negra Molida",
+  "categoria": "Especias",
+  "cantidad": 5,
+  "unidadMedida": "kg",
+  "cantidadMinima": 3,
+  "precioUnitario": 12.00,
+  "proveedor": "Especias del Mundo"
+}
+
+### Crear item con stock bajo (para probar alertas)
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Harina de Trigo",
+  "categoria": "Otros",
+  "cantidad": 8,
+  "unidadMedida": "kg",
+  "cantidadMinima": 20,
+  "precioUnitario": 2.00,
+  "proveedor": "Molino San José"
+}
+
+### Crear item crítico (para probar alertas)
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Aceite de Oliva Extra Virgen",
+  "categoria": "Otros",
+  "cantidad": 2,
+  "unidadMedida": "litros",
+  "cantidadMinima": 10,
+  "precioUnitario": 18.00,
+  "proveedor": "Importadora Gourmet"
+}
+
+### Intentar crear item sin autenticación (debe fallar)
+POST {{baseUrl}}/inventario
+Content-Type: application/json
+
+{
+  "nombre": "Test Sin Auth",
+  "categoria": "Otros",
+  "cantidad": 10,
+  "unidadMedida": "kg",
+  "cantidadMinima": 5,
+  "precioUnitario": 5.00
+}
+
+### Intentar crear item con datos inválidos (debe fallar)
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "T",
+  "categoria": "CategoriaInvalida",
+  "cantidad": -10,
+  "unidadMedida": "medidaInvalida",
+  "cantidadMinima": -5,
+  "precioUnitario": -8.00
+}
+
+### ============================================
+### INVENTARIO - GET por ID
+### ============================================
+
+### Obtener item por ID (reemplazar con un ID real)
+GET {{baseUrl}}/inventario/673385e5c123456789abcdef
+Authorization: Bearer {{token}}
+
+### ============================================
+### INVENTARIO - PUT (Actualizar)
+### ============================================
+
+### Actualizar item completo (reemplazar con un ID real)
+PUT {{baseUrl}}/inventario/673385e5c123456789abcdef
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Carne de Res Premium Actualizada",
+  "descripcion": "Carne de res de alta calidad para parrilla - Actualizada",
+  "cantidad": 60,
+  "cantidadMinima": 25,
+  "precioUnitario": 16.00,
+  "proveedor": "Carnes Premium S.A. - Nueva Sucursal"
+}
+
+### Actualizar solo algunos campos
+PUT {{baseUrl}}/inventario/673385e5c123456789abcdef
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "cantidad": 45,
+  "precioUnitario": 15.00
+}
+
+### Reactivar item desactivado
+PUT {{baseUrl}}/inventario/673385e5c123456789abcdef
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "activo": true
+}
+
+### ============================================
+### INVENTARIO - POST Ajustar Stock
+### ============================================
+
+### Ajustar stock - Entrada de mercancía
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "entrada",
+  "cantidad": 20,
+  "motivo": "Compra de mercancía nueva"
+}
+
+### Ajustar stock - Salida por uso en cocina
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "salida",
+  "cantidad": 5,
+  "motivo": "Uso en preparación de platillos"
+}
+
+### Ajustar stock - Salida por merma
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "salida",
+  "cantidad": 2,
+  "motivo": "Merma por deterioro"
+}
+
+### Intentar ajustar con tipo inválido (debe fallar)
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "invalido",
+  "cantidad": 10,
+  "motivo": "Test"
+}
+
+### Intentar salida mayor al stock disponible (debe fallar)
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "salida",
+  "cantidad": 999999,
+  "motivo": "Test de validación"
+}
+
+### ============================================
+### INVENTARIO - DELETE (Soft Delete)
+### ============================================
+
+### Desactivar item (reemplazar con un ID real)
+DELETE {{baseUrl}}/inventario/673385e5c123456789abcdef
+Authorization: Bearer {{token}}
+
+### ============================================
+### PRUEBAS DE PERMISOS
+### ============================================
+
+### Intentar crear como mesero (debe fallar - solo admin)
+# Primero hacer login como mesero y usar ese token
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Test Permiso Mesero",
+  "categoria": "Otros",
+  "cantidad": 10,
+  "unidadMedida": "kg",
+  "cantidadMinima": 5,
+  "precioUnitario": 5.00
+}
+
+### Cocinero puede ajustar stock (debe funcionar)
+# Primero hacer login como cocinero y usar ese token
+POST {{baseUrl}}/inventario/673385e5c123456789abcdef/ajustar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "salida",
+  "cantidad": 3,
+  "motivo": "Uso en cocina"
+}
+
+### ============================================
+### NOTAS DE USO
+### ============================================
+
+# 1. Primero hacer login y copiar el token en la variable @token
+# 2. Reemplazar los IDs de ejemplo (673385e5c123456789abcdef) con IDs reales de tu BD
+# 3. Para probar permisos, hacer login con diferentes roles y usar sus tokens
+# 4. Verificar las estadísticas y alertas después de crear items con diferentes estados
+# 5. Los items con cantidad < cantidadMinima generarán alertas
