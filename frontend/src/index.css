@@ -10,6 +10,9 @@
   --color-backgroundSecondary: #f4e2aa;
   --color-iconFill: #756a44;
   --color-iconFillSecondary: #e8d38d;
+  --color-success: #6bbf59;
+  --color-warning: #ffd166;
+  --color-error: #a4161a;
 }
 
 :root {

@@ -1,3 +1,5 @@
+import { getConfirmDialogStyles } from "../utils/empleadosUtils";
+
 const ConfirmDialog = ({
   isOpen,
   onClose,
@@ -10,76 +12,62 @@ const ConfirmDialog = ({
 }) => {
   if (!isOpen) return null;
 
-  const getColors = () => {
+  const getIcon = () => {
     switch (type) {
       case "danger":
-        return {
-          iconBg: "bg-red-100",
-          iconColor: "text-red-600",
-          confirmBg: "bg-red-600 hover:bg-red-700",
-          icon: (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-          ),
-        };
+        return (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        );
       case "success":
-        return {
-          iconBg: "bg-green-100",
-          iconColor: "text-green-600",
-          confirmBg: "bg-green-600 hover:bg-green-700",
-          icon: (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          ),
-        };
+        return (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        );
       case "warning":
       default:
-        return {
-          iconBg: "bg-yellow-100",
-          iconColor: "text-yellow-600",
-          confirmBg: "bg-yellow-600 hover:bg-yellow-700",
-          icon: (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-          ),
-        };
+        return (
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        );
     }
   };
 
-  const colors = getColors();
+  const colors = getConfirmDialogStyles(type);
+  const icon = getIcon();
 
   const handleConfirm = () => {
     onConfirm();
@@ -101,7 +89,7 @@ const ConfirmDialog = ({
           <div
             className={`w-16 h-16 rounded-full flex items-center justify-center ${colors.iconBg} ${colors.iconColor}`}
           >
-            {colors.icon}
+            {icon}
           </div>
         </div>
 
