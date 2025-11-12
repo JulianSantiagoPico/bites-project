@@ -108,9 +108,7 @@ export const isNearExpiration = (fechaVencimiento) => {
 
   const hoy = new Date();
   const vencimiento = new Date(fechaVencimiento);
-  const diasParaVencer = Math.ceil(
-    (vencimiento - hoy) / (1000 * 60 * 60 * 24)
-  );
+  const diasParaVencer = Math.ceil((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
   return diasParaVencer <= 7 && diasParaVencer > 0;
 };
@@ -127,9 +125,7 @@ export const getExpirationAlert = (fechaVencimiento) => {
 
   const hoy = new Date();
   const vencimiento = new Date(fechaVencimiento);
-  const diasParaVencer = Math.ceil(
-    (vencimiento - hoy) / (1000 * 60 * 60 * 24)
-  );
+  const diasParaVencer = Math.ceil((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
   if (diasParaVencer < 0) {
     return {

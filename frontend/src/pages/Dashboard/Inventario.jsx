@@ -132,7 +132,9 @@ const Inventario = () => {
       <InventarioStats stats={stats} />
 
       {/* Alerts */}
-      {(stats.itemsBajoStock > 0 || stats.itemsCriticos > 0 || stats.itemsAgotados > 0) && (
+      {(stats.itemsBajoStock > 0 ||
+        stats.itemsCriticos > 0 ||
+        stats.itemsAgotados > 0) && (
         <div
           className="rounded-xl p-4 flex items-start gap-3"
           style={{
@@ -157,7 +159,9 @@ const Inventario = () => {
           <div>
             <p className="font-bold text-[#F59E0B]">Alerta de Stock</p>
             <p className="text-sm text-textSecondary">
-              Hay {stats.itemsBajoStock + stats.itemsCriticos + stats.itemsAgotados} productos que requieren reposición
+              Hay{" "}
+              {stats.itemsBajoStock + stats.itemsCriticos + stats.itemsAgotados}{" "}
+              productos que requieren reposición
             </p>
           </div>
         </div>

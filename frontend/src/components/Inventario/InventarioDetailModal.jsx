@@ -165,7 +165,9 @@ const InventarioDetailModal = ({
 
           {item.lote && (
             <div>
-              <p className="text-sm font-medium text-textSecondary mb-1">Lote</p>
+              <p className="text-sm font-medium text-textSecondary mb-1">
+                Lote
+              </p>
               <p className="text-textMain">{item.lote}</p>
             </div>
           )}
@@ -184,7 +186,9 @@ const InventarioDetailModal = ({
               <p className="text-sm font-medium text-textSecondary mb-1">
                 Fecha de Vencimiento
               </p>
-              <p className="text-textMain">{formatDate(item.fechaVencimiento)}</p>
+              <p className="text-textMain">
+                {formatDate(item.fechaVencimiento)}
+              </p>
             </div>
           )}
         </div>

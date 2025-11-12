@@ -21,7 +21,14 @@ const inventarioSchema = new mongoose.Schema(
       type: String,
       required: [true, "La categoría es requerida"],
       enum: {
-        values: ["Carnes", "Vegetales", "Lácteos", "Bebidas", "Especias", "Otros"],
+        values: [
+          "Carnes",
+          "Vegetales",
+          "Lácteos",
+          "Bebidas",
+          "Especias",
+          "Otros",
+        ],
         message: "Categoría no válida",
       },
     },
@@ -118,15 +125,15 @@ inventarioSchema.virtual("estado").get(function () {
   if (this.cantidad === 0) {
     return "Agotado";
   }
-  
+
   const porcentaje = (this.cantidad / this.cantidadMinima) * 100;
-  
+
   if (porcentaje <= 50) {
     return "Crítico";
   } else if (porcentaje <= 100) {
     return "Bajo Stock";
   }
-  
+
   return "Normal";
 });
 
@@ -140,12 +147,12 @@ inventarioSchema.virtual("proximoAVencer").get(function () {
   if (!this.fechaVencimiento) {
     return false;
   }
-  
+
   const hoy = new Date();
   const diasParaVencer = Math.ceil(
     (this.fechaVencimiento - hoy) / (1000 * 60 * 60 * 24)
   );
-  
+
   return diasParaVencer <= 7 && diasParaVencer > 0;
 });
 
@@ -154,7 +161,7 @@ inventarioSchema.virtual("vencido").get(function () {
   if (!this.fechaVencimiento) {
     return false;
   }
-  
+
   return this.fechaVencimiento < new Date();
 });
 
@@ -186,7 +193,7 @@ inventarioSchema.methods.toPublicJSON = function () {
 // Método estático para obtener estadísticas del inventario
 inventarioSchema.statics.getEstadisticas = async function (restauranteId) {
   const items = await this.find({ restauranteId, activo: true });
-  
+
   const stats = {
     totalItems: items.length,
     itemsNormales: 0,
@@ -197,30 +204,30 @@ inventarioSchema.statics.getEstadisticas = async function (restauranteId) {
     itemsProximosAVencer: 0,
     itemsVencidos: 0,
   };
-  
+
   items.forEach((item) => {
     // Calcular valores totales
     stats.valorTotalInventario += item.cantidad * item.precioUnitario;
-    
+
     // Contar estados
     const estado = item.estado;
     if (estado === "Normal") stats.itemsNormales++;
     else if (estado === "Bajo Stock") stats.itemsBajoStock++;
     else if (estado === "Crítico") stats.itemsCriticos++;
     else if (estado === "Agotado") stats.itemsAgotados++;
-    
+
     // Contar vencimientos
     if (item.proximoAVencer) stats.itemsProximosAVencer++;
     if (item.vencido) stats.itemsVencidos++;
   });
-  
+
   return stats;
 };
 
 // Método estático para obtener alertas
 inventarioSchema.statics.getAlertas = async function (restauranteId) {
   const items = await this.find({ restauranteId, activo: true });
-  
+
   const alertas = {
     bajoStock: [],
     criticos: [],
@@ -228,20 +235,20 @@ inventarioSchema.statics.getAlertas = async function (restauranteId) {
     proximosAVencer: [],
     vencidos: [],
   };
-  
+
   items.forEach((item) => {
     const itemData = item.toPublicJSON();
-    
+
     // Alertas de stock
     if (item.estado === "Bajo Stock") alertas.bajoStock.push(itemData);
     else if (item.estado === "Crítico") alertas.criticos.push(itemData);
     else if (item.estado === "Agotado") alertas.agotados.push(itemData);
-    
+
     // Alertas de vencimiento
     if (item.proximoAVencer) alertas.proximosAVencer.push(itemData);
     if (item.vencido) alertas.vencidos.push(itemData);
   });
-  
+
   return alertas;
 };
 

@@ -205,9 +205,10 @@ export const updateItem = async (req, res) => {
     if (precioUnitario !== undefined) item.precioUnitario = precioUnitario;
     if (proveedor !== undefined) item.proveedor = proveedor;
     if (lote !== undefined) item.lote = lote;
-    if (fechaVencimiento !== undefined) item.fechaVencimiento = fechaVencimiento;
+    if (fechaVencimiento !== undefined)
+      item.fechaVencimiento = fechaVencimiento;
     if (activo !== undefined) item.activo = activo;
-    
+
     item.modificadoPor = req.user.id;
 
     await item.save();
@@ -313,7 +314,7 @@ export const adjustStock = async (req, res) => {
       nuevaCantidad = cantidadAnterior + cantidad;
     } else {
       nuevaCantidad = cantidadAnterior - cantidad;
-      
+
       // Validar que no sea negativa
       if (nuevaCantidad < 0) {
         return res.status(400).json({

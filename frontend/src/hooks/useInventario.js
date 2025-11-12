@@ -47,7 +47,10 @@ export const useInventario = () => {
       } else {
         // Crear nuevo item
         await inventarioService.createItem(formData);
-        showNotification("🎉 Item agregado al inventario exitosamente", "success");
+        showNotification(
+          "🎉 Item agregado al inventario exitosamente",
+          "success"
+        );
       }
 
       await loadInventario();
@@ -117,14 +120,17 @@ export const useInventario = () => {
   // Ajustar stock
   const ajustarStock = async (item, ajusteData) => {
     try {
-      const response = await inventarioService.ajustarStock(item.id, ajusteData);
-      
+      const response = await inventarioService.ajustarStock(
+        item.id,
+        ajusteData
+      );
+
       const tipoEmoji = ajusteData.tipo === "entrada" ? "📦" : "📤";
       showNotification(
         `${tipoEmoji} Stock ajustado exitosamente (${ajusteData.tipo})`,
         "success"
       );
-      
+
       await loadInventario();
       return response;
     } catch (err) {

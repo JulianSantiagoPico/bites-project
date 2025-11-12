@@ -352,7 +352,9 @@ const InventarioForm = ({ item, onSubmit, onCancel }) => {
             placeholder="0"
           />
           {errors.cantidadMinima && (
-            <span className="text-xs text-primary">{errors.cantidadMinima}</span>
+            <span className="text-xs text-primary">
+              {errors.cantidadMinima}
+            </span>
           )}
         </div>
 
@@ -373,7 +375,9 @@ const InventarioForm = ({ item, onSubmit, onCancel }) => {
             placeholder="0.00"
           />
           {errors.precioUnitario && (
-            <span className="text-xs text-primary">{errors.precioUnitario}</span>
+            <span className="text-xs text-primary">
+              {errors.precioUnitario}
+            </span>
           )}
         </div>
       </div>

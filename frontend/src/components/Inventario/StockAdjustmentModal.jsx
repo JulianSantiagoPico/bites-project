@@ -106,7 +106,10 @@ const StockAdjustmentModal = ({ isOpen, item, onAdjust, onClose }) => {
           <h4 className="font-semibold text-primary mb-2">{item.nombre}</h4>
           <div className="flex items-center gap-4 text-sm text-textSecondary">
             <span>
-              Stock actual: <strong className="text-primary">{item.cantidad} {item.unidadMedida}</strong>
+              Stock actual:{" "}
+              <strong className="text-primary">
+                {item.cantidad} {item.unidadMedida}
+              </strong>
             </span>
             <span>•</span>
             <span>Categoría: {item.categoria}</span>
@@ -117,7 +120,9 @@ const StockAdjustmentModal = ({ isOpen, item, onAdjust, onClose }) => {
           {/* Error general */}
           {errors.general && (
             <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-              <p className="text-sm font-medium text-red-800">{errors.general}</p>
+              <p className="text-sm font-medium text-red-800">
+                {errors.general}
+              </p>
             </div>
           )}
 
@@ -235,7 +240,8 @@ const StockAdjustmentModal = ({ isOpen, item, onAdjust, onClose }) => {
                   {item.cantidad} {item.unidadMedida}
                 </span>
                 <span className="text-blue-600 font-bold">
-                  {tipo === "entrada" ? "+" : "-"} {cantidad} {item.unidadMedida}
+                  {tipo === "entrada" ? "+" : "-"} {cantidad}{" "}
+                  {item.unidadMedida}
                 </span>
                 <span className="text-blue-600">→</span>
                 <span className="text-blue-800 font-bold">
