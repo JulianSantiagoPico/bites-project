@@ -9,8 +9,10 @@ export const handleValidationErrors = (req, res, next) => {
       success: false,
       message: "Errores de validación",
       errors: errors.array().map((err) => ({
-        field: err.path,
-        message: err.msg,
+        path: err.path,
+        msg: err.msg,
+        field: err.path, // Mantener por compatibilidad
+        message: err.msg, // Mantener por compatibilidad
       })),
     });
   }
@@ -112,8 +114,12 @@ export const validateCreateEmployee = [
   body("telefono")
     .optional()
     .trim()
-    .isMobilePhone("es-CO")
-    .withMessage("Teléfono inválido"),
+    .isLength({ min: 10, max: 15 })
+    .withMessage("El teléfono debe tener entre 10 y 15 dígitos")
+    .matches(/^[0-9+\-\s()]+$/)
+    .withMessage(
+      "El teléfono solo puede contener números, +, -, espacios y paréntesis"
+    ),
 
   handleValidationErrors,
 ];
@@ -135,8 +141,12 @@ export const validateUpdateUser = [
   body("telefono")
     .optional()
     .trim()
-    .isMobilePhone("es-CO")
-    .withMessage("Teléfono inválido"),
+    .isLength({ min: 10, max: 15 })
+    .withMessage("El teléfono debe tener entre 10 y 15 dígitos")
+    .matches(/^[0-9+\-\s()]+$/)
+    .withMessage(
+      "El teléfono solo puede contener números, +, -, espacios y paréntesis"
+    ),
 
   body("rol")
     .optional()
