@@ -10,6 +10,7 @@ import errorHandler from "./src/middlewares/errorHandler.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import restauranteRoutes from "./src/routes/restaurante.routes.js";
+import inventarioRoutes from "./src/routes/inventario.routes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
       auth: "/api/auth",
       users: "/api/users",
       restaurante: "/api/restaurante",
+      inventario: "/api/inventario",
     },
   });
 });
@@ -50,6 +52,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/restaurante", restauranteRoutes);
+app.use("/api/inventario", inventarioRoutes);
 
 // Manejo de rutas no encontradas
 app.use("*", (req, res) => {

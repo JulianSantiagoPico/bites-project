@@ -1,318 +1,103 @@
 import { useState } from "react";
+import InventarioStats from "../../components/Inventario/InventarioStats";
+import InventarioFilters from "../../components/Inventario/InventarioFilters";
+import InventarioTable from "../../components/Inventario/InventarioTable";
+import InventarioModal from "../../components/Inventario/InventarioModal";
+import InventarioDetailModal from "../../components/Inventario/InventarioDetailModal";
+import StockAdjustmentModal from "../../components/Inventario/StockAdjustmentModal";
+import Notification from "../../components/Notification";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import { useInventario } from "../../hooks/useInventario";
 
 const Inventario = () => {
+  // Estados locales del componente (UI)
   const [showModal, setShowModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterCategory, setFilterCategory] = useState("Todo");
+  const [editingItem, setEditingItem] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showAdjustModal, setShowAdjustModal] = useState(false);
+  const [adjustingItem, setAdjustingItem] = useState(null);
 
-  const categories = [
-    "Todo",
-    "Carnes",
-    "Vegetales",
-    "Lácteos",
-    "Bebidas",
-    "Especias",
-    "Otros",
-  ];
+  // Hook personalizado con toda la lógica de inventario
+  const {
+    items,
+    loading,
+    error,
+    searchTerm,
+    filterCategory,
+    notification,
+    confirmDialog,
+    filteredItems,
+    stats,
+    setSearchTerm,
+    setFilterCategory,
+    loadInventario,
+    saveItem,
+    deleteItem,
+    reactivateItem,
+    ajustarStock,
+    closeNotification,
+    closeConfirmDialog,
+  } = useInventario();
 
-  const [inventory] = useState([
-    {
-      id: 1,
-      nombre: "Carne de Res",
-      categoria: "Carnes",
-      cantidad: 25,
-      unidad: "kg",
-      minimo: 10,
-      precio: 8.5,
-      proveedor: "Carnes Premium",
-      estado: "Normal",
-    },
-    {
-      id: 2,
-      nombre: "Pollo",
-      categoria: "Carnes",
-      cantidad: 30,
-      unidad: "kg",
-      minimo: 15,
-      precio: 5.0,
-      proveedor: "Avícola del Valle",
-      estado: "Normal",
-    },
-    {
-      id: 3,
-      nombre: "Lechuga",
-      categoria: "Vegetales",
-      cantidad: 8,
-      unidad: "kg",
-      minimo: 10,
-      precio: 2.0,
-      proveedor: "Verduras Frescas",
-      estado: "Bajo Stock",
-    },
-    {
-      id: 4,
-      nombre: "Tomate",
-      categoria: "Vegetales",
-      cantidad: 15,
-      unidad: "kg",
-      minimo: 8,
-      precio: 2.5,
-      proveedor: "Verduras Frescas",
-      estado: "Normal",
-    },
-    {
-      id: 5,
-      nombre: "Queso Mozzarella",
-      categoria: "Lácteos",
-      cantidad: 12,
-      unidad: "kg",
-      minimo: 5,
-      precio: 7.0,
-      proveedor: "Lácteos La Granja",
-      estado: "Normal",
-    },
-    {
-      id: 6,
-      nombre: "Leche",
-      categoria: "Lácteos",
-      cantidad: 20,
-      unidad: "litros",
-      minimo: 15,
-      precio: 1.2,
-      proveedor: "Lácteos La Granja",
-      estado: "Normal",
-    },
-    {
-      id: 7,
-      nombre: "Coca Cola",
-      categoria: "Bebidas",
-      cantidad: 3,
-      unidad: "cajas",
-      minimo: 5,
-      precio: 24.0,
-      proveedor: "Distribuidora Bebidas",
-      estado: "Bajo Stock",
-    },
-    {
-      id: 8,
-      nombre: "Agua Embotellada",
-      categoria: "Bebidas",
-      cantidad: 15,
-      unidad: "cajas",
-      minimo: 8,
-      precio: 12.0,
-      proveedor: "Distribuidora Bebidas",
-      estado: "Normal",
-    },
-    {
-      id: 9,
-      nombre: "Sal",
-      categoria: "Especias",
-      cantidad: 5,
-      unidad: "kg",
-      minimo: 3,
-      precio: 1.5,
-      proveedor: "Especias del Mundo",
-      estado: "Normal",
-    },
-    {
-      id: 10,
-      nombre: "Pimienta",
-      categoria: "Especias",
-      cantidad: 2,
-      unidad: "kg",
-      minimo: 2,
-      precio: 8.0,
-      proveedor: "Especias del Mundo",
-      estado: "Bajo Stock",
-    },
-    {
-      id: 11,
-      nombre: "Aceite de Oliva",
-      categoria: "Otros",
-      cantidad: 8,
-      unidad: "litros",
-      minimo: 5,
-      precio: 12.0,
-      proveedor: "Importadora Gourmet",
-      estado: "Normal",
-    },
-    {
-      id: 12,
-      nombre: "Harina",
-      categoria: "Otros",
-      cantidad: 1,
-      unidad: "kg",
-      minimo: 10,
-      precio: 1.8,
-      proveedor: "Molino San José",
-      estado: "Crítico",
-    },
-  ]);
-
-  const filteredInventory = inventory.filter((item) => {
-    const matchesSearch = item.nombre
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === "Todo" || item.categoria === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const getStatusColor = (estado) => {
-    const statusColors = {
-      Normal: { bg: "#10B98120", color: "#10B981" },
-      "Bajo Stock": { bg: "#F59E0B20", color: "#F59E0B" },
-      Crítico: { bg: "#EF444420", color: "#EF4444" },
-      Agotado: { bg: "#6B728020", color: "#6B7280" },
-    };
-    return statusColors[estado] || statusColors["Normal"];
+  const handleOpenModal = (item = null) => {
+    setEditingItem(item);
+    setShowModal(true);
   };
 
-  const InventoryModal = () => (
-    <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-      onClick={() => setShowModal(false)}
-    >
-      <div
-        className="rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-        style={{ backgroundColor: "white" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-primary">
-            Agregar al Inventario
-          </h3>
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingItem(null);
+  };
+
+  const handleFormSubmit = async (formData) => {
+    await saveItem(formData, editingItem);
+    handleCloseModal();
+  };
+
+  const handleOpenAdjustModal = (item) => {
+    setAdjustingItem(item);
+    setShowAdjustModal(true);
+  };
+
+  const handleCloseAdjustModal = () => {
+    setShowAdjustModal(false);
+    setAdjustingItem(null);
+  };
+
+  const handleAdjustStock = async (item, ajusteData) => {
+    await ajustarStock(item, ajusteData);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <p className="text-lg font-medium text-textMain">
+            Cargando inventario...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="text-6xl mb-4">❌</div>
+          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
           <button
-            onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
+            onClick={loadInventario}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            Reintentar
           </button>
         </div>
-
-        <form className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Nombre del Producto *
-              </label>
-              <input
-                type="text"
-                placeholder="Ej: Tomate Cherry"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Categoría *
-              </label>
-              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
-                {categories
-                  .filter((c) => c !== "Todo")
-                  .map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Proveedor
-              </label>
-              <input
-                type="text"
-                placeholder="Nombre del proveedor"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Cantidad *
-              </label>
-              <input
-                type="number"
-                placeholder="0"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Unidad de Medida *
-              </label>
-              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
-                <option value="kg">Kilogramos (kg)</option>
-                <option value="litros">Litros</option>
-                <option value="unidades">Unidades</option>
-                <option value="cajas">Cajas</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Stock Mínimo *
-              </label>
-              <input
-                type="number"
-                placeholder="0"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Precio Unitario ($) *
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-4">
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-            >
-              Agregar Item
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -323,7 +108,7 @@ const Inventario = () => {
           <p className="text-textSecondary">Control de stock y suministros</p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => handleOpenModal()}
           className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
           <svg
@@ -344,39 +129,10 @@ const Inventario = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl p-6 shadow-md bg-white">
-          <p className="text-sm mb-1 text-textSecondary">Total Items</p>
-          <p className="text-3xl font-bold text-primary">{inventory.length}</p>
-        </div>
-        <div className="rounded-xl p-6 shadow-md bg-white">
-          <p className="text-sm mb-1 text-textSecondary">Stock Normal</p>
-          <p className="text-3xl font-bold text-[#10B981]">
-            {inventory.filter((i) => i.estado === "Normal").length}
-          </p>
-        </div>
-        <div className="rounded-xl p-6 shadow-md bg-white">
-          <p className="text-sm mb-1 text-textSecondary">Bajo Stock</p>
-          <p className="text-3xl font-bold text-[#F59E0B]">
-            {inventory.filter((i) => i.estado === "Bajo Stock").length}
-          </p>
-        </div>
-        <div className="rounded-xl p-6 shadow-md bg-white">
-          <p className="text-sm mb-1 text-textSecondary">Crítico/Agotado</p>
-          <p className="text-3xl font-bold text-[#EF4444]">
-            {
-              inventory.filter(
-                (i) => i.estado === "Crítico" || i.estado === "Agotado"
-              ).length
-            }
-          </p>
-        </div>
-      </div>
+      <InventarioStats stats={stats} />
 
       {/* Alerts */}
-      {inventory.filter(
-        (i) => i.estado === "Crítico" || i.estado === "Bajo Stock"
-      ).length > 0 && (
+      {(stats.itemsBajoStock > 0 || stats.itemsCriticos > 0 || stats.itemsAgotados > 0) && (
         <div
           className="rounded-xl p-4 flex items-start gap-3"
           style={{
@@ -401,209 +157,81 @@ const Inventario = () => {
           <div>
             <p className="font-bold text-[#F59E0B]">Alerta de Stock</p>
             <p className="text-sm text-textSecondary">
-              Hay{" "}
-              {
-                inventory.filter(
-                  (i) => i.estado === "Crítico" || i.estado === "Bajo Stock"
-                ).length
-              }{" "}
-              productos que requieren reposición
+              Hay {stats.itemsBajoStock + stats.itemsCriticos + stats.itemsAgotados} productos que requieren reposición
             </p>
           </div>
         </div>
       )}
 
       {/* Filters */}
-      <div
-        className="rounded-xl p-6 shadow-md"
-        style={{ backgroundColor: "white" }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2 text-text">
-              Buscar Producto
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Buscar por nombre..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-              <svg
-                className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-          </div>
+      <InventarioFilters
+        searchTerm={searchTerm}
+        filterCategory={filterCategory}
+        onSearchChange={setSearchTerm}
+        onCategoryChange={setFilterCategory}
+      />
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-textMain">
-              Filtrar por Categoría
-            </label>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
+      {/* Tabla de items */}
+      <InventarioTable
+        items={filteredItems}
+        onEdit={handleOpenModal}
+        onDelete={deleteItem}
+        onReactivate={reactivateItem}
+        onAdjustStock={handleOpenAdjustModal}
+        onViewDetails={(item) => {
+          setSelectedItem(item);
+          setShowDetailModal(true);
+        }}
+      />
 
-      {/* Inventory Table */}
-      <div
-        className="rounded-xl shadow-md overflow-hidden"
-        style={{ backgroundColor: "white" }}
-      >
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-primary">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Producto
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Categoría
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Cantidad
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Mínimo
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Precio
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Proveedor
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Estado
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredInventory.map((item, index) => {
-                const statusColor = getStatusColor(item.estado);
-                const percentage = (item.cantidad / item.minimo) * 100;
-                return (
-                  <tr
-                    key={item.id}
-                    style={{
-                      backgroundColor: index % 2 === 0 ? "white" : "#faf3e0",
-                      borderBottom: `1px solid #35524a20`,
-                    }}
-                  >
-                    <td className="px-6 py-4 font-medium text-primary">
-                      {item.nombre}
-                    </td>
-                    <td className="px-6 py-4 text-textMain">
-                      {item.categoria}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-semibold text-primary">
-                          {item.cantidad} {item.unidad}
-                        </p>
-                        <div className="w-24 h-2 rounded-full mt-1 overflow-hidden bg-background">
-                          <div
-                            className="h-full transition-all duration-300"
-                            style={{
-                              backgroundColor: statusColor.color,
-                              width: `${Math.min(percentage, 100)}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-textSecondary">
-                      {item.minimo} {item.unidad}
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-accent">
-                      ${item.precio.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-textMain">
-                      {item.proveedor}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className="px-3 py-1 rounded-full text-xs font-medium"
-                        style={{
-                          backgroundColor: statusColor.bg,
-                          color: statusColor.color,
-                        }}
-                      >
-                        {item.estado}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          className="p-2 rounded-lg hover:bg-green-50 transition-colors text-green-500"
-                          title="Agregar Stock"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 4v16m8-8H4"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-blue-500"
-                          title="Editar"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Modales */}
+      <InventarioModal
+        isOpen={showModal}
+        item={editingItem}
+        onSubmit={handleFormSubmit}
+        onClose={handleCloseModal}
+      />
 
-      {showModal && <InventoryModal />}
+      <InventarioDetailModal
+        isOpen={showDetailModal}
+        item={selectedItem}
+        onClose={() => setShowDetailModal(false)}
+        onEdit={handleOpenModal}
+        onDelete={deleteItem}
+        onReactivate={reactivateItem}
+        onAdjustStock={handleOpenAdjustModal}
+      />
+
+      <StockAdjustmentModal
+        isOpen={showAdjustModal}
+        item={adjustingItem}
+        onAdjust={handleAdjustStock}
+        onClose={handleCloseAdjustModal}
+      />
+
+      {/* Notificaciones Toast */}
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+          duration={3000}
+        />
+      )}
+
+      {/* Dialog de Confirmación */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        type={confirmDialog.type}
+        confirmText={
+          confirmDialog.type === "danger" ? "Desactivar" : "Reactivar"
+        }
+        cancelText="Cancelar"
+      />
     </div>
   );
 };
