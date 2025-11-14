@@ -5,7 +5,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         BITES ERP SYSTEM                        │
-│                  Sistema de Gestión para Restaurantes            │
+│                  Sistema de Gestión para Restaurantes           │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────┐          ┌──────────────────────────┐
@@ -279,7 +279,7 @@
    └─────────┘
 
 ┌────────────────────────────────────────────────────────────┐
-│                   PERMISSIONS MATRIX                        │
+│                   PERMISSIONS MATRIX                       │
 └────────────────────────────────────────────────────────────┘
 
 Módulo        │ Admin │ Mesero │ Cocinero │ Cajero │ Host
@@ -306,14 +306,14 @@ D = Delete (Eliminar)
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                      USERS Collection                     │
+│                      USERS Collection                    │
 ├──────────────────────────────────────────────────────────┤
 │  _id: ObjectId                                           │
 │  nombre: String                                          │
 │  apellido: String                                        │
 │  email: String (unique per restaurant)                   │
 │  password: String (hashed)                               │
-│  rol: String [admin, mesero, cocinero, cajero, host]    │
+│  rol: String [admin, mesero, cocinero, cajero, host]     │
 │  restauranteId: ObjectId → Restaurante                   │
 │  telefono: String                                        │
 │  foto: String (URL)                                      │
@@ -327,7 +327,7 @@ D = Delete (Eliminar)
                             │ N:1
                             ▼
 ┌──────────────────────────────────────────────────────────┐
-│                 RESTAURANTES Collection                   │
+│                 RESTAURANTES Collection                  │
 ├──────────────────────────────────────────────────────────┤
 │  _id: ObjectId                                           │
 │  nombre: String                                          │
@@ -335,7 +335,7 @@ D = Delete (Eliminar)
 │  telefono: String                                        │
 │  email: String                                           │
 │  direccion: Object {                                     │
-│    calle, ciudad, estado, codigoPostal, pais            │
+│    calle, ciudad, estado, codigoPostal, pais             │
 │  }                                                       │
 │  logo: String (URL)                                      │
 │  moneda: String                                          │
@@ -363,7 +363,7 @@ PRÓXIMAS COLECCIONES:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                    CAPAS DE SEGURIDAD                     │
+│                    CAPAS DE SEGURIDAD                    │
 └──────────────────────────────────────────────────────────┘
 
 1. FRONTEND
@@ -454,7 +454,7 @@ PRÓXIMAS COLECCIONES:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              ARQUITECTURA FUTURA (v2.0)                  │
+│              ARQUITECTURA FUTURA (v2.0)                 │
 └─────────────────────────────────────────────────────────┘
 
 ┌──────────────┐         ┌──────────────┐

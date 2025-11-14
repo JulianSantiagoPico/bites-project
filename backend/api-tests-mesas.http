@@ -1,0 +1,291 @@
+### Variables
+@baseUrl = http://localhost:5000/api
+@token = YOUR_TOKEN_HERE
+@mesaId = YOUR_MESA_ID_HERE
+@meseroId = YOUR_MESERO_ID_HERE
+
+### 1. Login como Admin (obtener token)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+### 2. Crear Mesa - Interior
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 1,
+  "capacidad": 4,
+  "ubicacion": "Interior",
+  "notas": "Mesa cerca de la ventana"
+}
+
+### 3. Crear Mesa - Terraza
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 5,
+  "capacidad": 6,
+  "ubicacion": "Terraza",
+  "estado": "disponible"
+}
+
+### 4. Crear Mesa - Bar
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 10,
+  "capacidad": 2,
+  "ubicacion": "Bar"
+}
+
+### 5. Crear Mesa - VIP
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 20,
+  "capacidad": 8,
+  "ubicacion": "VIP",
+  "notas": "Mesa privada con vista especial"
+}
+
+### 6. Obtener todas las mesas
+GET {{baseUrl}}/mesas
+Authorization: Bearer {{token}}
+
+### 7. Obtener mesas filtradas por ubicación
+GET {{baseUrl}}/mesas?ubicacion=Terraza
+Authorization: Bearer {{token}}
+
+### 8. Obtener mesas filtradas por estado
+GET {{baseUrl}}/mesas?estado=disponible
+Authorization: Bearer {{token}}
+
+### 9. Obtener mesa por ID
+GET {{baseUrl}}/mesas/{{mesaId}}
+Authorization: Bearer {{token}}
+
+### 10. Actualizar mesa
+PUT {{baseUrl}}/mesas/{{mesaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "capacidad": 5,
+  "notas": "Mesa renovada con sillas nuevas"
+}
+
+### 11. Cambiar estado a ocupada
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "ocupada"
+}
+
+### 12. Cambiar estado a en limpieza
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "en_limpieza"
+}
+
+### 13. Cambiar estado a disponible
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "disponible"
+}
+
+### 14. Cambiar estado a reservada
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "reservada"
+}
+
+### 15. Asignar mesero a mesa
+PATCH {{baseUrl}}/mesas/{{mesaId}}/asignar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "meseroId": "{{meseroId}}"
+}
+
+### 16. Desasignar mesero de mesa
+PATCH {{baseUrl}}/mesas/{{mesaId}}/asignar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "meseroId": null
+}
+
+### 17. Obtener estadísticas de mesas
+GET {{baseUrl}}/mesas/estadisticas
+Authorization: Bearer {{token}}
+
+### 18. Obtener mesas disponibles
+GET {{baseUrl}}/mesas/disponibles
+Authorization: Bearer {{token}}
+
+### 19. Obtener mesas disponibles con capacidad mínima
+GET {{baseUrl}}/mesas/disponibles?capacidadMinima=4
+Authorization: Bearer {{token}}
+
+### 20. Eliminar mesa (soft delete)
+DELETE {{baseUrl}}/mesas/{{mesaId}}
+Authorization: Bearer {{token}}
+
+### 21. Verificar mesa eliminada
+GET {{baseUrl}}/mesas?activo=false
+Authorization: Bearer {{token}}
+
+### ===== TESTS DE VALIDACIÓN =====
+
+### 22. ERROR: Crear mesa sin número
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "capacidad": 4,
+  "ubicacion": "Interior"
+}
+
+### 23. ERROR: Crear mesa con capacidad inválida
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 100,
+  "capacidad": 25,
+  "ubicacion": "Interior"
+}
+
+### 24. ERROR: Crear mesa con ubicación inválida
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 101,
+  "capacidad": 4,
+  "ubicacion": "Jardín"
+}
+
+### 25. ERROR: Crear mesa con número duplicado
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 1,
+  "capacidad": 4,
+  "ubicacion": "Interior"
+}
+
+### 26. ERROR: Cambiar a estado inválido
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "cerrada"
+}
+
+### 27. ERROR: Transición de estado no permitida (de ocupada a reservada)
+# Primero cambiar a ocupada
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "ocupada"
+}
+
+# Luego intentar cambiar a reservada (no permitido)
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "reservada"
+}
+
+### 28. ERROR: Asignar mesero inválido
+PATCH {{baseUrl}}/mesas/{{mesaId}}/asignar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "meseroId": "invalid_id_format"
+}
+
+### ===== TESTS DE PERMISOS (requiere token de diferentes roles) =====
+
+### 29. Como Mesero: Ver mesas (permitido)
+GET {{baseUrl}}/mesas
+Authorization: Bearer {{token}}
+
+### 30. Como Mesero: Cambiar estado (permitido)
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "disponible"
+}
+
+### 31. Como Mesero: Crear mesa (NO permitido)
+POST {{baseUrl}}/mesas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numero": 200,
+  "capacidad": 4,
+  "ubicacion": "Interior"
+}
+
+### 32. Como Host: Asignar mesero (permitido)
+PATCH {{baseUrl}}/mesas/{{mesaId}}/asignar
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "meseroId": "{{meseroId}}"
+}
+
+### 33. Como Cocinero: Ver mesas (permitido)
+GET {{baseUrl}}/mesas
+Authorization: Bearer {{token}}
+
+### 34. Como Cocinero: Cambiar estado (NO permitido)
+PATCH {{baseUrl}}/mesas/{{mesaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "disponible"
+}

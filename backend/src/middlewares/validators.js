@@ -302,3 +302,81 @@ export const validateStockAdjustment = [
 
   handleValidationErrors,
 ];
+
+// Validaciones para crear mesa
+export const validateCreateMesa = [
+  body("numero")
+    .notEmpty()
+    .withMessage("El número de mesa es requerido")
+    .isInt({ min: 1 })
+    .withMessage("El número de mesa debe ser un entero mayor a 0"),
+
+  body("capacidad")
+    .notEmpty()
+    .withMessage("La capacidad es requerida")
+    .isInt({ min: 1, max: 20 })
+    .withMessage("La capacidad debe estar entre 1 y 20 personas"),
+
+  body("ubicacion")
+    .notEmpty()
+    .withMessage("La ubicación es requerida")
+    .isIn(["Interior", "Terraza", "Bar", "VIP"])
+    .withMessage("Ubicación no válida"),
+
+  body("estado")
+    .optional()
+    .isIn(["disponible", "ocupada", "reservada", "en_limpieza"])
+    .withMessage("Estado no válido"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para actualizar mesa
+export const validateUpdateMesa = [
+  body("numero")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("El número de mesa debe ser un entero mayor a 0"),
+
+  body("capacidad")
+    .optional()
+    .isInt({ min: 1, max: 20 })
+    .withMessage("La capacidad debe estar entre 1 y 20 personas"),
+
+  body("ubicacion")
+    .optional()
+    .isIn(["Interior", "Terraza", "Bar", "VIP"])
+    .withMessage("Ubicación no válida"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para cambiar estado de mesa
+export const validateChangeEstado = [
+  body("estado")
+    .notEmpty()
+    .withMessage("El estado es requerido")
+    .isIn(["disponible", "ocupada", "reservada", "en_limpieza"])
+    .withMessage("Estado no válido"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para asignar mesero
+export const validateAsignarMesero = [
+  body("meseroId").optional().isMongoId().withMessage("ID de mesero inválido"),
+
+  handleValidationErrors,
+];

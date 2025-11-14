@@ -182,7 +182,7 @@ const Inventario = () => {
         onDelete={deleteItem}
         onReactivate={reactivateItem}
         onAdjustStock={handleOpenAdjustModal}
-        onViewDetails={(item) => {
+        onViewDetail={(item) => {
           setSelectedItem(item);
           setShowDetailModal(true);
         }}
