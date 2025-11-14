@@ -380,3 +380,153 @@ export const validateAsignarMesero = [
 
   handleValidationErrors,
 ];
+
+// ==================== VALIDACIONES PARA RESERVAS ====================
+
+// Validaciones para crear reserva
+export const validateCreateReserva = [
+  body("nombreCliente")
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre del cliente es requerido")
+    .isLength({ max: 100 })
+    .withMessage("El nombre no puede exceder 100 caracteres"),
+
+  body("telefonoCliente")
+    .trim()
+    .notEmpty()
+    .withMessage("El teléfono del cliente es requerido")
+    .matches(
+      /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/
+    )
+    .withMessage("Formato de teléfono inválido"),
+
+  body("emailCliente")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isEmail()
+    .withMessage("Email inválido")
+    .normalizeEmail(),
+
+  body("fecha")
+    .notEmpty()
+    .withMessage("La fecha es requerida")
+    .isISO8601()
+    .withMessage("Formato de fecha inválido"),
+
+  body("hora")
+    .notEmpty()
+    .withMessage("La hora es requerida")
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .withMessage("Formato de hora inválido (HH:MM)"),
+
+  body("numeroPersonas")
+    .notEmpty()
+    .withMessage("El número de personas es requerido")
+    .isInt({ min: 1, max: 30 })
+    .withMessage("El número de personas debe estar entre 1 y 30"),
+
+  body("mesaAsignada")
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage("ID de mesa inválido"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  body("ocasion")
+    .optional()
+    .isIn(["ninguna", "cumpleaños", "aniversario", "cita", "negocio", "otro"])
+    .withMessage("Ocasión no válida"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para actualizar reserva
+export const validateUpdateReserva = [
+  body("nombreCliente")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre del cliente no puede estar vacío")
+    .isLength({ max: 100 })
+    .withMessage("El nombre no puede exceder 100 caracteres"),
+
+  body("telefonoCliente")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El teléfono no puede estar vacío")
+    .matches(
+      /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/
+    )
+    .withMessage("Formato de teléfono inválido"),
+
+  body("emailCliente")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isEmail()
+    .withMessage("Email inválido")
+    .normalizeEmail(),
+
+  body("fecha").optional().isISO8601().withMessage("Formato de fecha inválido"),
+
+  body("hora")
+    .optional()
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+    .withMessage("Formato de hora inválido (HH:MM)"),
+
+  body("numeroPersonas")
+    .optional()
+    .isInt({ min: 1, max: 30 })
+    .withMessage("El número de personas debe estar entre 1 y 30"),
+
+  body("mesaAsignada")
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage("ID de mesa inválido"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  body("ocasion")
+    .optional()
+    .isIn(["ninguna", "cumpleaños", "aniversario", "cita", "negocio", "otro"])
+    .withMessage("Ocasión no válida"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para cambiar estado de reserva
+export const validateChangeEstadoReserva = [
+  body("estado")
+    .notEmpty()
+    .withMessage("El estado es requerido")
+    .isIn([
+      "pendiente",
+      "confirmada",
+      "sentada",
+      "completada",
+      "cancelada",
+      "no_show",
+    ])
+    .withMessage("Estado no válido"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para asignar mesa a reserva
+export const validateAsignarMesaReserva = [
+  body("mesaId")
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage("ID de mesa inválido"),
+
+  handleValidationErrors,
+];

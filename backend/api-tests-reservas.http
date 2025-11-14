@@ -1,0 +1,358 @@
+### Variables
+@baseURL = http://localhost:5000/api
+@token = {{login.response.body.token}}
+@restauranteId = 
+@reservaId = 
+
+### ============================================
+### AUTENTICACIÓN
+### ============================================
+
+### Login como Admin
+# @name login
+POST {{baseURL}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@restaurante.com",
+  "password": "Admin123"
+}
+
+### ============================================
+### CREAR RESERVAS
+### ============================================
+
+### Crear reserva con mesa asignada
+# @name crearReservaConMesa
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Juan Pérez",
+  "telefonoCliente": "+1-555-0101",
+  "emailCliente": "juan.perez@email.com",
+  "fecha": "2025-11-20",
+  "hora": "19:00",
+  "numeroPersonas": 4,
+  "mesaAsignada": "673a8c1234567890abcdef01",
+  "notas": "Celebración de aniversario. Por favor mesa cerca de la ventana",
+  "ocasion": "aniversario"
+}
+
+### Crear reserva sin mesa asignada
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "María García",
+  "telefonoCliente": "555-0102",
+  "emailCliente": "maria.garcia@email.com",
+  "fecha": "2025-11-21",
+  "hora": "20:30",
+  "numeroPersonas": 2,
+  "notas": "Primera visita",
+  "ocasion": "cita"
+}
+
+### Crear reserva para cumpleaños
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Carlos Rodríguez",
+  "telefonoCliente": "+1-555-0103",
+  "emailCliente": "carlos.r@email.com",
+  "fecha": "2025-11-22",
+  "hora": "21:00",
+  "numeroPersonas": 8,
+  "notas": "Cumpleaños sorpresa. Necesitamos pastel al final",
+  "ocasion": "cumpleaños"
+}
+
+### Crear reserva de negocio
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Ana Martínez",
+  "telefonoCliente": "555-0104",
+  "fecha": "2025-11-23",
+  "hora": "13:00",
+  "numeroPersonas": 6,
+  "ocasion": "negocio",
+  "notas": "Reunión de negocios. Ambiente tranquilo preferido"
+}
+
+### ============================================
+### OBTENER RESERVAS
+### ============================================
+
+### Obtener todas las reservas
+GET {{baseURL}}/reservas
+Authorization: Bearer {{token}}
+
+### Obtener reservas por fecha específica
+GET {{baseURL}}/reservas?fecha=2025-11-20
+Authorization: Bearer {{token}}
+
+### Obtener reservas por estado
+GET {{baseURL}}/reservas?estado=confirmada
+Authorization: Bearer {{token}}
+
+### Obtener reservas pendientes
+GET {{baseURL}}/reservas?estado=pendiente
+Authorization: Bearer {{token}}
+
+### Obtener una reserva por ID
+GET {{baseURL}}/reservas/{{reservaId}}
+Authorization: Bearer {{token}}
+
+### ============================================
+### ACTUALIZAR RESERVAS
+### ============================================
+
+### Actualizar información de reserva
+PUT {{baseURL}}/reservas/{{reservaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Juan Pérez López",
+  "telefonoCliente": "+1-555-9999",
+  "numeroPersonas": 5,
+  "notas": "Actualizado: Ahora seremos 5 personas"
+}
+
+### Cambiar fecha y hora de reserva
+PUT {{baseURL}}/reservas/{{reservaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fecha": "2025-11-25",
+  "hora": "20:00"
+}
+
+### Actualizar mesa asignada
+PUT {{baseURL}}/reservas/{{reservaId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "mesaAsignada": "673a8c1234567890abcdef02"
+}
+
+### ============================================
+### CAMBIAR ESTADO DE RESERVA
+### ============================================
+
+### Confirmar reserva (pendiente -> confirmada)
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "confirmada"
+}
+
+### Sentar clientes (confirmada -> sentada)
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "sentada"
+}
+
+### Completar reserva (sentada -> completada)
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "completada"
+}
+
+### Cancelar reserva
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "cancelada"
+}
+
+### Marcar como No Show
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "no_show"
+}
+
+### ============================================
+### ASIGNAR/DESASIGNAR MESA
+### ============================================
+
+### Asignar mesa a reserva
+PATCH {{baseURL}}/reservas/{{reservaId}}/asignar-mesa
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "mesaId": "673a8c1234567890abcdef01"
+}
+
+### Desasignar mesa de reserva
+PATCH {{baseURL}}/reservas/{{reservaId}}/asignar-mesa
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "mesaId": null
+}
+
+### ============================================
+### ESTADÍSTICAS
+### ============================================
+
+### Obtener estadísticas de reservas
+GET {{baseURL}}/reservas/estadisticas
+Authorization: Bearer {{token}}
+
+### ============================================
+### ELIMINAR RESERVA
+### ============================================
+
+### Eliminar reserva (soft delete)
+DELETE {{baseURL}}/reservas/{{reservaId}}
+Authorization: Bearer {{token}}
+
+### ============================================
+### VALIDACIONES Y ERRORES
+### ============================================
+
+### Error: Crear reserva sin nombre (400)
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "telefonoCliente": "555-0101",
+  "fecha": "2025-11-20",
+  "hora": "19:00",
+  "numeroPersonas": 4
+}
+
+### Error: Crear reserva con email inválido (400)
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Test User",
+  "telefonoCliente": "555-0101",
+  "emailCliente": "email-invalido",
+  "fecha": "2025-11-20",
+  "hora": "19:00",
+  "numeroPersonas": 4
+}
+
+### Error: Crear reserva con hora inválida (400)
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Test User",
+  "telefonoCliente": "555-0101",
+  "fecha": "2025-11-20",
+  "hora": "25:00",
+  "numeroPersonas": 4
+}
+
+### Error: Crear reserva con número de personas inválido (400)
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Test User",
+  "telefonoCliente": "555-0101",
+  "fecha": "2025-11-20",
+  "hora": "19:00",
+  "numeroPersonas": 0
+}
+
+### Error: Crear reserva con ocasión inválida (400)
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Test User",
+  "telefonoCliente": "555-0101",
+  "fecha": "2025-11-20",
+  "hora": "19:00",
+  "numeroPersonas": 4,
+  "ocasion": "graduacion"
+}
+
+### Error: Cambiar a estado inválido (400)
+PATCH {{baseURL}}/reservas/{{reservaId}}/estado
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "estado": "estado-invalido"
+}
+
+### Error: Obtener reserva inexistente (404)
+GET {{baseURL}}/reservas/000000000000000000000000
+Authorization: Bearer {{token}}
+
+### Error: Actualizar reserva inexistente (404)
+PUT {{baseURL}}/reservas/000000000000000000000000
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "numeroPersonas": 5
+}
+
+### ============================================
+### CASOS DE USO COMPLETOS
+### ============================================
+
+### Flujo completo: Crear y confirmar reserva
+# 1. Crear reserva
+POST {{baseURL}}/reservas
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombreCliente": "Roberto Gómez",
+  "telefonoCliente": "+1-555-0150",
+  "emailCliente": "roberto.gomez@email.com",
+  "fecha": "2025-11-24",
+  "hora": "19:30",
+  "numeroPersonas": 3,
+  "ocasion": "ninguna"
+}
+
+# 2. Confirmar la reserva creada
+# PATCH {{baseURL}}/reservas/{{reservaId}}/estado con estado: "confirmada"
+
+# 3. Asignar mesa
+# PATCH {{baseURL}}/reservas/{{reservaId}}/asignar-mesa con mesaId
+
+# 4. Sentar clientes
+# PATCH {{baseURL}}/reservas/{{reservaId}}/estado con estado: "sentada"
+
+# 5. Completar reserva
+# PATCH {{baseURL}}/reservas/{{reservaId}}/estado con estado: "completada"

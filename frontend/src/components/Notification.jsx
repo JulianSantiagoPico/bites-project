@@ -91,7 +91,7 @@ const Notification = ({
   const icon = getIcon();
 
   return (
-    <div className="fixed top-4 right-4 z-100 animate-slide-in-right">
+    <div className="fixed top-4 right-4 z-999 animate-slide-in-right">
       <div
         className={`flex items-start gap-3 p-4 rounded-lg border shadow-lg min-w-[320px] max-w-md ${styles.bg} ${styles.border}`}
       >

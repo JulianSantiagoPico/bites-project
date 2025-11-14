@@ -12,6 +12,7 @@ import userRoutes from "./src/routes/user.routes.js";
 import restauranteRoutes from "./src/routes/restaurante.routes.js";
 import inventarioRoutes from "./src/routes/inventario.routes.js";
 import mesaRoutes from "./src/routes/mesa.routes.js";
+import reservaRoutes from "./src/routes/reserva.routes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -46,6 +47,7 @@ app.get("/", (req, res) => {
       restaurante: "/api/restaurante",
       inventario: "/api/inventario",
       mesas: "/api/mesas",
+      reservas: "/api/reservas",
     },
   });
 });
@@ -56,6 +58,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/restaurante", restauranteRoutes);
 app.use("/api/inventario", inventarioRoutes);
 app.use("/api/mesas", mesaRoutes);
+app.use("/api/reservas", reservaRoutes);
 
 // Manejo de rutas no encontradas
 app.use("*", (req, res) => {
