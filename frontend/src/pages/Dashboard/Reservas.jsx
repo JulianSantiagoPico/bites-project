@@ -1,238 +1,126 @@
 import { useState } from "react";
+import ReservasStats from "../../components/Reservas/ReservasStats";
+import ReservasFilters from "../../components/Reservas/ReservasFilters";
+import ReservasTable from "../../components/Reservas/ReservasTable";
+import ReservaModal from "../../components/Reservas/ReservaModal";
+import ReservaDetailModal from "../../components/Reservas/ReservaDetailModal";
+import AsignarMesaModal from "../../components/Reservas/AsignarMesaModal";
+import Notification from "../../components/Notification";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import { useReservas } from "../../hooks/useReservas";
 
 const Reservas = () => {
+  // Estados locales del componente (UI)
   const [showModal, setShowModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("Todas");
+  const [editingReserva, setEditingReserva] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedReserva, setSelectedReserva] = useState(null);
+  const [showAsignarModal, setShowAsignarModal] = useState(false);
+  const [asigningReserva, setAsigningReserva] = useState(null);
 
-  const [reservations, setReservations] = useState([
-    {
-      id: "RES-001",
-      cliente: "Juan Pérez",
-      telefono: "555-0101",
-      email: "juan@email.com",
-      fecha: "2025-11-09",
-      hora: "19:00",
-      personas: 4,
-      mesa: "Mesa 7",
-      estado: "Confirmada",
-      notas: "Celebración de aniversario",
-    },
-    {
-      id: "RES-002",
-      cliente: "María García",
-      telefono: "555-0102",
-      email: "maria@email.com",
-      fecha: "2025-11-09",
-      hora: "20:30",
-      personas: 2,
-      mesa: "Mesa 15",
-      estado: "Confirmada",
-      notas: "",
-    },
-    {
-      id: "RES-003",
-      cliente: "Carlos López",
-      telefono: "555-0103",
-      email: "carlos@email.com",
-      fecha: "2025-11-10",
-      hora: "18:00",
-      personas: 6,
-      mesa: "Mesa 10",
-      estado: "Pendiente",
-      notas: "Cena de negocios",
-    },
-    {
-      id: "RES-004",
-      cliente: "Ana Martínez",
-      telefono: "555-0104",
-      email: "ana@email.com",
-      fecha: "2025-11-10",
-      hora: "21:00",
-      personas: 8,
-      mesa: "Mesa 18",
-      estado: "Confirmada",
-      notas: "Cumpleaños, necesitan decoración",
-    },
-    {
-      id: "RES-005",
-      cliente: "Pedro Sánchez",
-      telefono: "555-0105",
-      email: "pedro@email.com",
-      fecha: "2025-11-11",
-      hora: "19:30",
-      personas: 4,
-      mesa: "Pendiente",
-      estado: "Pendiente",
-      notas: "",
-    },
-  ]);
+  // Hook personalizado con toda la lógica de reservas
+  const {
+    reservas,
+    loading,
+    error,
+    searchTerm,
+    filterEstado,
+    filterFecha,
+    notification,
+    confirmDialog,
+    filteredReservas,
+    stats,
+    setSearchTerm,
+    setFilterEstado,
+    setFilterFecha,
+    loadReservas,
+    saveReserva,
+    deleteReserva,
+    changeEstado,
+    asignarMesa,
+    closeNotification,
+    closeConfirmDialog,
+  } = useReservas();
 
-  const getStatusColor = (estado) => {
-    const statusColors = {
-      Confirmada: { bg: "#10B98120", color: "#10B981" },
-      Pendiente: { bg: "#F59E0B20", color: "#F59E0B" },
-      Cancelada: { bg: "#EF444420", color: "#EF4444" },
-      Completada: { bg: "#6B728020", color: "#6B7280" },
-    };
-    return statusColors[estado] || statusColors["Pendiente"];
+  const handleOpenModal = (reserva = null) => {
+    setEditingReserva(reserva);
+    setShowModal(true);
   };
 
-  const updateReservationStatus = (id, newStatus) => {
-    setReservations(
-      reservations.map((res) =>
-        res.id === id ? { ...res, estado: newStatus } : res
-      )
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingReserva(null);
+  };
+
+  const handleFormSubmit = async (formData) => {
+    const success = await saveReserva(formData, editingReserva);
+    if (success) {
+      handleCloseModal();
+    }
+  };
+
+  const handleViewDetail = (reserva) => {
+    setSelectedReserva(reserva);
+    setShowDetailModal(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setShowDetailModal(false);
+    setSelectedReserva(null);
+  };
+
+  const handleChangeEstado = async (reserva, nuevoEstado) => {
+    await changeEstado(reserva, nuevoEstado);
+    // Cerrar el modal de detalles después de cambiar el estado
+    handleCloseDetailModal();
+  };
+
+  const handleOpenAsignarModal = (reserva) => {
+    setAsigningReserva(reserva);
+    setShowAsignarModal(true);
+  };
+
+  const handleCloseAsignarModal = () => {
+    setShowAsignarModal(false);
+    setAsigningReserva(null);
+  };
+
+  const handleAsignarMesa = async (reserva, mesaId) => {
+    const success = await asignarMesa(reserva, mesaId);
+    if (success) {
+      handleCloseAsignarModal();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <p className="text-lg font-medium text-textMain">
+            Cargando reservas...
+          </p>
+        </div>
+      </div>
     );
-  };
+  }
 
-  const ReservationModal = () => (
-    <div
-      className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-      onClick={() => setShowModal(false)}
-    >
-      <div
-        className="rounded-xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
-        style={{ backgroundColor: "white" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-primary">Nueva Reserva</h3>
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="text-6xl mb-4">❌</div>
+          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
           <button
-            onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
+            onClick={loadReservas}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            Reintentar
           </button>
         </div>
-
-        <form className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Nombre del Cliente *
-              </label>
-              <input
-                type="text"
-                placeholder="Nombre completo"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Teléfono *
-              </label>
-              <input
-                type="tel"
-                placeholder="555-0000"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="cliente@email.com"
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Fecha *
-              </label>
-              <input
-                type="date"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Hora *
-              </label>
-              <input
-                type="time"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Número de Personas *
-              </label>
-              <input
-                type="number"
-                min="1"
-                placeholder="0"
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Mesa Asignada
-              </label>
-              <select className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background">
-                <option value="">Asignar después...</option>
-                <option value="Mesa 1">Mesa 1 (4 personas)</option>
-                <option value="Mesa 2">Mesa 2 (2 personas)</option>
-                <option value="Mesa 7">Mesa 7 (8 personas)</option>
-              </select>
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2 text-textMain">
-                Notas / Solicitudes Especiales
-              </label>
-              <textarea
-                rows="3"
-                placeholder="Alergias, preferencias de asiento, ocasión especial..."
-                className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 py-3 rounded-lg font-medium border-2 hover:bg-gray-50 transition-colors border-secondary/40 text-textMain"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-            >
-              Crear Reserva
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -241,11 +129,11 @@ const Reservas = () => {
         <div>
           <h2 className="text-3xl font-bold text-primary">Reservas</h2>
           <p className="text-textSecondary">
-            Gestiona las reservaciones del restaurante
+            Gestión de reservas del restaurante
           </p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => handleOpenModal()}
           className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
           <svg
@@ -266,248 +154,99 @@ const Reservas = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div
-          className="rounded-xl p-6 shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <p className="text-sm mb-1 text-textSecondary">Total Hoy</p>
-          <p className="text-3xl font-bold text-primary">
-            {reservations.filter((r) => r.fecha === "2025-11-09").length}
-          </p>
-        </div>
-        <div
-          className="rounded-xl p-6 shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <p className="text-sm mb-1 text-textSecondary">Confirmadas</p>
-          <p className="text-3xl font-bold text-[#10B981]">
-            {reservations.filter((r) => r.estado === "Confirmada").length}
-          </p>
-        </div>
-        <div
-          className="rounded-xl p-6 shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <p className="text-sm mb-1 text-textSecondary">Pendientes</p>
-          <p className="text-3xl font-bold text-[#F59E0B]">
-            {reservations.filter((r) => r.estado === "Pendiente").length}
-          </p>
-        </div>
-        <div
-          className="rounded-xl p-6 shadow-md"
-          style={{ backgroundColor: "white" }}
-        >
-          <p className="text-sm mb-1 text-textSecondary">Total Personas</p>
-          <p className="text-3xl font-bold text-accent">
-            {reservations.reduce((sum, r) => sum + r.personas, 0)}
-          </p>
-        </div>
-      </div>
+      <ReservasStats stats={stats} />
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {["Todas", "Hoy", "Mañana", "Esta Semana"].map((filter) => (
-          <button
-            key={filter}
-            onClick={() => setSelectedDate(filter)}
-            className="px-6 py-3 rounded-lg font-medium whitespace-nowrap transition-all duration-200"
-            style={{
-              backgroundColor: selectedDate === filter ? "#e6af2e" : "white",
-              color: selectedDate === filter ? "#581845" : "#4a4a4a",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
+      {/* Filters */}
+      <ReservasFilters
+        searchTerm={searchTerm}
+        filterEstado={filterEstado}
+        filterFecha={filterFecha}
+        onSearchChange={setSearchTerm}
+        onEstadoChange={setFilterEstado}
+        onFechaChange={setFilterFecha}
+      />
 
-      {/* Reservations Table */}
-      <div
-        className="rounded-xl shadow-md overflow-hidden"
-        style={{ backgroundColor: "white" }}
-      >
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-primary">
-              <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  ID
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Cliente
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Contacto
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Fecha & Hora
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Personas
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Mesa
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Estado
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservations.map((reservation, index) => {
-                const statusColor = getStatusColor(reservation.estado);
-                return (
-                  <tr
-                    key={reservation.id}
-                    style={{
-                      backgroundColor: index % 2 === 0 ? "white" : "#faf3e0",
-                      borderBottom: `1px solid #35524a20`,
-                    }}
-                  >
-                    <td className="px-6 py-4 font-medium text-primary">
-                      {reservation.id}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-medium text-primary">
-                          {reservation.cliente}
-                        </p>
-                        {reservation.notas && (
-                          <p className="text-xs text-textSecondary">
-                            📝 {reservation.notas}
-                          </p>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-textSecondary">
-                        <p>📞 {reservation.telefono}</p>
-                        {reservation.email && <p>✉️ {reservation.email}</p>}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-textSecondary">
-                        <p className="font-medium">📅 {reservation.fecha}</p>
-                        <p>🕐 {reservation.hora}</p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-textSecondary">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                          />
-                        </svg>
-                        <span className="font-medium">
-                          {reservation.personas}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-accent">
-                      {reservation.mesa}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className="px-3 py-1 rounded-full text-xs font-medium"
-                        style={{
-                          backgroundColor: statusColor.bg,
-                          color: statusColor.color,
-                        }}
-                      >
-                        {reservation.estado}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {reservation.estado === "Pendiente" && (
-                          <button
-                            onClick={() =>
-                              updateReservationStatus(
-                                reservation.id,
-                                "Confirmada"
-                              )
-                            }
-                            className="p-2 rounded-lg hover:bg-green-50 transition-colors text-[#10B981]"
-                            title="Confirmar"
-                          >
-                            <svg
-                              className="w-5 h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          </button>
-                        )}
-                        <button
-                          className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-[#3B82F6]"
-                          title="Editar"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() =>
-                            updateReservationStatus(reservation.id, "Cancelada")
-                          }
-                          className="p-2 rounded-lg hover:bg-red-50 transition-colors text-[#EF4444]"
-                          title="Cancelar"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      {/* Tabla de Reservas */}
+      <ReservasTable
+        reservas={filteredReservas}
+        onViewDetail={handleViewDetail}
+        onEdit={handleOpenModal}
+        onDelete={deleteReserva}
+        onChangeEstado={changeEstado}
+        onAsignarMesa={handleOpenAsignarModal}
+      />
+
+      {filteredReservas.length === 0 && (
+        <div
+          className="text-center py-12 rounded-xl"
+          style={{ backgroundColor: "white" }}
+        >
+          <div className="text-6xl mb-4">📅</div>
+          <p className="text-lg font-medium text-textMain">
+            No se encontraron reservas
+          </p>
+          <p className="text-textSecondary mb-4">
+            {searchTerm || filterEstado !== "Todos" || filterFecha
+              ? "Intenta con otros filtros de búsqueda"
+              : "Comienza agregando tu primera reserva"}
+          </p>
+          {!searchTerm && filterEstado === "Todos" && !filterFecha && (
+            <button
+              onClick={() => handleOpenModal()}
+              className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+            >
+              Agregar Reserva
+            </button>
+          )}
         </div>
-      </div>
+      )}
 
-      {showModal && <ReservationModal />}
+      {/* Modales */}
+      <ReservaModal
+        isOpen={showModal}
+        reserva={editingReserva}
+        onSubmit={handleFormSubmit}
+        onClose={handleCloseModal}
+      />
+
+      <ReservaDetailModal
+        isOpen={showDetailModal}
+        reserva={selectedReserva}
+        onClose={handleCloseDetailModal}
+        onEdit={handleOpenModal}
+        onDelete={deleteReserva}
+        onChangeEstado={handleChangeEstado}
+        onAsignarMesa={handleOpenAsignarModal}
+      />
+
+      <AsignarMesaModal
+        isOpen={showAsignarModal}
+        reserva={asigningReserva}
+        onClose={handleCloseAsignarModal}
+        onConfirm={handleAsignarMesa}
+      />
+
+      {/* Notificaciones Toast */}
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+          duration={3000}
+        />
+      )}
+
+      {/* Dialog de Confirmación */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={closeConfirmDialog}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        type={confirmDialog.type}
+        confirmText="Confirmar"
+        cancelText="Cancelar"
+      />
     </div>
   );
 };
