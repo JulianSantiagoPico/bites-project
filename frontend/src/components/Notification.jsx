@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { getNotificationStyles } from "../utils/empleadosUtils";
 
 const Notification = ({
@@ -7,6 +8,7 @@ const Notification = ({
   onClose,
   duration = 3000,
 }) => {
+  // Auto-cerrar después de la duración especificada
   useEffect(() => {
     if (duration > 0) {
       const timer = setTimeout(() => {
@@ -90,8 +92,11 @@ const Notification = ({
   const styles = getNotificationStyles(type);
   const icon = getIcon();
 
-  return (
-    <div className="fixed top-4 right-4 z-999 animate-slide-in-right">
+  const notificationContent = (
+    <div 
+      className="fixed top-4 right-4 animate-slide-in-right pointer-events-auto" 
+      style={{ zIndex: 9999 }}
+    >
       <div
         className={`flex items-start gap-3 p-4 rounded-lg border shadow-lg min-w-[320px] max-w-md ${styles.bg} ${styles.border}`}
       >
@@ -120,6 +125,8 @@ const Notification = ({
       </div>
     </div>
   );
+
+  return createPortal(notificationContent, document.body);
 };
 
 export default Notification;
