@@ -15,6 +15,7 @@ export {
   inventarioService,
   mesasService,
   reservasService,
+  productosService,
   fetchAPI,
   API_URL,
 } from "./index";

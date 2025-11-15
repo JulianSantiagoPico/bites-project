@@ -1,25 +1,16 @@
 import { Search, X, Filter, Tag } from "lucide-react";
+import { CATEGORIAS } from "../../utils/productosUtils";
 
 /**
- * Componente de filtros para el inventario
- * Incluye: Búsqueda por nombre y filtro por categoría
+ * Componente de filtros para el módulo de Productos
+ * Permite buscar por texto y filtrar por categoría
  */
-const InventarioFilters = ({
+const ProductosFilters = ({
   searchTerm,
-  filterCategory,
   onSearchChange,
+  filterCategory,
   onCategoryChange,
 }) => {
-  const categories = [
-    "Todo",
-    "Carnes",
-    "Vegetales",
-    "Lácteos",
-    "Bebidas",
-    "Especias",
-    "Otros",
-  ];
-
   const handleClearSearch = () => {
     onSearchChange("");
   };
@@ -49,7 +40,7 @@ const InventarioFilters = ({
               type="text"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Nombre del producto..."
+              placeholder="Nombre, descripción, tags..."
               className="w-full pl-10 pr-10 py-2 border-2 rounded-lg focus:outline-none transition-colors text-textMain border-secondary/40"
             />
             {searchTerm && (
@@ -78,9 +69,9 @@ const InventarioFilters = ({
               onChange={(e) => onCategoryChange(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
             >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              {CATEGORIAS.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
                 </option>
               ))}
             </select>
@@ -91,4 +82,4 @@ const InventarioFilters = ({
   );
 };
 
-export default InventarioFilters;
+export default ProductosFilters;
