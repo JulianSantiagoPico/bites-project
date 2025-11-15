@@ -49,15 +49,30 @@ export const useEmpleados = () => {
           rol: formData.rol,
         };
 
-        await empleadosService.updateEmpleado(editingEmployee.id, updateData);
+        const response = await empleadosService.updateEmpleado(
+          editingEmployee.id,
+          updateData
+        );
+
+        // Actualizar estado local sin recargar
+        setEmployees((prevEmployees) =>
+          prevEmployees.map((emp) =>
+            emp.id === editingEmployee.id
+              ? { ...emp, ...response.data.user }
+              : emp
+          )
+        );
+
         showNotification("✨ Empleado actualizado exitosamente", "success");
       } else {
         // Crear nuevo empleado
-        await empleadosService.createEmpleado(formData);
+        const response = await empleadosService.createEmpleado(formData);
+
+        // Agregar nuevo empleado al estado local
+        setEmployees((prevEmployees) => [...prevEmployees, response.data.user]);
+
         showNotification("🎉 Empleado creado exitosamente", "success");
       }
-
-      await loadEmpleados();
     } catch (err) {
       console.error("Error al guardar empleado:", err);
 
@@ -83,8 +98,15 @@ export const useEmpleados = () => {
       onConfirm: async () => {
         try {
           await empleadosService.deleteEmpleado(employee.id);
+
+          // Actualizar estado local
+          setEmployees((prevEmployees) =>
+            prevEmployees.map((emp) =>
+              emp.id === employee.id ? { ...emp, activo: false } : emp
+            )
+          );
+
           showNotification("👋 Empleado desactivado exitosamente", "success");
-          await loadEmpleados();
         } catch (err) {
           console.error("Error al desactivar empleado:", err);
           showNotification(
@@ -107,8 +129,15 @@ export const useEmpleados = () => {
       onConfirm: async () => {
         try {
           await empleadosService.reactivarEmpleado(employee.id);
+
+          // Actualizar estado local
+          setEmployees((prevEmployees) =>
+            prevEmployees.map((emp) =>
+              emp.id === employee.id ? { ...emp, activo: true } : emp
+            )
+          );
+
           showNotification("🎊 Empleado reactivado exitosamente", "success");
-          await loadEmpleados();
         } catch (err) {
           console.error("Error al reactivar empleado:", err);
           showNotification(

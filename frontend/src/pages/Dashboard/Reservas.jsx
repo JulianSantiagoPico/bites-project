@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CalendarX2 } from "lucide-react";
 import ReservasStats from "../../components/Reservas/ReservasStats";
 import ReservasFilters from "../../components/Reservas/ReservasFilters";
 import ReservasTable from "../../components/Reservas/ReservasTable";
@@ -181,7 +182,9 @@ const Reservas = () => {
           className="text-center py-12 rounded-xl"
           style={{ backgroundColor: "white" }}
         >
-          <div className="text-6xl mb-4">📅</div>
+          <div className="flex justify-center mb-4">
+            <CalendarX2 size={64} className="text-textSecondary" />
+          </div>
           <p className="text-lg font-medium text-textMain">
             No se encontraron reservas
           </p>

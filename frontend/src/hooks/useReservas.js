@@ -73,18 +73,34 @@ export const useReservas = () => {
         const reservaId =
           editingReserva["_id"] || editingReserva._id || editingReserva.id;
         response = await reservasService.updateReserva(reservaId, formData);
+
+        if (response.success) {
+          // Actualizar estado local
+          setReservas((prevReservas) =>
+            prevReservas.map((r) => {
+              const rId = r["_id"] || r._id || r.id;
+              return rId === reservaId ? { ...r, ...response.data.reserva } : r;
+            })
+          );
+
+          showNotification("Reserva actualizada exitosamente", "success");
+          return true;
+        }
       } else {
         // Crear nueva reserva
         response = await reservasService.createReserva(formData);
-      }
 
-      if (response.success) {
-        const mensaje = editingReserva
-          ? "Reserva actualizada exitosamente"
-          : "Reserva creada exitosamente";
-        showNotification(mensaje, "success");
-        await loadReservas();
-        return true;
+        if (response.success) {
+          // Agregar nueva reserva al estado local
+          const nuevaReserva = response.data.reserva;
+          setReservas((prevReservas) => {
+            const updated = [...prevReservas, nuevaReserva];
+            return ordenarReservasPorFecha(updated, "asc");
+          });
+
+          showNotification("Reserva creada exitosamente", "success");
+          return true;
+        }
       }
       return false;
     } catch (err) {
@@ -114,8 +130,15 @@ export const useReservas = () => {
         const response = await reservasService.deleteReserva(reservaId);
 
         if (response.success) {
+          // Actualizar estado local
+          setReservas((prevReservas) =>
+            prevReservas.filter((r) => {
+              const rId = r["_id"] || r._id || r.id;
+              return rId !== reservaId;
+            })
+          );
+
           showNotification("Reserva eliminada exitosamente", "success");
-          await loadReservas();
         }
       } catch (err) {
         console.error("Error al eliminar reserva:", err);
@@ -149,11 +172,18 @@ export const useReservas = () => {
         );
 
         if (response.success) {
+          // Actualizar estado local
+          setReservas((prevReservas) =>
+            prevReservas.map((r) => {
+              const rId = r["_id"] || r._id || r.id;
+              return rId === reservaId ? { ...r, estado: nuevoEstado } : r;
+            })
+          );
+
           showNotification(
             `Estado cambiado a ${nuevoEstado} exitosamente`,
             "success"
           );
-          await loadReservas();
         }
       } catch (err) {
         console.error("Error al cambiar estado:", err);
@@ -181,11 +211,18 @@ export const useReservas = () => {
       const response = await reservasService.asignarMesa(reservaId, mesaId);
 
       if (response.success) {
+        // Actualizar estado local
+        setReservas((prevReservas) =>
+          prevReservas.map((r) => {
+            const rId = r["_id"] || r._id || r.id;
+            return rId === reservaId ? { ...r, ...response.data.reserva } : r;
+          })
+        );
+
         const mensaje = mesaId
           ? "Mesa asignada exitosamente"
           : "Mesa desasignada exitosamente";
         showNotification(mensaje, "success");
-        await loadReservas();
         return true;
       }
       return false;
