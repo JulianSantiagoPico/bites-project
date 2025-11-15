@@ -150,6 +150,12 @@ const PedidoModal = ({ isOpen, onClose, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar que se haya seleccionado una mesa
+    if (!formData.mesaId) {
+      setErrors(["Debes seleccionar una mesa para crear el pedido"]);
+      return;
+    }
+
     const pedidoData = {
       ...formData,
       items: cart,
@@ -426,10 +432,11 @@ const PedidoModal = ({ isOpen, onClose, onSubmit }) => {
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.propina}
+                    value={formData.propina || ""}
                     onChange={(e) =>
                       setFormData({ ...formData, propina: e.target.value })
                     }
+                    placeholder="0"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-textMain"
                   />
                 </div>

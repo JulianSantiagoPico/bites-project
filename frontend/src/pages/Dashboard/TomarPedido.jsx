@@ -68,8 +68,8 @@ const TomarPedido = () => {
     setSelectedPedido(null);
   };
 
-  const handleChangeEstado = (pedidoId, nuevoEstado, pedido) => {
-    changeEstado(pedidoId, nuevoEstado, pedido);
+  const handleChangeEstado = (pedido, nuevoEstado) => {
+    changeEstado(pedido.id, nuevoEstado, pedido);
   };
 
   const handleCancelPedido = (pedido) => {
@@ -194,11 +194,13 @@ const TomarPedido = () => {
       {/* Diálogo de confirmación */}
       {confirmDialog.isOpen && (
         <ConfirmDialog
+          isOpen={confirmDialog.isOpen}
           title={confirmDialog.title}
           message={confirmDialog.message}
           type={confirmDialog.type}
           onConfirm={confirmDialog.onConfirm}
           onCancel={closeConfirmDialog}
+          onClose={closeConfirmDialog}
         />
       )}
     </div>

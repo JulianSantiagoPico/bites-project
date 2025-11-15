@@ -34,6 +34,11 @@ const PedidoCard = ({ pedido, onView, onChangeEstado, onCancel }) => {
     setShowEstadoMenu(false);
   };
 
+  const handleCancel = () => {
+    onCancel(pedido);
+    setShowMenu(false);
+  };
+
   return (
     <div
       className="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border overflow-hidden bg-white"
@@ -83,10 +88,7 @@ const PedidoCard = ({ pedido, onView, onChangeEstado, onCancel }) => {
                   {pedido.estado !== "entregado" &&
                     pedido.estado !== "cancelado" && (
                       <button
-                        onClick={() => {
-                          onCancel(pedido);
-                          setShowMenu(false);
-                        }}
+                        onClick={handleCancel}
                         className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 text-sm"
                       >
                         <XCircle className="w-4 h-4" />

@@ -104,7 +104,7 @@ export const usePedidos = () => {
       cancelado: "cancelado",
     };
 
-    setConfirmDialog({
+    const newDialog = {
       isOpen: true,
       title: `Cambiar estado a ${estadoLabels[nuevoEstado] || nuevoEstado}`,
       message: `¿Confirmar el cambio de estado del pedido ${
@@ -112,6 +112,9 @@ export const usePedidos = () => {
       }?`,
       type: nuevoEstado === "cancelado" ? "danger" : "info",
       onConfirm: async () => {
+        // Cerrar el diálogo primero
+        closeConfirmDialog();
+
         try {
           const response = await pedidosService.changeEstado(
             pedidoId,
@@ -138,7 +141,8 @@ export const usePedidos = () => {
           );
         }
       },
-    });
+    };
+    setConfirmDialog(newDialog);
   };
 
   // Cancelar pedido
@@ -149,6 +153,9 @@ export const usePedidos = () => {
       message: `¿Estás seguro de cancelar el pedido ${pedido.numeroPedido}? Esta acción no se puede deshacer.`,
       type: "danger",
       onConfirm: async () => {
+        // Cerrar el diálogo primero
+        closeConfirmDialog();
+
         try {
           const response = await pedidosService.cancelPedido(pedido.id);
 
