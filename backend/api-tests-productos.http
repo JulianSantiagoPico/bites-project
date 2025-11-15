@@ -1,0 +1,311 @@
+### ============================================
+### API TESTS - PRODUCTOS
+### Sistema de gestión de productos del menú
+### ============================================
+
+### Variables
+@baseURL = http://localhost:5000/api
+@token = YOUR_TOKEN_HERE
+@productoId = 
+
+### --------------------------------------------
+### 1. OBTENER TODOS LOS PRODUCTOS
+### --------------------------------------------
+GET {{baseURL}}/productos
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 2. OBTENER PRODUCTOS POR CATEGORÍA
+### --------------------------------------------
+GET {{baseURL}}/productos?categoria=Platos Fuertes
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 3. OBTENER SOLO PRODUCTOS DISPONIBLES
+### --------------------------------------------
+GET {{baseURL}}/productos?disponible=true
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 4. OBTENER PRODUCTOS DESTACADOS
+### --------------------------------------------
+GET {{baseURL}}/productos/destacados
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 5. OBTENER ESTADÍSTICAS DE PRODUCTOS
+### --------------------------------------------
+GET {{baseURL}}/productos/estadisticas
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 6. CREAR PRODUCTO - ENTRADA
+### --------------------------------------------
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Ensalada César",
+  "descripcion": "Lechuga fresca, crotones, parmesano y aderezo césar casero",
+  "categoria": "Entradas",
+  "precio": 8.50,
+  "imagen": "🥗",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 10,
+  "tags": ["vegetariano", "fresco", "saludable"]
+}
+
+### --------------------------------------------
+### 7. CREAR PRODUCTO - PLATO FUERTE
+### --------------------------------------------
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Hamburguesa Clásica",
+  "descripcion": "Carne de res 200g, queso cheddar, lechuga, tomate, cebolla y salsa especial",
+  "categoria": "Platos Fuertes",
+  "precio": 12.00,
+  "imagen": "🍔",
+  "disponible": true,
+  "destacado": true,
+  "tiempoPreparacion": 15,
+  "tags": ["popular", "tradicional"]
+}
+
+### --------------------------------------------
+### 8. CREAR PRODUCTO - BEBIDA
+### --------------------------------------------
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Limonada Natural",
+  "descripcion": "Limonada fresca preparada con limones naturales y menta",
+  "categoria": "Bebidas",
+  "precio": 3.50,
+  "imagen": "🍋",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 5,
+  "tags": ["refrescante", "natural"]
+}
+
+### --------------------------------------------
+### 9. CREAR PRODUCTO - POSTRE
+### --------------------------------------------
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Cheesecake de Fresa",
+  "descripcion": "Delicioso cheesecake con base de galleta y topping de fresas frescas",
+  "categoria": "Postres",
+  "precio": 6.50,
+  "imagen": "🍰",
+  "disponible": true,
+  "destacado": true,
+  "tiempoPreparacion": 0,
+  "tags": ["dulce", "popular", "frío"]
+}
+
+### --------------------------------------------
+### 10. CREAR PRODUCTO - PIZZA
+### --------------------------------------------
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Pizza Margherita",
+  "descripcion": "Pizza clásica con salsa de tomate, mozzarella fresca y albahaca",
+  "categoria": "Platos Fuertes",
+  "precio": 14.00,
+  "imagen": "🍕",
+  "disponible": true,
+  "destacado": true,
+  "tiempoPreparacion": 20,
+  "tags": ["italiana", "vegetariano", "clásico"]
+}
+
+### --------------------------------------------
+### 11. OBTENER PRODUCTO POR ID
+### --------------------------------------------
+GET {{baseURL}}/productos/{{productoId}}
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 12. ACTUALIZAR PRODUCTO
+### --------------------------------------------
+PUT {{baseURL}}/productos/{{productoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Ensalada César Premium",
+  "precio": 10.00,
+  "destacado": true,
+  "descripcion": "Lechuga fresca, crotones artesanales, parmesano importado, pollo grillado y aderezo césar casero"
+}
+
+### --------------------------------------------
+### 13. CAMBIAR DISPONIBILIDAD - Marcar como NO DISPONIBLE
+### --------------------------------------------
+PATCH {{baseURL}}/productos/{{productoId}}/disponibilidad
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "disponible": false
+}
+
+### --------------------------------------------
+### 14. CAMBIAR DISPONIBILIDAD - Marcar como DISPONIBLE
+### --------------------------------------------
+PATCH {{baseURL}}/productos/{{productoId}}/disponibilidad
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "disponible": true
+}
+
+### --------------------------------------------
+### 15. DESACTIVAR PRODUCTO (Soft Delete)
+### --------------------------------------------
+DELETE {{baseURL}}/productos/{{productoId}}
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 16. REACTIVAR PRODUCTO
+### --------------------------------------------
+PUT {{baseURL}}/productos/{{productoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "activo": true,
+  "disponible": true
+}
+
+### --------------------------------------------
+### CASOS DE ERROR
+### --------------------------------------------
+
+### 17. Error - Crear producto sin nombre
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "categoria": "Entradas",
+  "precio": 5.00
+}
+
+### 18. Error - Crear producto con categoría inválida
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Producto Prueba",
+  "categoria": "CategoriaInvalida",
+  "precio": 5.00
+}
+
+### 19. Error - Crear producto con precio negativo
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Producto Prueba",
+  "categoria": "Entradas",
+  "precio": -5.00
+}
+
+### 20. Error - Actualizar producto que no existe
+PUT {{baseURL}}/productos/000000000000000000000000
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Producto Inexistente"
+}
+
+### --------------------------------------------
+### PRODUCTOS DE PRUEBA COMPLETOS
+### --------------------------------------------
+
+### 21. Crear Pasta Carbonara
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Pasta Carbonara",
+  "descripcion": "Pasta fresca con salsa carbonara, panceta y parmesano",
+  "categoria": "Platos Fuertes",
+  "precio": 13.50,
+  "imagen": "🍝",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 18,
+  "tags": ["italiana", "pasta"]
+}
+
+### 22. Crear Alitas BBQ
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Alitas BBQ",
+  "descripcion": "10 alitas de pollo con salsa BBQ ahumada y vegetales",
+  "categoria": "Entradas",
+  "precio": 9.50,
+  "imagen": "🍗",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 20,
+  "tags": ["picante", "pollo"]
+}
+
+### 23. Crear Coca Cola
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Coca Cola",
+  "descripcion": "Bebida gaseosa 355ml",
+  "categoria": "Bebidas",
+  "precio": 2.50,
+  "imagen": "🥤",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 0,
+  "tags": ["bebida", "gaseosa"]
+}
+
+### 24. Crear Helado de Chocolate
+POST {{baseURL}}/productos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Helado de Chocolate",
+  "descripcion": "Helado cremoso de chocolate belga con chispas y salsa de chocolate",
+  "categoria": "Postres",
+  "precio": 5.00,
+  "imagen": "🍨",
+  "disponible": true,
+  "destacado": false,
+  "tiempoPreparacion": 2,
+  "tags": ["dulce", "frío", "chocolate"]
+}

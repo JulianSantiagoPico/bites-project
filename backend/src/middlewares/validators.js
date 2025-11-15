@@ -530,3 +530,146 @@ export const validateAsignarMesaReserva = [
 
   handleValidationErrors,
 ];
+
+// ============================================
+// VALIDACIONES DE PRODUCTOS
+// ============================================
+
+// Validaciones para crear producto
+export const validateCreateProducto = [
+  body("nombre")
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre del producto es requerido")
+    .isLength({ min: 2 })
+    .withMessage("El nombre debe tener al menos 2 caracteres")
+    .isLength({ max: 100 })
+    .withMessage("El nombre no puede exceder 100 caracteres"),
+
+  body("descripcion")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La descripción no puede exceder 500 caracteres"),
+
+  body("categoria")
+    .notEmpty()
+    .withMessage("La categoría es requerida")
+    .isIn(["Entradas", "Platos Fuertes", "Postres", "Bebidas", "Otros"])
+    .withMessage("Categoría no válida"),
+
+  body("precio")
+    .notEmpty()
+    .withMessage("El precio es requerido")
+    .isFloat({ min: 0 })
+    .withMessage("El precio debe ser un número mayor o igual a 0"),
+
+  body("imagen")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La imagen no puede exceder 500 caracteres"),
+
+  body("disponible")
+    .optional()
+    .isBoolean()
+    .withMessage("Disponible debe ser un valor booleano"),
+
+  body("destacado")
+    .optional()
+    .isBoolean()
+    .withMessage("Destacado debe ser un valor booleano"),
+
+  body("tiempoPreparacion")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage(
+      "El tiempo de preparación debe ser un número entero mayor o igual a 0"
+    ),
+
+  body("tags").optional().isArray().withMessage("Tags debe ser un array"),
+
+  body("tags.*")
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage("Cada tag no puede exceder 50 caracteres"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para actualizar producto
+export const validateUpdateProducto = [
+  body("nombre")
+    .optional()
+    .trim()
+    .isLength({ min: 2 })
+    .withMessage("El nombre debe tener al menos 2 caracteres")
+    .isLength({ max: 100 })
+    .withMessage("El nombre no puede exceder 100 caracteres"),
+
+  body("descripcion")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La descripción no puede exceder 500 caracteres"),
+
+  body("categoria")
+    .optional()
+    .isIn(["Entradas", "Platos Fuertes", "Postres", "Bebidas", "Otros"])
+    .withMessage("Categoría no válida"),
+
+  body("precio")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("El precio debe ser un número mayor o igual a 0"),
+
+  body("imagen")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La imagen no puede exceder 500 caracteres"),
+
+  body("disponible")
+    .optional()
+    .isBoolean()
+    .withMessage("Disponible debe ser un valor booleano"),
+
+  body("destacado")
+    .optional()
+    .isBoolean()
+    .withMessage("Destacado debe ser un valor booleano"),
+
+  body("tiempoPreparacion")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage(
+      "El tiempo de preparación debe ser un número entero mayor o igual a 0"
+    ),
+
+  body("tags").optional().isArray().withMessage("Tags debe ser un array"),
+
+  body("tags.*")
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage("Cada tag no puede exceder 50 caracteres"),
+
+  body("activo")
+    .optional()
+    .isBoolean()
+    .withMessage("Activo debe ser un valor booleano"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para cambiar disponibilidad de producto
+export const validateToggleDisponibilidad = [
+  body("disponible")
+    .notEmpty()
+    .withMessage("El campo disponible es requerido")
+    .isBoolean()
+    .withMessage("Disponible debe ser un valor booleano"),
+
+  handleValidationErrors,
+];
