@@ -6,4 +6,5 @@ export { inventarioService } from "./inventario.service";
 export { mesasService } from "./mesas.service";
 export { reservasService } from "./reservas.service";
 export { productosService } from "./productos.service";
+export { pedidosService } from "./pedidos.service";
 export { fetchAPI, API_URL } from "./config";
