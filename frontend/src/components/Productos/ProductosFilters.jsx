@@ -17,7 +17,10 @@ const ProductosFilters = ({
   };
 
   return (
-    <div className="rounded-xl shadow-md p-6" style={{ backgroundColor: "white" }}>
+    <div
+      className="rounded-xl shadow-md p-6"
+      style={{ backgroundColor: "white" }}
+    >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Filter size={20} className="text-accent" />
