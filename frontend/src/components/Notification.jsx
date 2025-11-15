@@ -93,8 +93,8 @@ const Notification = ({
   const icon = getIcon();
 
   const notificationContent = (
-    <div 
-      className="fixed top-4 right-4 animate-slide-in-right pointer-events-auto" 
+    <div
+      className="fixed top-4 right-4 animate-slide-in-right pointer-events-auto"
       style={{ zIndex: 9999 }}
     >
       <div
