@@ -1,5 +1,12 @@
 import { useMemo } from "react";
-import { LayoutGrid, CheckCircle, Circle, Calendar, Sparkles, Users } from "lucide-react";
+import {
+  LayoutGrid,
+  CheckCircle,
+  Circle,
+  Calendar,
+  Sparkles,
+  Users,
+} from "lucide-react";
 
 const MesasStats = ({ stats }) => {
   // Definir las tarjetas de estadísticas
