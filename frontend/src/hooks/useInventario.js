@@ -42,18 +42,33 @@ export const useInventario = () => {
     try {
       if (editingItem) {
         // Actualizar item
-        await inventarioService.updateItem(editingItem.id, formData);
+        const response = await inventarioService.updateItem(
+          editingItem.id,
+          formData
+        );
+
+        // Actualizar estado local
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === editingItem.id
+              ? { ...item, ...response.data.item }
+              : item
+          )
+        );
+
         showNotification("✨ Item actualizado exitosamente", "success");
       } else {
         // Crear nuevo item
-        await inventarioService.createItem(formData);
+        const response = await inventarioService.createItem(formData);
+
+        // Agregar nuevo item al estado local
+        setItems((prevItems) => [...prevItems, response.data.item]);
+
         showNotification(
           "🎉 Item agregado al inventario exitosamente",
           "success"
         );
       }
-
-      await loadInventario();
     } catch (err) {
       console.error("Error al guardar item:", err);
 
@@ -79,8 +94,15 @@ export const useInventario = () => {
       onConfirm: async () => {
         try {
           await inventarioService.deleteItem(item.id);
+
+          // Actualizar estado local
+          setItems((prevItems) =>
+            prevItems.map((it) =>
+              it.id === item.id ? { ...it, activo: false } : it
+            )
+          );
+
           showNotification("👋 Item desactivado exitosamente", "success");
-          await loadInventario();
         } catch (err) {
           console.error("Error al desactivar item:", err);
           showNotification(
@@ -103,8 +125,15 @@ export const useInventario = () => {
       onConfirm: async () => {
         try {
           await inventarioService.reactivarItem(item.id);
+
+          // Actualizar estado local
+          setItems((prevItems) =>
+            prevItems.map((it) =>
+              it.id === item.id ? { ...it, activo: true } : it
+            )
+          );
+
           showNotification("🎊 Item reactivado exitosamente", "success");
-          await loadInventario();
         } catch (err) {
           console.error("Error al reactivar item:", err);
           showNotification(
@@ -125,13 +154,19 @@ export const useInventario = () => {
         ajusteData
       );
 
+      // Actualizar estado local con el nuevo stock
+      setItems((prevItems) =>
+        prevItems.map((it) =>
+          it.id === item.id ? { ...it, ...response.data.item } : it
+        )
+      );
+
       const tipoEmoji = ajusteData.tipo === "entrada" ? "📦" : "📤";
       showNotification(
         `${tipoEmoji} Stock ajustado exitosamente (${ajusteData.tipo})`,
         "success"
       );
 
-      await loadInventario();
       return response;
     } catch (err) {
       console.error("Error al ajustar stock:", err);

@@ -60,15 +60,30 @@ export const useMesas = () => {
     try {
       if (editingMesa) {
         // Actualizar mesa
-        await mesasService.updateMesa(editingMesa.id, formData);
+        const response = await mesasService.updateMesa(
+          editingMesa.id,
+          formData
+        );
+
+        // Actualizar estado local
+        setMesas((prevMesas) =>
+          prevMesas.map((mesa) =>
+            mesa.id === editingMesa.id
+              ? { ...mesa, ...response.data.mesa }
+              : mesa
+          )
+        );
+
         showNotification("✨ Mesa actualizada exitosamente", "success");
       } else {
         // Crear nueva mesa
-        await mesasService.createMesa(formData);
+        const response = await mesasService.createMesa(formData);
+
+        // Agregar nueva mesa al estado local
+        setMesas((prevMesas) => [...prevMesas, response.data.mesa]);
+
         showNotification("✅ Mesa creada exitosamente", "success");
       }
-
-      await loadMesas();
     } catch (err) {
       const errorMsg =
         err.message ||
@@ -88,8 +103,15 @@ export const useMesas = () => {
       onConfirm: async () => {
         try {
           await mesasService.deleteMesa(mesa.id);
+
+          // Actualizar estado local
+          setMesas((prevMesas) =>
+            prevMesas.map((m) =>
+              m.id === mesa.id ? { ...m, activo: false } : m
+            )
+          );
+
           showNotification("🗑️ Mesa eliminada exitosamente", "success");
-          await loadMesas();
         } catch (err) {
           const errorMsg = err.message || "Error al eliminar la mesa";
           showNotification(`❌ ${errorMsg}`, "error");
@@ -110,8 +132,15 @@ export const useMesas = () => {
       onConfirm: async () => {
         try {
           await mesasService.changeEstado(mesa.id, nuevoEstado);
+
+          // Actualizar estado local
+          setMesas((prevMesas) =>
+            prevMesas.map((m) =>
+              m.id === mesa.id ? { ...m, estado: nuevoEstado } : m
+            )
+          );
+
           showNotification("🔄 Estado actualizado exitosamente", "success");
-          await loadMesas();
         } catch (err) {
           const errorMsg = err.message || "Error al cambiar el estado";
           showNotification(`❌ ${errorMsg}`, "error");
@@ -125,14 +154,21 @@ export const useMesas = () => {
   // Asignar mesero a una mesa
   const asignarMesero = async (mesa, meseroId) => {
     try {
-      await mesasService.asignarMesero(mesa.id, meseroId);
+      const response = await mesasService.asignarMesero(mesa.id, meseroId);
+
+      // Actualizar estado local
+      setMesas((prevMesas) =>
+        prevMesas.map((m) =>
+          m.id === mesa.id ? { ...m, ...response.data.mesa } : m
+        )
+      );
+
       showNotification(
         meseroId
           ? "👤 Mesero asignado exitosamente"
           : "👤 Mesero desasignado exitosamente",
         "success"
       );
-      await loadMesas();
     } catch (err) {
       const errorMsg = err.message || "Error al asignar mesero";
       showNotification(`❌ ${errorMsg}`, "error");
@@ -150,8 +186,15 @@ export const useMesas = () => {
       onConfirm: async () => {
         try {
           await mesasService.updateMesa(mesa.id, { activo: true });
+
+          // Actualizar estado local
+          setMesas((prevMesas) =>
+            prevMesas.map((m) =>
+              m.id === mesa.id ? { ...m, activo: true } : m
+            )
+          );
+
           showNotification("♻️ Mesa reactivada exitosamente", "success");
-          await loadMesas();
         } catch (err) {
           const errorMsg = err.message || "Error al reactivar la mesa";
           showNotification(`❌ ${errorMsg}`, "error");

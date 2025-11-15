@@ -23,14 +23,9 @@ const ReservasTable = ({
   const textMain = "#1f2937";
   const textSecondary = "#6b7280";
 
+  // Si no hay reservas, no renderizar nada (el mensaje se maneja en el componente padre)
   if (!reservas || reservas.length === 0) {
-    return (
-      <div className="bg-white rounded-xl shadow-md p-8 text-center">
-        <p style={{ color: textSecondary }} className="text-lg">
-          No hay reservas para mostrar
-        </p>
-      </div>
-    );
+    return null;
   }
 
   return (
