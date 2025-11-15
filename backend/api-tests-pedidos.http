@@ -1,0 +1,392 @@
+### ============================================
+### API TESTS - PEDIDOS
+### Sistema de gestión de pedidos/órdenes
+### ============================================
+
+### Variables
+@baseURL = http://localhost:5000/api
+@token = YOUR_TOKEN_HERE
+@pedidoId = 
+@mesaId = 
+
+### --------------------------------------------
+### 1. OBTENER TODOS LOS PEDIDOS
+### --------------------------------------------
+GET {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 2. OBTENER PEDIDOS POR ESTADO
+### --------------------------------------------
+### Pendientes
+GET {{baseURL}}/pedidos?estado=pendiente
+Authorization: Bearer {{token}}
+
+###
+### En preparación
+GET {{baseURL}}/pedidos?estado=en_preparacion
+Authorization: Bearer {{token}}
+
+###
+### Listos para entregar
+GET {{baseURL}}/pedidos?estado=listo
+Authorization: Bearer {{token}}
+
+###
+### Entregados
+GET {{baseURL}}/pedidos?estado=entregado
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 3. OBTENER PEDIDOS POR MESA
+### --------------------------------------------
+GET {{baseURL}}/pedidos/mesa/{{mesaId}}
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 4. OBTENER ESTADÍSTICAS DE PEDIDOS
+### --------------------------------------------
+### Estadísticas generales
+GET {{baseURL}}/pedidos/estadisticas
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas del día
+GET {{baseURL}}/pedidos/estadisticas?fecha=2024-11-14
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 5. OBTENER UN PEDIDO POR ID
+### --------------------------------------------
+GET {{baseURL}}/pedidos/{{pedidoId}}
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 6. CREAR PEDIDO - EJEMPLO 1
+### Pedido básico con varios items
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 2,
+      "notas": "Sin cebolla"
+    },
+    {
+      "productoId": "PRODUCTO_ID_2",
+      "cantidad": 1
+    },
+    {
+      "productoId": "PRODUCTO_ID_3",
+      "cantidad": 3,
+      "notas": "Extra queso"
+    }
+  ],
+  "nombreCliente": "Juan Pérez",
+  "notas": "Cliente regular, prefiere mesa cerca de ventana"
+}
+
+### --------------------------------------------
+### 7. CREAR PEDIDO - EJEMPLO 2
+### Pedido con propina
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 1
+    }
+  ],
+  "nombreCliente": "María García",
+  "propina": 5.00,
+  "notas": "Pagar con tarjeta"
+}
+
+### --------------------------------------------
+### 8. CREAR PEDIDO - EJEMPLO 3
+### Pedido sin cliente específico
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 2
+    },
+    {
+      "productoId": "PRODUCTO_ID_2",
+      "cantidad": 1,
+      "notas": "Bien cocido"
+    }
+  ]
+}
+
+### --------------------------------------------
+### 9. ACTUALIZAR PEDIDO (Solo estado pendiente)
+### Agregar o modificar items
+### --------------------------------------------
+PUT {{baseURL}}/pedidos/{{pedidoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 3,
+      "notas": "Sin cebolla"
+    },
+    {
+      "productoId": "PRODUCTO_ID_2",
+      "cantidad": 2
+    }
+  ],
+  "nombreCliente": "Juan Pérez Actualizado",
+  "notas": "Cliente pidió cambios",
+  "propina": 3.50
+}
+
+### --------------------------------------------
+### 10. CAMBIAR ESTADO - PENDIENTE A EN PREPARACIÓN
+### (Típicamente hecho por el cocinero)
+### --------------------------------------------
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "en_preparacion"
+}
+
+### --------------------------------------------
+### 11. CAMBIAR ESTADO - EN PREPARACIÓN A LISTO
+### (Cocinero indica que el pedido está listo)
+### --------------------------------------------
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "listo"
+}
+
+### --------------------------------------------
+### 12. CAMBIAR ESTADO - LISTO A ENTREGADO
+### (Mesero o cajero confirma entrega)
+### --------------------------------------------
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "entregado"
+}
+
+### --------------------------------------------
+### 13. CANCELAR PEDIDO
+### (Soft delete - marca como cancelado)
+### --------------------------------------------
+DELETE {{baseURL}}/pedidos/{{pedidoId}}
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 14. CAMBIAR ESTADO A CANCELADO
+### (Alternativa a DELETE)
+### --------------------------------------------
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "cancelado"
+}
+
+### ============================================
+### TESTS DE VALIDACIÓN (Deben fallar)
+### ============================================
+
+### --------------------------------------------
+### V1. Crear pedido sin items (debe fallar)
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": []
+}
+
+### --------------------------------------------
+### V2. Crear pedido sin mesa (debe fallar)
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 1
+    }
+  ]
+}
+
+### --------------------------------------------
+### V3. Crear pedido con cantidad negativa (debe fallar)
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": -1
+    }
+  ]
+}
+
+### --------------------------------------------
+### V4. Crear pedido con producto inexistente (debe fallar)
+### --------------------------------------------
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "000000000000000000000000",
+      "cantidad": 1
+    }
+  ]
+}
+
+### --------------------------------------------
+### V5. Cambiar a estado inválido (debe fallar)
+### --------------------------------------------
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "estado_invalido"
+}
+
+### --------------------------------------------
+### V6. Actualizar pedido que no está pendiente (debe fallar)
+### Primero cambiar el estado a en_preparacion
+### Luego intentar actualizar
+### --------------------------------------------
+PUT {{baseURL}}/pedidos/{{pedidoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 5
+    }
+  ]
+}
+
+### ============================================
+### FLUJO COMPLETO DE PEDIDO
+### Ejecutar en orden para probar el ciclo de vida
+### ============================================
+
+### PASO 1: Crear pedido nuevo
+POST {{baseURL}}/pedidos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "mesaId": "{{mesaId}}",
+  "items": [
+    {
+      "productoId": "PRODUCTO_ID_1",
+      "cantidad": 1,
+      "notas": "Término medio"
+    }
+  ],
+  "nombreCliente": "Test Cliente"
+}
+
+### PASO 2: Ver el pedido creado (copiar el ID del response anterior)
+GET {{baseURL}}/pedidos/{{pedidoId}}
+Authorization: Bearer {{token}}
+
+### PASO 3: Cocinero inicia preparación
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "en_preparacion"
+}
+
+### PASO 4: Cocinero marca como listo
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "listo"
+}
+
+### PASO 5: Mesero entrega el pedido
+PATCH {{baseURL}}/pedidos/{{pedidoId}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "entregado"
+}
+
+### PASO 6: Verificar estadísticas actualizadas
+GET {{baseURL}}/pedidos/estadisticas
+Authorization: Bearer {{token}}
+
+### ============================================
+### NOTAS DE USO
+### ============================================
+###
+### 1. Reemplazar {{token}} con un token JWT válido
+### 2. Reemplazar {{mesaId}} con un ID de mesa existente
+### 3. Reemplazar PRODUCTO_ID_X con IDs de productos reales
+### 4. Reemplazar {{pedidoId}} con el ID del pedido a probar
+###
+### ROLES Y PERMISOS:
+### - ADMIN: Todos los permisos
+### - MESERO: Crear, ver, actualizar (solo pendientes), cambiar estado
+### - COCINERO: Ver, cambiar estado (en_preparacion, listo)
+### - CAJERO: Ver, cambiar estado a entregado
+###
+### ESTADOS DEL PEDIDO:
+### - pendiente: Pedido recién creado
+### - en_preparacion: Cocinero está preparando
+### - listo: Pedido listo para servir
+### - entregado: Pedido entregado al cliente
+### - cancelado: Pedido cancelado
+###
+### ============================================

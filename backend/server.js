@@ -14,6 +14,7 @@ import inventarioRoutes from "./src/routes/inventario.routes.js";
 import mesaRoutes from "./src/routes/mesa.routes.js";
 import reservaRoutes from "./src/routes/reserva.routes.js";
 import productoRoutes from "./src/routes/producto.routes.js";
+import pedidoRoutes from "./src/routes/pedido.routes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -50,6 +51,7 @@ app.get("/", (req, res) => {
       mesas: "/api/mesas",
       reservas: "/api/reservas",
       productos: "/api/productos",
+      pedidos: "/api/pedidos",
     },
   });
 });
@@ -62,6 +64,7 @@ app.use("/api/inventario", inventarioRoutes);
 app.use("/api/mesas", mesaRoutes);
 app.use("/api/reservas", reservaRoutes);
 app.use("/api/productos", productoRoutes);
+app.use("/api/pedidos", pedidoRoutes);
 
 // Manejo de rutas no encontradas
 app.use("*", (req, res) => {

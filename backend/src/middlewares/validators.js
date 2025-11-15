@@ -673,3 +673,111 @@ export const validateToggleDisponibilidad = [
 
   handleValidationErrors,
 ];
+
+// ========== VALIDACIONES PARA PEDIDOS ==========
+
+// Validaciones para crear pedido
+export const validateCreatePedido = [
+  body("mesaId")
+    .notEmpty()
+    .withMessage("La mesa es requerida")
+    .isMongoId()
+    .withMessage("ID de mesa inválido"),
+
+  body("items")
+    .notEmpty()
+    .withMessage("Los items son requeridos")
+    .isArray({ min: 1 })
+    .withMessage("Debe haber al menos un producto en el pedido"),
+
+  body("items.*.productoId")
+    .notEmpty()
+    .withMessage("El ID del producto es requerido")
+    .isMongoId()
+    .withMessage("ID de producto inválido"),
+
+  body("items.*.cantidad")
+    .notEmpty()
+    .withMessage("La cantidad es requerida")
+    .isInt({ min: 1 })
+    .withMessage("La cantidad debe ser un número entero mayor a 0"),
+
+  body("items.*.notas")
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage("Las notas no pueden exceder 200 caracteres"),
+
+  body("nombreCliente")
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage("El nombre del cliente debe tener entre 2 y 100 caracteres"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  body("propina")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("La propina debe ser un número mayor o igual a 0"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para actualizar pedido
+export const validateUpdatePedido = [
+  body("items")
+    .optional()
+    .isArray({ min: 1 })
+    .withMessage("Debe haber al menos un producto en el pedido"),
+
+  body("items.*.productoId")
+    .optional()
+    .isMongoId()
+    .withMessage("ID de producto inválido"),
+
+  body("items.*.cantidad")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("La cantidad debe ser un número entero mayor a 0"),
+
+  body("items.*.notas")
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage("Las notas no pueden exceder 200 caracteres"),
+
+  body("nombreCliente")
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage("El nombre del cliente debe tener entre 2 y 100 caracteres"),
+
+  body("notas")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Las notas no pueden exceder 500 caracteres"),
+
+  body("propina")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("La propina debe ser un número mayor o igual a 0"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para cambiar estado de pedido
+export const validateChangeEstadoPedido = [
+  body("estado")
+    .notEmpty()
+    .withMessage("El estado es requerido")
+    .isIn(["pendiente", "en_preparacion", "listo", "entregado", "cancelado"])
+    .withMessage("Estado no válido"),
+
+  handleValidationErrors,
+];
