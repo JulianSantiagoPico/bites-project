@@ -1,3 +1,5 @@
+import { Search, X, Filter, Tag } from "lucide-react";
+
 /**
  * Componente de filtros para el inventario
  * Incluye: Búsqueda por nombre y filtro por categoría
@@ -18,54 +20,71 @@ const InventarioFilters = ({
     "Otros",
   ];
 
+  const handleClearSearch = () => {
+    onSearchChange("");
+  };
+
   return (
-    <div className="rounded-xl p-6 shadow-md bg-white">
+    <div
+      className="rounded-xl shadow-md p-6"
+      style={{ backgroundColor: "white" }}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Filter size={20} className="text-accent" />
+        <h3 className="text-lg font-semibold text-textMain">Filtros</h3>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Búsqueda */}
+        {/* Campo de búsqueda */}
         <div>
-          <label className="block text-sm font-medium mb-2 text-textMain">
-            Buscar Producto
+          <label className="block text-sm font-medium mb-2 text-textSecondary">
+            Buscar
           </label>
           <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary"
+              size={18}
+            />
             <input
               type="text"
-              placeholder="Buscar por nombre..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full px-4 py-3 pl-12 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background text-textMain"
+              placeholder="Nombre del producto..."
+              className="w-full pl-10 pr-10 py-2 border-2 rounded-lg focus:outline-none transition-colors text-textMain border-secondary/40"
             />
-            <svg
-              className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-textSecondary"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            {searchTerm && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:bg-gray-100 rounded-full p-1 transition-colors"
+              >
+                <X size={16} className="text-textSecondary" />
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Filtro por categoría */}
+        {/* Selector de categoría */}
         <div>
-          <label className="block text-sm font-medium mb-2 text-textMain">
-            Filtrar por Categoría
+          <label className="block text-sm font-medium mb-2 text-textSecondary">
+            Categoría
           </label>
-          <select
-            value={filterCategory}
-            onChange={(e) => onCategoryChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors border-secondary/40 bg-background text-textMain"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <Tag
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary pointer-events-none"
+              size={18}
+            />
+            <select
+              value={filterCategory}
+              onChange={(e) => onCategoryChange(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>

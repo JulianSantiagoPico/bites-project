@@ -1,4 +1,4 @@
-import { Search, X, Filter } from "lucide-react";
+import { Search, X, Filter, CircleDot, Calendar } from "lucide-react";
 import { ESTADOS_RESERVA, getEstadoLabel } from "../../utils/reservasUtils";
 
 /**
@@ -27,7 +27,7 @@ const ReservasFilters = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Búsqueda */}
+        {/* Campo de búsqueda */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Buscar
@@ -55,49 +55,61 @@ const ReservasFilters = ({
           </div>
         </div>
 
-        {/* Filtro de Estado */}
+        {/* Selector de estado */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Estado
           </label>
-          <select
-            value={filterEstado}
-            onChange={(e) => onEstadoChange(e.target.value)}
-            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain"
-          >
-            <option value="Todos">Todos los estados</option>
-            <option value={ESTADOS_RESERVA.PENDIENTE}>
-              {getEstadoLabel(ESTADOS_RESERVA.PENDIENTE)}
-            </option>
-            <option value={ESTADOS_RESERVA.CONFIRMADA}>
-              {getEstadoLabel(ESTADOS_RESERVA.CONFIRMADA)}
-            </option>
-            <option value={ESTADOS_RESERVA.SENTADA}>
-              {getEstadoLabel(ESTADOS_RESERVA.SENTADA)}
-            </option>
-            <option value={ESTADOS_RESERVA.COMPLETADA}>
-              {getEstadoLabel(ESTADOS_RESERVA.COMPLETADA)}
-            </option>
-            <option value={ESTADOS_RESERVA.CANCELADA}>
-              {getEstadoLabel(ESTADOS_RESERVA.CANCELADA)}
-            </option>
-            <option value={ESTADOS_RESERVA.NO_SHOW}>
-              {getEstadoLabel(ESTADOS_RESERVA.NO_SHOW)}
-            </option>
-          </select>
+          <div className="relative">
+            <CircleDot
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary pointer-events-none"
+              size={18}
+            />
+            <select
+              value={filterEstado}
+              onChange={(e) => onEstadoChange(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
+            >
+              <option value="Todos">Todos los estados</option>
+              <option value={ESTADOS_RESERVA.PENDIENTE}>
+                {getEstadoLabel(ESTADOS_RESERVA.PENDIENTE)}
+              </option>
+              <option value={ESTADOS_RESERVA.CONFIRMADA}>
+                {getEstadoLabel(ESTADOS_RESERVA.CONFIRMADA)}
+              </option>
+              <option value={ESTADOS_RESERVA.SENTADA}>
+                {getEstadoLabel(ESTADOS_RESERVA.SENTADA)}
+              </option>
+              <option value={ESTADOS_RESERVA.COMPLETADA}>
+                {getEstadoLabel(ESTADOS_RESERVA.COMPLETADA)}
+              </option>
+              <option value={ESTADOS_RESERVA.CANCELADA}>
+                {getEstadoLabel(ESTADOS_RESERVA.CANCELADA)}
+              </option>
+              <option value={ESTADOS_RESERVA.NO_SHOW}>
+                {getEstadoLabel(ESTADOS_RESERVA.NO_SHOW)}
+              </option>
+            </select>
+          </div>
         </div>
 
-        {/* Filtro de Fecha */}
+        {/* Selector de fecha */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Fecha
           </label>
-          <input
-            type="date"
-            value={filterFecha}
-            onChange={(e) => onFechaChange(e.target.value)}
-            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain"
-          />
+          <div className="relative">
+            <Calendar
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary pointer-events-none"
+              size={18}
+            />
+            <input
+              type="date"
+              value={filterFecha}
+              onChange={(e) => onFechaChange(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain cursor-pointer"
+            />
+          </div>
         </div>
       </div>
     </div>

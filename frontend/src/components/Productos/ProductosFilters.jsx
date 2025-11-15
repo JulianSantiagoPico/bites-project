@@ -1,4 +1,4 @@
-import { Search, X, Filter, Tag, Plus } from "lucide-react";
+import { Search, X, Filter, Tag } from "lucide-react";
 import { CATEGORIAS } from "../../utils/productosUtils";
 
 /**
@@ -10,7 +10,6 @@ const ProductosFilters = ({
   onSearchChange,
   filterCategory,
   onCategoryChange,
-  onAddNew,
 }) => {
   const handleClearSearch = () => {
     onSearchChange("");
@@ -21,18 +20,9 @@ const ProductosFilters = ({
       className="rounded-xl shadow-md p-6"
       style={{ backgroundColor: "white" }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Filter size={20} className="text-accent" />
-          <h3 className="text-lg font-semibold text-textMain">Filtros</h3>
-        </div>
-        <button
-          onClick={onAddNew}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all hover:opacity-90 bg-primary"
-        >
-          <Plus size={20} />
-          Nuevo Producto
-        </button>
+      <div className="flex items-center gap-2 mb-4">
+        <Filter size={20} className="text-accent" />
+        <h3 className="text-lg font-semibold text-textMain">Filtros</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -23,7 +23,7 @@ const MesasFilters = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Búsqueda por número */}
+        {/* Campo de búsqueda */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Buscar
@@ -51,7 +51,7 @@ const MesasFilters = ({
           </div>
         </div>
 
-        {/* Filtro por ubicación */}
+        {/* Selector de ubicación */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Ubicación
@@ -75,7 +75,7 @@ const MesasFilters = ({
           </div>
         </div>
 
-        {/* Filtro por estado */}
+        {/* Selector de estado */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textSecondary">
             Estado
