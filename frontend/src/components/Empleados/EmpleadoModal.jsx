@@ -1,5 +1,5 @@
 import EmpleadoForm from "./EmpleadoForm";
-import { rolesDisplay, roles } from "../../utils/empleadosUtils";
+import { getCurrentRoles } from "../../utils/empleadosUtils";
 
 /**
  * Modal para crear o editar un empleado
@@ -7,6 +7,8 @@ import { rolesDisplay, roles } from "../../utils/empleadosUtils";
  */
 const EmpleadoModal = ({ isOpen, employee, onSubmit, onClose }) => {
   if (!isOpen) return null;
+
+  const { rolesDisplay, roles } = getCurrentRoles();
 
   return (
     <div

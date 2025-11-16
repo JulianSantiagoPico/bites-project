@@ -38,7 +38,7 @@ const TomarPedido = () => {
   } = usePedidos();
 
   // Hook para obtener mesas (para el filtro)
-  const { mesas: allMesas } = useMesas();
+  const { mesas: allMesas, loading: loadingMesas } = useMesas();
 
   // Mesas disponibles para el filtro (solo activas)
   const mesasParaFiltro = allMesas.filter((mesa) => mesa.activo);
@@ -121,6 +121,7 @@ const TomarPedido = () => {
         filterMesa={filterMesa}
         setFilterMesa={setFilterMesa}
         mesas={mesasParaFiltro}
+        loadingMesas={loadingMesas}
       />
 
       {/* Lista de pedidos */}

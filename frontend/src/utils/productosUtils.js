@@ -3,16 +3,87 @@
  * Helpers, formatters y funciones auxiliares
  */
 
-// Iconos por categoría
+// Iconos por categoría (dinámico)
 export const getCategoryIcon = (categoria) => {
+  // Obtener categorías personalizadas del localStorage
+  const customCategorias = localStorage.getItem("customCategorias");
+  if (customCategorias) {
+    try {
+      const { categoriasIcons } = JSON.parse(customCategorias);
+      if (categoriasIcons && categoriasIcons[categoria]) {
+        return categoriasIcons[categoria];
+      }
+    } catch (e) {
+      console.error("Error parsing customCategorias:", e);
+    }
+  }
+
+  // Iconos por defecto
   const icons = {
-    Entradas: "🍽️",
-    "Platos Fuertes": "🍖",
-    Postres: "🍰",
-    Bebidas: "🥤",
-    Otros: "📦",
+    entradas: "🥗",
+    platos_fuertes: "🍽️",
+    postres: "🍰",
+    bebidas: "🍹",
+    extras: "🍟",
   };
   return icons[categoria] || "🍽️";
+};
+
+// Obtener label de categoría (dinámico)
+export const getCategoryLabel = (categoria) => {
+  // Obtener categorías personalizadas del localStorage
+  const customCategorias = localStorage.getItem("customCategorias");
+  if (customCategorias) {
+    try {
+      const { categoriasDisplay } = JSON.parse(customCategorias);
+      if (categoriasDisplay && categoriasDisplay[categoria]) {
+        return categoriasDisplay[categoria];
+      }
+    } catch (e) {
+      console.error("Error parsing customCategorias:", e);
+    }
+  }
+
+  // Labels por defecto
+  const labels = {
+    entradas: "Entradas",
+    platos_fuertes: "Platos Fuertes",
+    postres: "Postres",
+    bebidas: "Bebidas",
+    extras: "Extras",
+  };
+  return labels[categoria] || categoria;
+};
+
+// Función helper para obtener todas las categorías disponibles
+export const getCurrentCategorias = () => {
+  // Categorías predeterminadas
+  const defaultCategorias = {
+    entradas: "Entradas",
+    platos_fuertes: "Platos Fuertes",
+    postres: "Postres",
+    bebidas: "Bebidas",
+    extras: "Extras",
+  };
+
+  // Obtener categorías personalizadas del localStorage
+  const customCategorias = localStorage.getItem("customCategorias");
+  if (customCategorias) {
+    try {
+      const { categoriasDisplay } = JSON.parse(customCategorias);
+      if (categoriasDisplay && Object.keys(categoriasDisplay).length > 0) {
+        // Combinar categorías predeterminadas con personalizadas
+        return {
+          ...defaultCategorias,
+          ...categoriasDisplay,
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing customCategorias:", e);
+    }
+  }
+
+  return defaultCategorias;
 };
 
 // Colores para disponibilidad

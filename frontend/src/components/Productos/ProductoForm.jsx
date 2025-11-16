@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
-import { CATEGORIAS_FORM, TAGS_SUGERIDOS } from "../../utils/productosUtils";
+import {
+  TAGS_SUGERIDOS,
+  getCurrentCategorias,
+  getCategoryIcon,
+} from "../../utils/productosUtils";
 
 const ProductoForm = ({ producto, onSubmit, onCancel }) => {
+  const [categoriasDisponibles, setCategoriasDisponibles] = useState({});
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
-    categoria: "Platos Fuertes",
+    categoria: "platos_fuertes",
     precio: "",
     imagen: "",
     disponible: true,
@@ -19,12 +24,25 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
   const [serverError, setServerError] = useState("");
   const [tagInput, setTagInput] = useState("");
 
+  // Cargar categorías disponibles
+  useEffect(() => {
+    const categorias = getCurrentCategorias();
+    setCategoriasDisponibles(categorias);
+    // Si no hay categoría seleccionada, usar la primera disponible
+    if (!formData.categoria && Object.keys(categorias).length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        categoria: Object.keys(categorias)[0],
+      }));
+    }
+  }, []);
+
   useEffect(() => {
     if (producto) {
       setFormData({
         nombre: producto.nombre || "",
         descripcion: producto.descripcion || "",
-        categoria: producto.categoria || "Platos Fuertes",
+        categoria: producto.categoria || "platos_fuertes",
         precio: producto.precio || "",
         imagen: producto.imagen || "",
         disponible:
@@ -140,10 +158,12 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
 
       // Resetear formulario si es creación exitosa
       if (!producto) {
+        const categorias = getCurrentCategorias();
+        const primeraCategoria = Object.keys(categorias)[0] || "platos_fuertes";
         setFormData({
           nombre: "",
           descripcion: "",
-          categoria: "Platos Fuertes",
+          categoria: primeraCategoria,
           precio: "",
           imagen: "",
           disponible: true,
@@ -211,9 +231,9 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:border-primary transition-colors appearance-none cursor-pointer border-secondary/30 bg-white text-textMain"
           >
-            {CATEGORIAS_FORM.map((cat) => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
+            {Object.entries(categoriasDisponibles).map(([key, label]) => (
+              <option key={key} value={key}>
+                {getCategoryIcon(key)} {label}
               </option>
             ))}
           </select>

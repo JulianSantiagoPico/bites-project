@@ -64,6 +64,20 @@ export const getEstadoLabel = (estado) => {
  * @returns {string} Etiqueta en español
  */
 export const getOcasionLabel = (ocasion) => {
+  // Intentar obtener de localStorage primero (ocasiones personalizadas)
+  try {
+    const customOcasiones = localStorage.getItem("customOcasiones");
+    if (customOcasiones) {
+      const parsed = JSON.parse(customOcasiones);
+      if (parsed.ocasionesDisplay && parsed.ocasionesDisplay[ocasion]) {
+        return parsed.ocasionesDisplay[ocasion];
+      }
+    }
+  } catch (error) {
+    console.error("Error al leer ocasiones personalizadas:", error);
+  }
+
+  // Fallback a labels predeterminadas
   const labels = {
     ninguna: "Sin ocasión",
     cumpleaños: "Cumpleaños",
@@ -126,6 +140,20 @@ export const formatearHora = (hora) => {
  * @returns {string} Emoji del icono
  */
 export const getOcasionIcon = (ocasion) => {
+  // Intentar obtener de localStorage primero (ocasiones personalizadas)
+  try {
+    const customOcasiones = localStorage.getItem("customOcasiones");
+    if (customOcasiones) {
+      const parsed = JSON.parse(customOcasiones);
+      if (parsed.ocasionesIcons && parsed.ocasionesIcons[ocasion]) {
+        return parsed.ocasionesIcons[ocasion];
+      }
+    }
+  } catch (error) {
+    console.error("Error al leer iconos de ocasiones:", error);
+  }
+
+  // Fallback a iconos predeterminados
   const iconos = {
     ninguna: "📅",
     cumpleaños: "🎂",
@@ -147,6 +175,40 @@ export const puedeEditarReserva = (estado) => {
     estado === ESTADOS_RESERVA.PENDIENTE ||
     estado === ESTADOS_RESERVA.CONFIRMADA
   );
+};
+
+/**
+ * Obtiene todas las ocasiones disponibles (predeterminadas + personalizadas)
+ * @returns {Object} Objeto con todas las ocasiones
+ */
+export const getCurrentOcasiones = () => {
+  // Ocasiones predeterminadas
+  const defaultOcasiones = {
+    ninguna: "Sin ocasión",
+    cumpleaños: "Cumpleaños",
+    aniversario: "Aniversario",
+    cita: "Cita",
+    negocio: "Negocio",
+    otro: "Otro",
+  };
+
+  // Intentar obtener ocasiones personalizadas
+  try {
+    const customOcasiones = localStorage.getItem("customOcasiones");
+    if (customOcasiones) {
+      const parsed = JSON.parse(customOcasiones);
+      if (parsed.ocasionesDisplay) {
+        return {
+          ...defaultOcasiones,
+          ...parsed.ocasionesDisplay,
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error al leer ocasiones personalizadas:", error);
+  }
+
+  return defaultOcasiones;
 };
 
 /**

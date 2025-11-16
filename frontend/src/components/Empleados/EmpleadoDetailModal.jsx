@@ -2,7 +2,7 @@ import {
   getStatusColor,
   getRoleIcon,
   formatDate,
-  rolesDisplay,
+  getCurrentRoles,
 } from "../../utils/empleadosUtils";
 
 /**
@@ -18,6 +18,8 @@ const EmpleadoDetailModal = ({
   onReactivate,
 }) => {
   if (!isOpen || !employee) return null;
+
+  const { rolesDisplay } = getCurrentRoles();
 
   return (
     <div

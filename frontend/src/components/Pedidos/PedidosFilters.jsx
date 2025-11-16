@@ -17,6 +17,7 @@ const PedidosFilters = ({
   filterMesa,
   setFilterMesa,
   mesas = [],
+  loadingMesas = false,
 }) => {
   const estados = [
     { value: "Todos", label: "Todos" },
@@ -95,31 +96,32 @@ const PedidosFilters = ({
         </div>
 
         {/* Selector de mesa */}
-        {mesas.length > 0 && (
-          <div>
-            <label className="block text-sm font-medium mb-2 text-textSecondary">
-              Mesa
-            </label>
-            <div className="relative">
-              <UtensilsCrossed
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary pointer-events-none"
-                size={18}
-              />
-              <select
-                value={filterMesa}
-                onChange={(e) => setFilterMesa(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
-              >
-                <option value="Todas">Todas las mesas</option>
-                {mesas.map((mesa) => (
-                  <option key={mesa.id} value={mesa.numero.toString()}>
-                    Mesa {mesa.numero}
-                  </option>
-                ))}
-              </select>
-            </div>
+        <div>
+          <label className="block text-sm font-medium mb-2 text-textSecondary">
+            Mesa
+          </label>
+          <div className="relative">
+            <UtensilsCrossed
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-textSecondary pointer-events-none"
+              size={18}
+            />
+            <select
+              value={filterMesa}
+              onChange={(e) => setFilterMesa(e.target.value)}
+              disabled={loadingMesas}
+              className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="Todas">
+                {loadingMesas ? "Cargando mesas..." : "Todas las mesas"}
+              </option>
+              {mesas.map((mesa) => (
+                <option key={mesa.id} value={mesa.numero.toString()}>
+                  Mesa {mesa.numero}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

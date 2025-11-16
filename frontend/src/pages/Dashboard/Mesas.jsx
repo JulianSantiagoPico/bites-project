@@ -5,9 +5,12 @@ import MesaCard from "../../components/Mesas/MesaCard";
 import MesaModal from "../../components/Mesas/MesaModal";
 import MesaDetailModal from "../../components/Mesas/MesaDetailModal";
 import AsignarMeseroModal from "../../components/Mesas/AsignarMeseroModal";
+import UbicacionesModal from "../../components/Mesas/UbicacionesModal";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useMesas } from "../../hooks/useMesas";
+import { useUbicaciones } from "../../hooks/useUbicaciones";
+import { Settings } from "lucide-react";
 
 const Mesas = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +19,7 @@ const Mesas = () => {
   const [selectedMesa, setSelectedMesa] = useState(null);
   const [showAsignarModal, setShowAsignarModal] = useState(false);
   const [asigningMesa, setAsigningMesa] = useState(null);
+  const [showUbicacionesModal, setShowUbicacionesModal] = useState(false);
 
   const {
     meseros,
@@ -39,6 +43,13 @@ const Mesas = () => {
     closeNotification,
     closeConfirmDialog,
   } = useMesas();
+
+  const {
+    ubicaciones,
+    saving: savingUbicaciones,
+    updateUbicaciones,
+    getCurrentUbicaciones,
+  } = useUbicaciones();
 
   const handleOpenModal = (mesa = null) => {
     setEditingMesa(mesa);
@@ -74,33 +85,14 @@ const Mesas = () => {
     await asignarMesero(mesa, meseroId);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <p className="text-lg font-medium text-textMain">Cargando mesas...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
-          <button
-            onClick={loadMesas}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleUpdateUbicaciones = async (ubicacionesData) => {
+    const result = await updateUbicaciones(ubicacionesData);
+    if (result.success) {
+      setShowUbicacionesModal(false);
+      // Recargar mesas para reflejar los cambios
+      await loadMesas();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -109,25 +101,35 @@ const Mesas = () => {
           <h2 className="text-3xl font-bold text-primary">Mesas</h2>
           <p className="text-textSecondary">Gestión de mesas del restaurante</p>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowUbicacionesModal(true)}
+            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-colors flex items-center gap-2 justify-center"
+            title="Gestionar Ubicaciones"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Nueva Mesa
-        </button>
+            <Settings className="w-5 h-5" />
+            <span className="hidden sm:inline">Gestionar Ubicaciones</span>
+          </button>
+          <button
+            onClick={() => handleOpenModal()}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Nueva Mesa
+          </button>
+        </div>
       </div>
 
       <MesasStats stats={stats} />
@@ -141,7 +143,25 @@ const Mesas = () => {
         setFilterEstado={setFilterEstado}
       />
 
-      {filteredMesas.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+          <p className="text-textSecondary mt-4">Cargando mesas...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="text-6xl mb-4">❌</div>
+            <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
+            <button
+              onClick={loadMesas}
+              className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      ) : filteredMesas.length === 0 ? (
         <div
           className="text-center py-12 rounded-xl"
           style={{ backgroundColor: "white" }}
@@ -241,6 +261,14 @@ const Mesas = () => {
         isOpen={showAsignarModal}
         onClose={handleCloseAsignarModal}
         onConfirm={handleAsignarMesero}
+      />
+
+      <UbicacionesModal
+        isOpen={showUbicacionesModal}
+        onClose={() => setShowUbicacionesModal(false)}
+        currentUbicaciones={getCurrentUbicaciones()}
+        onUpdateUbicaciones={handleUpdateUbicaciones}
+        saving={savingUbicaciones}
       />
 
       {notification && (

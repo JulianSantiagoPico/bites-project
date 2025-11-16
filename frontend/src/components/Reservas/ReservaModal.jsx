@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Calendar, Save } from "lucide-react";
 import { mesasService } from "../../services/api";
 import {
-  OCASIONES,
+  getCurrentOcasiones,
   getOcasionLabel,
   validarTelefono,
   validarEmail,
@@ -30,6 +30,7 @@ const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
   const [mesas, setMesas] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [ocasionesDisponibles, setOcasionesDisponibles] = useState({});
 
   const textMain = "#1f2937";
   const textSecondary = "#6b7280";
@@ -72,6 +73,7 @@ const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       fetchMesas();
+      setOcasionesDisponibles(getCurrentOcasiones());
     }
   }, [isOpen]);
 
@@ -442,9 +444,9 @@ const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
                     color: textMain,
                   }}
                 >
-                  {Object.values(OCASIONES).map((ocasion) => (
-                    <option key={ocasion} value={ocasion}>
-                      {getOcasionLabel(ocasion)}
+                  {Object.entries(ocasionesDisponibles).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
                     </option>
                   ))}
                 </select>
