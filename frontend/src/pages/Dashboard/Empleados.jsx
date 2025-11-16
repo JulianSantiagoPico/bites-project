@@ -56,36 +56,6 @@ const Empleados = () => {
     setShowDetailModal(true);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <p className="text-lg font-medium text-textMain">
-            Cargando empleados...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
-          <button
-            onClick={loadEmpleados}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -116,10 +86,8 @@ const Empleados = () => {
           Nuevo Empleado
         </button>
       </div>
-
       {/* Stats */}
       <EmpleadosStats employees={employees} />
-
       {/* Filters */}
       <EmpleadosFilters
         searchTerm={searchTerm}
@@ -127,46 +95,66 @@ const Empleados = () => {
         onSearchChange={setSearchTerm}
         onRoleChange={setFilterRole}
       />
-
       {/* Employees Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredEmployees.map((employee) => (
-          <EmpleadoCard
-            key={employee.id}
-            employee={employee}
-            onViewDetail={handleViewDetail}
-            onEdit={handleOpenModal}
-            onDelete={deleteEmpleado}
-            onReactivate={reactivateEmpleado}
-          />
-        ))}
-      </div>
-
-      {filteredEmployees.length === 0 && (
-        <div
-          className="text-center py-12 rounded-xl"
-          style={{ backgroundColor: "white" }}
-        >
-          <div className="text-6xl mb-4">👥</div>
-          <p className="text-lg font-medium text-textMain">
-            No se encontraron empleados
-          </p>
-          <p className="text-textSecondary mb-4">
-            {searchTerm || filterRole !== "Todos"
-              ? "Intenta con otros filtros de búsqueda"
-              : "Comienza agregando tu primer empleado"}
-          </p>
-          {!searchTerm && filterRole === "Todos" && (
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+          <p className="text-textSecondary mt-4">Cargando empleados...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="text-6xl mb-4">❌</div>
+            <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
-              onClick={() => handleOpenModal()}
+              onClick={loadEmpleados}
               className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
-              Agregar Empleado
+              Reintentar
             </button>
-          )}
+          </div>
         </div>
-      )}
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEmployees.map((employee) => (
+              <EmpleadoCard
+                key={employee.id}
+                employee={employee}
+                onViewDetail={handleViewDetail}
+                onEdit={handleOpenModal}
+                onDelete={deleteEmpleado}
+                onReactivate={reactivateEmpleado}
+              />
+            ))}
+          </div>
 
+          {filteredEmployees.length === 0 && (
+            <div
+              className="text-center py-12 rounded-xl"
+              style={{ backgroundColor: "white" }}
+            >
+              <div className="text-6xl mb-4">👥</div>
+              <p className="text-lg font-medium text-textMain">
+                No se encontraron empleados
+              </p>
+              <p className="text-textSecondary mb-4">
+                {searchTerm || filterRole !== "Todos"
+                  ? "Intenta con otros filtros de búsqueda"
+                  : "Comienza agregando tu primer empleado"}
+              </p>
+              {!searchTerm && filterRole === "Todos" && (
+                <button
+                  onClick={() => handleOpenModal()}
+                  className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                >
+                  Agregar Empleado
+                </button>
+              )}
+            </div>
+          )}
+        </>
+      )}{" "}
       {/* Modales */}
       <EmpleadoModal
         isOpen={showModal}
@@ -174,7 +162,6 @@ const Empleados = () => {
         onSubmit={handleFormSubmit}
         onClose={handleCloseModal}
       />
-
       <EmpleadoDetailModal
         isOpen={showDetailModal}
         employee={selectedEmployee}
@@ -183,7 +170,6 @@ const Empleados = () => {
         onDelete={deleteEmpleado}
         onReactivate={reactivateEmpleado}
       />
-
       {/* Notificaciones Toast */}
       {notification && (
         <Notification
@@ -193,7 +179,6 @@ const Empleados = () => {
           duration={3000}
         />
       )}
-
       {/* Dialog de Confirmación */}
       <ConfirmDialog
         isOpen={confirmDialog.isOpen}

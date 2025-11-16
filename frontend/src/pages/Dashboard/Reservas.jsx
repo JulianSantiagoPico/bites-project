@@ -93,36 +93,6 @@ const Reservas = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <p className="text-lg font-medium text-textMain">
-            Cargando reservas...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
-          <button
-            onClick={loadReservas}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -153,10 +123,8 @@ const Reservas = () => {
           Nueva Reserva
         </button>
       </div>
-
       {/* Stats */}
       <ReservasStats stats={stats} />
-
       {/* Filters */}
       <ReservasFilters
         searchTerm={searchTerm}
@@ -166,44 +134,64 @@ const Reservas = () => {
         onEstadoChange={setFilterEstado}
         onFechaChange={setFilterFecha}
       />
-
       {/* Tabla de Reservas */}
-      <ReservasTable
-        reservas={filteredReservas}
-        onViewDetail={handleViewDetail}
-        onEdit={handleOpenModal}
-        onDelete={deleteReserva}
-        onChangeEstado={changeEstado}
-        onAsignarMesa={handleOpenAsignarModal}
-      />
-
-      {filteredReservas.length === 0 && (
-        <div
-          className="text-center py-12 rounded-xl"
-          style={{ backgroundColor: "white" }}
-        >
-          <div className="flex justify-center mb-4">
-            <CalendarX2 size={64} className="text-textSecondary" />
-          </div>
-          <p className="text-lg font-medium text-textMain">
-            No se encontraron reservas
-          </p>
-          <p className="text-textSecondary mb-4">
-            {searchTerm || filterEstado !== "Todos" || filterFecha
-              ? "Intenta con otros filtros de búsqueda"
-              : "Comienza agregando tu primera reserva"}
-          </p>
-          {!searchTerm && filterEstado === "Todos" && !filterFecha && (
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+          <p className="text-textSecondary mt-4">Cargando reservas...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="text-6xl mb-4">❌</div>
+            <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
-              onClick={() => handleOpenModal()}
+              onClick={loadReservas}
               className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
             >
-              Agregar Reserva
+              Reintentar
             </button>
-          )}
+          </div>
         </div>
-      )}
+      ) : (
+        <>
+          <ReservasTable
+            reservas={filteredReservas}
+            onViewDetail={handleViewDetail}
+            onEdit={handleOpenModal}
+            onDelete={deleteReserva}
+            onChangeEstado={changeEstado}
+            onAsignarMesa={handleOpenAsignarModal}
+          />
 
+          {filteredReservas.length === 0 && (
+            <div
+              className="text-center py-12 rounded-xl"
+              style={{ backgroundColor: "white" }}
+            >
+              <div className="flex justify-center mb-4">
+                <CalendarX2 size={64} className="text-textSecondary" />
+              </div>
+              <p className="text-lg font-medium text-textMain">
+                No se encontraron reservas
+              </p>
+              <p className="text-textSecondary mb-4">
+                {searchTerm || filterEstado !== "Todos" || filterFecha
+                  ? "Intenta con otros filtros de búsqueda"
+                  : "Comienza agregando tu primera reserva"}
+              </p>
+              {!searchTerm && filterEstado === "Todos" && !filterFecha && (
+                <button
+                  onClick={() => handleOpenModal()}
+                  className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                >
+                  Agregar Reserva
+                </button>
+              )}
+            </div>
+          )}
+        </>
+      )}{" "}
       {/* Modales */}
       <ReservaModal
         isOpen={showModal}
@@ -211,7 +199,6 @@ const Reservas = () => {
         onSubmit={handleFormSubmit}
         onClose={handleCloseModal}
       />
-
       <ReservaDetailModal
         isOpen={showDetailModal}
         reserva={selectedReserva}
@@ -221,14 +208,12 @@ const Reservas = () => {
         onChangeEstado={handleChangeEstado}
         onAsignarMesa={handleOpenAsignarModal}
       />
-
       <AsignarMesaModal
         isOpen={showAsignarModal}
         reserva={asigningReserva}
         onClose={handleCloseAsignarModal}
         onConfirm={handleAsignarMesa}
       />
-
       {/* Notificaciones Toast */}
       {notification && (
         <Notification
@@ -238,7 +223,6 @@ const Reservas = () => {
           duration={3000}
         />
       )}
-
       {/* Dialog de Confirmación */}
       <ConfirmDialog
         isOpen={confirmDialog.isOpen}

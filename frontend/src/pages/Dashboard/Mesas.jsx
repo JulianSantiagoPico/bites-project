@@ -74,34 +74,6 @@ const Mesas = () => {
     await asignarMesero(mesa, meseroId);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <p className="text-lg font-medium text-textMain">Cargando mesas...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
-          <button
-            onClick={loadMesas}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -141,7 +113,25 @@ const Mesas = () => {
         setFilterEstado={setFilterEstado}
       />
 
-      {filteredMesas.length === 0 ? (
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+          <p className="text-textSecondary mt-4">Cargando mesas...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="text-6xl mb-4">❌</div>
+            <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
+            <button
+              onClick={loadMesas}
+              className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      ) : filteredMesas.length === 0 ? (
         <div
           className="text-center py-12 rounded-xl"
           style={{ backgroundColor: "white" }}

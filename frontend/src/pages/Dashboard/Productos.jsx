@@ -62,45 +62,15 @@ const Productos = () => {
     setSelectedProducto(null);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">⏳</div>
-          <p className="text-lg font-medium text-textMain">
-            Cargando productos...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
-          <button
-            onClick={loadProductos}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary">
+          <h2 className="text-3xl font-bold text-primary">
             Gestión de Productos
-          </h1>
-          <p className="text-textSecondary mt-1">
+          </h2>
+          <p className="text-textSecondary">
             Administra el menú y los productos del restaurante
           </p>
         </div>
@@ -137,14 +107,34 @@ const Productos = () => {
       />
 
       {/* Tabla de productos */}
-      <ProductosTable
-        productos={filteredProductos}
-        onViewDetail={handleViewDetail}
-        onEdit={handleOpenModal}
-        onDelete={deleteProducto}
-        onReactivate={reactivateProducto}
-        onToggleDisponibilidad={toggleDisponibilidad}
-      />
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+          <p className="text-textSecondary mt-4">Cargando productos...</p>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="text-6xl mb-4">❌</div>
+            <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
+            <button
+              onClick={loadProductos}
+              className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      ) : (
+        <ProductosTable
+          productos={filteredProductos}
+          onViewDetail={handleViewDetail}
+          onEdit={handleOpenModal}
+          onDelete={deleteProducto}
+          onReactivate={reactivateProducto}
+          onToggleDisponibilidad={toggleDisponibilidad}
+        />
+      )}
 
       {/* Modal de crear/editar */}
       <ProductoModal
