@@ -236,7 +236,8 @@ pedidoSchema.methods.calcularTotales = function (porcentajeImpuesto = 0) {
 // Método para obtener JSON público
 pedidoSchema.methods.toPublicJSON = function () {
   return {
-    id: this._id,
+    _id: this._id,
+    id: this._id, // Mantener compatibilidad
     numeroPedido: this.numeroPedido,
     mesaId: this.mesaId,
     meseroId: this.meseroId,

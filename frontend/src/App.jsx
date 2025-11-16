@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { SocketProvider } from "./context/SocketContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -9,6 +10,7 @@ import DashboardHome from "./pages/Dashboard/DashboardHome.jsx";
 import TomarPedido from "./pages/Dashboard/TomarPedido.jsx";
 import Productos from "./pages/Dashboard/Productos.jsx";
 import Ordenes from "./pages/Dashboard/Ordenes.jsx";
+import Cocina from "./pages/Dashboard/Cocina.jsx";
 import Mesas from "./pages/Dashboard/Mesas.jsx";
 import Reservas from "./pages/Dashboard/Reservas.jsx";
 import Inventario from "./pages/Dashboard/Inventario.jsx";
@@ -19,34 +21,37 @@ import "./App.css";
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <SocketProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Dashboard Routes - Protegidas */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<DashboardHome />} />
-          <Route path="pedidos" element={<TomarPedido />} />
-          <Route path="productos" element={<Productos />} />
-          <Route path="ordenes" element={<Ordenes />} />
-          <Route path="mesas" element={<Mesas />} />
-          <Route path="reservas" element={<Reservas />} />
-          <Route path="inventario" element={<Inventario />} />
-          <Route path="empleados" element={<Empleados />} />
-          <Route path="perfil" element={<Perfil />} />
-        </Route>
+          {/* Dashboard Routes - Protegidas */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<DashboardHome />} />
+            <Route path="pedidos" element={<TomarPedido />} />
+            <Route path="productos" element={<Productos />} />
+            <Route path="ordenes" element={<Ordenes />} />
+            <Route path="cocina" element={<Cocina />} />
+            <Route path="mesas" element={<Mesas />} />
+            <Route path="reservas" element={<Reservas />} />
+            <Route path="inventario" element={<Inventario />} />
+            <Route path="empleados" element={<Empleados />} />
+            <Route path="perfil" element={<Perfil />} />
+          </Route>
 
-        {/* Ruta por defecto - Redirigir al login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+          {/* Ruta por defecto - Redirigir al login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </SocketProvider>
     </AuthProvider>
   );
 }

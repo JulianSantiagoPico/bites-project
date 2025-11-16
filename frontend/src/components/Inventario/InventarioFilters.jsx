@@ -26,7 +26,7 @@ const InventarioFilters = ({
 
   return (
     <div
-      className="rounded-xl shadow-md p-6"
+      className="rounded-xl shadow-md p-4"
       style={{ backgroundColor: "white" }}
     >
       <div className="flex items-center gap-2 mb-4">
