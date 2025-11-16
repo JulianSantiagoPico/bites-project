@@ -164,9 +164,7 @@ const EditOcasionModal = ({
                 <button
                   key={icon}
                   type="button"
-                  onClick={() =>
-                    setEditedOcasion({ ...editedOcasion, icon })
-                  }
+                  onClick={() => setEditedOcasion({ ...editedOcasion, icon })}
                   className={`p-3 text-2xl rounded-lg border-2 transition-all ${
                     editedOcasion.icon === icon
                       ? "border-primary bg-primary/10"

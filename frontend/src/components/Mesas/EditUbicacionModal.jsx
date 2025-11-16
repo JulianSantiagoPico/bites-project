@@ -148,7 +148,10 @@ const EditUbicacionModal = ({
               type="text"
               value={editedUbicacion.label}
               onChange={(e) =>
-                setEditedUbicacion({ ...editedUbicacion, label: e.target.value })
+                setEditedUbicacion({
+                  ...editedUbicacion,
+                  label: e.target.value,
+                })
               }
               placeholder="ej: Jardín"
               className="w-full px-3 py-2 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"

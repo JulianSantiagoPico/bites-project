@@ -87,8 +87,7 @@ const UbicacionesModal = ({
 
     // Validar que la clave no exista ya
     const keyExists = ubicaciones.some(
-      (u) =>
-        u.key.toLowerCase() === ubicacion.key.toLowerCase()
+      (u) => u.key.toLowerCase() === ubicacion.key.toLowerCase()
     );
 
     if (keyExists) {

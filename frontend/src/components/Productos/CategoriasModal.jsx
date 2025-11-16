@@ -91,8 +91,7 @@ const CategoriasModal = ({
 
     // Validar que la clave no exista ya
     const keyExists = categorias.some(
-      (c) =>
-        c.key.toLowerCase() === categoria.key.toLowerCase()
+      (c) => c.key.toLowerCase() === categoria.key.toLowerCase()
     );
 
     if (keyExists) {
