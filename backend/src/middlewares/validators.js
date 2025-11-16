@@ -1,4 +1,5 @@
 import { body, validationResult } from "express-validator";
+import Restaurante from "../models/Restaurante.js";
 
 // Middleware para manejar los resultados de validación
 export const handleValidationErrors = (req, res, next) => {
@@ -108,8 +109,43 @@ export const validateCreateEmployee = [
   body("rol")
     .notEmpty()
     .withMessage("El rol es requerido")
-    .isIn(["mesero", "cocinero", "cajero", "host"])
-    .withMessage("Rol inválido"),
+    .custom(async (value, { req }) => {
+      try {
+        // Obtener roles del restaurante
+        const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+        if (!restaurante) {
+          throw new Error("Restaurante no encontrado");
+        }
+
+        // Roles predeterminados
+        const defaultRoles = ["mesero", "cocinero", "cajero", "host"];
+
+        // Roles personalizados del restaurante (convertir Map a array de keys)
+        let customRoles = [];
+        if (restaurante.customRoles) {
+          if (restaurante.customRoles instanceof Map) {
+            customRoles = Array.from(restaurante.customRoles.keys());
+          } else if (typeof restaurante.customRoles === "object") {
+            customRoles = Object.keys(restaurante.customRoles);
+          }
+        }
+
+        // Combinar roles predeterminados y personalizados
+        const validRoles = [...defaultRoles, ...customRoles];
+
+        if (!validRoles.includes(value)) {
+          throw new Error(
+            `Rol inválido. Roles válidos: ${validRoles.join(", ")}`
+          );
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error en validación de rol:", error);
+        throw error;
+      }
+    }),
 
   body("telefono")
     .optional()
@@ -150,8 +186,43 @@ export const validateUpdateUser = [
 
   body("rol")
     .optional()
-    .isIn(["admin", "mesero", "cocinero", "cajero", "host"])
-    .withMessage("Rol inválido"),
+    .custom(async (value, { req }) => {
+      try {
+        // Obtener roles del restaurante
+        const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+        if (!restaurante) {
+          throw new Error("Restaurante no encontrado");
+        }
+
+        // Roles predeterminados (incluir admin para validación)
+        const defaultRoles = ["admin", "mesero", "cocinero", "cajero", "host"];
+
+        // Roles personalizados del restaurante (convertir Map a array de keys)
+        let customRoles = [];
+        if (restaurante.customRoles) {
+          if (restaurante.customRoles instanceof Map) {
+            customRoles = Array.from(restaurante.customRoles.keys());
+          } else if (typeof restaurante.customRoles === "object") {
+            customRoles = Object.keys(restaurante.customRoles);
+          }
+        }
+
+        // Combinar roles predeterminados y personalizados
+        const validRoles = [...defaultRoles, ...customRoles];
+
+        if (!validRoles.includes(value)) {
+          throw new Error(
+            `Rol inválido. Roles válidos: ${validRoles.join(", ")}`
+          );
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error en validación de rol:", error);
+        throw error;
+      }
+    }),
 
   handleValidationErrors,
 ];
@@ -320,8 +391,40 @@ export const validateCreateMesa = [
   body("ubicacion")
     .notEmpty()
     .withMessage("La ubicación es requerida")
-    .isIn(["Interior", "Terraza", "Bar", "VIP"])
-    .withMessage("Ubicación no válida"),
+    .custom(async (value, { req }) => {
+      const restaurante = await Restaurante.findById(req.user.restauranteId);
+      if (!restaurante) {
+        throw new Error("Restaurante no encontrado");
+      }
+
+      // Ubicaciones por defecto
+      const defaultUbicaciones = [
+        "interior",
+        "exterior",
+        "terraza",
+        "barra",
+        "privado",
+      ];
+
+      // Obtener ubicaciones personalizadas
+      let customUbicaciones = [];
+      if (restaurante.customUbicaciones) {
+        if (restaurante.customUbicaciones instanceof Map) {
+          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
+        } else if (typeof restaurante.customUbicaciones === "object") {
+          customUbicaciones = Object.keys(restaurante.customUbicaciones);
+        }
+      }
+
+      // Combinar ubicaciones
+      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
+
+      if (!validUbicaciones.includes(value)) {
+        throw new Error("Ubicación no válida");
+      }
+
+      return true;
+    }),
 
   body("estado")
     .optional()
@@ -351,8 +454,42 @@ export const validateUpdateMesa = [
 
   body("ubicacion")
     .optional()
-    .isIn(["Interior", "Terraza", "Bar", "VIP"])
-    .withMessage("Ubicación no válida"),
+    .custom(async (value, { req }) => {
+      if (!value) return true;
+
+      const restaurante = await Restaurante.findById(req.user.restauranteId);
+      if (!restaurante) {
+        throw new Error("Restaurante no encontrado");
+      }
+
+      // Ubicaciones por defecto
+      const defaultUbicaciones = [
+        "interior",
+        "exterior",
+        "terraza",
+        "barra",
+        "privado",
+      ];
+
+      // Obtener ubicaciones personalizadas
+      let customUbicaciones = [];
+      if (restaurante.customUbicaciones) {
+        if (restaurante.customUbicaciones instanceof Map) {
+          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
+        } else if (typeof restaurante.customUbicaciones === "object") {
+          customUbicaciones = Object.keys(restaurante.customUbicaciones);
+        }
+      }
+
+      // Combinar ubicaciones
+      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
+
+      if (!validUbicaciones.includes(value)) {
+        throw new Error("Ubicación no válida");
+      }
+
+      return true;
+    }),
 
   body("notas")
     .optional()
@@ -439,8 +576,50 @@ export const validateCreateReserva = [
 
   body("ocasion")
     .optional()
-    .isIn(["ninguna", "cumpleaños", "aniversario", "cita", "negocio", "otro"])
-    .withMessage("Ocasión no válida"),
+    .custom(async (value, { req }) => {
+      try {
+        // Obtener ocasiones del restaurante
+        const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+        if (!restaurante) {
+          throw new Error("Restaurante no encontrado");
+        }
+
+        // Ocasiones predeterminadas
+        const defaultOcasiones = [
+          "ninguna",
+          "cumpleaños",
+          "aniversario",
+          "cita",
+          "negocio",
+          "otro",
+        ];
+
+        // Ocasiones personalizadas del restaurante (convertir Map a array de keys)
+        let customOcasiones = [];
+        if (restaurante.customOcasiones) {
+          if (restaurante.customOcasiones instanceof Map) {
+            customOcasiones = Array.from(restaurante.customOcasiones.keys());
+          } else if (typeof restaurante.customOcasiones === "object") {
+            customOcasiones = Object.keys(restaurante.customOcasiones);
+          }
+        }
+
+        // Combinar ocasiones predeterminadas y personalizadas
+        const validOcasiones = [...defaultOcasiones, ...customOcasiones];
+
+        if (!validOcasiones.includes(value)) {
+          throw new Error(
+            `Ocasión inválida. Ocasiones válidas: ${validOcasiones.join(", ")}`
+          );
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error en validación de ocasión:", error);
+        throw error;
+      }
+    }),
 
   handleValidationErrors,
 ];
@@ -497,8 +676,50 @@ export const validateUpdateReserva = [
 
   body("ocasion")
     .optional()
-    .isIn(["ninguna", "cumpleaños", "aniversario", "cita", "negocio", "otro"])
-    .withMessage("Ocasión no válida"),
+    .custom(async (value, { req }) => {
+      try {
+        // Obtener ocasiones del restaurante
+        const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+        if (!restaurante) {
+          throw new Error("Restaurante no encontrado");
+        }
+
+        // Ocasiones predeterminadas
+        const defaultOcasiones = [
+          "ninguna",
+          "cumpleaños",
+          "aniversario",
+          "cita",
+          "negocio",
+          "otro",
+        ];
+
+        // Ocasiones personalizadas del restaurante (convertir Map a array de keys)
+        let customOcasiones = [];
+        if (restaurante.customOcasiones) {
+          if (restaurante.customOcasiones instanceof Map) {
+            customOcasiones = Array.from(restaurante.customOcasiones.keys());
+          } else if (typeof restaurante.customOcasiones === "object") {
+            customOcasiones = Object.keys(restaurante.customOcasiones);
+          }
+        }
+
+        // Combinar ocasiones predeterminadas y personalizadas
+        const validOcasiones = [...defaultOcasiones, ...customOcasiones];
+
+        if (!validOcasiones.includes(value)) {
+          throw new Error(
+            `Ocasión inválida. Ocasiones válidas: ${validOcasiones.join(", ")}`
+          );
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error en validación de ocasión:", error);
+        throw error;
+      }
+    }),
 
   handleValidationErrors,
 ];
@@ -555,8 +776,40 @@ export const validateCreateProducto = [
   body("categoria")
     .notEmpty()
     .withMessage("La categoría es requerida")
-    .isIn(["Entradas", "Platos Fuertes", "Postres", "Bebidas", "Otros"])
-    .withMessage("Categoría no válida"),
+    .custom(async (value, { req }) => {
+      const restaurante = await Restaurante.findById(req.user.restauranteId);
+      if (!restaurante) {
+        throw new Error("Restaurante no encontrado");
+      }
+
+      // Categorías por defecto
+      const defaultCategorias = [
+        "entradas",
+        "platos_fuertes",
+        "postres",
+        "bebidas",
+        "extras",
+      ];
+
+      // Obtener categorías personalizadas
+      let customCategorias = [];
+      if (restaurante.customCategorias) {
+        if (restaurante.customCategorias instanceof Map) {
+          customCategorias = Array.from(restaurante.customCategorias.keys());
+        } else if (typeof restaurante.customCategorias === "object") {
+          customCategorias = Object.keys(restaurante.customCategorias);
+        }
+      }
+
+      // Combinar categorías
+      const validCategorias = [...defaultCategorias, ...customCategorias];
+
+      if (!validCategorias.includes(value)) {
+        throw new Error("Categoría no válida");
+      }
+
+      return true;
+    }),
 
   body("precio")
     .notEmpty()
@@ -616,8 +869,42 @@ export const validateUpdateProducto = [
 
   body("categoria")
     .optional()
-    .isIn(["Entradas", "Platos Fuertes", "Postres", "Bebidas", "Otros"])
-    .withMessage("Categoría no válida"),
+    .custom(async (value, { req }) => {
+      if (!value) return true;
+
+      const restaurante = await Restaurante.findById(req.user.restauranteId);
+      if (!restaurante) {
+        throw new Error("Restaurante no encontrado");
+      }
+
+      // Categorías por defecto
+      const defaultCategorias = [
+        "entradas",
+        "platos_fuertes",
+        "postres",
+        "bebidas",
+        "extras",
+      ];
+
+      // Obtener categorías personalizadas
+      let customCategorias = [];
+      if (restaurante.customCategorias) {
+        if (restaurante.customCategorias instanceof Map) {
+          customCategorias = Array.from(restaurante.customCategorias.keys());
+        } else if (typeof restaurante.customCategorias === "object") {
+          customCategorias = Object.keys(restaurante.customCategorias);
+        }
+      }
+
+      // Combinar categorías
+      const validCategorias = [...defaultCategorias, ...customCategorias];
+
+      if (!validCategorias.includes(value)) {
+        throw new Error("Categoría no válida");
+      }
+
+      return true;
+    }),
 
   body("precio")
     .optional()

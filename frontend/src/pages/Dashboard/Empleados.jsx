@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { Settings } from "lucide-react";
 import EmpleadoForm from "../../components/Empleados/EmpleadoForm";
 import EmpleadosStats from "../../components/Empleados/EmpleadosStats";
 import EmpleadosFilters from "../../components/Empleados/EmpleadosFilters";
 import EmpleadoCard from "../../components/Empleados/EmpleadoCard";
 import EmpleadoModal from "../../components/Empleados/EmpleadoModal";
 import EmpleadoDetailModal from "../../components/Empleados/EmpleadoDetailModal";
+import RolesModal from "../../components/Empleados/RolesModal";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useEmpleados } from "../../hooks/useEmpleados";
+import { useRoles } from "../../hooks/useRoles";
+import { getCurrentRoles } from "../../utils/empleadosUtils";
 
 const Empleados = () => {
   // Estados locales del componente (UI)
@@ -15,6 +19,8 @@ const Empleados = () => {
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [showRolesModal, setShowRolesModal] = useState(false);
+  const [rolesSaving, setRolesSaving] = useState(false);
 
   // Hook personalizado con toda la lógica de empleados
   const {
@@ -36,6 +42,9 @@ const Empleados = () => {
     closeConfirmDialog,
   } = useEmpleados();
 
+  // Hook para gestionar roles
+  const { saveRoles } = useRoles();
+
   const handleOpenModal = (employee = null) => {
     setEditingEmployee(employee);
     setShowModal(true);
@@ -56,6 +65,25 @@ const Empleados = () => {
     setShowDetailModal(true);
   };
 
+  const handleUpdateRoles = async ({ rolesDisplay, rolesList, rolesIcons }) => {
+    setRolesSaving(true);
+
+    const result = await saveRoles({
+      rolesDisplay,
+      rolesIcons,
+    });
+
+    setRolesSaving(false);
+
+    if (result.success) {
+      // Recargar empleados para actualizar los filtros
+      loadEmpleados();
+    } else {
+      // Mostrar error si falla
+      alert(result.error || "Error al actualizar roles");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -66,25 +94,35 @@ const Empleados = () => {
             Gestión del personal del restaurante
           </p>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowRolesModal(true)}
+            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2"
+            title="Gestionar roles"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Nuevo Empleado
-        </button>
+            <Settings className="w-5 h-5" />
+            <span className="hidden md:inline">Roles</span>
+          </button>
+          <button
+            onClick={() => handleOpenModal()}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Nuevo Empleado
+          </button>
+        </div>
       </div>
       {/* Stats */}
       <EmpleadosStats employees={employees} />
@@ -169,6 +207,13 @@ const Empleados = () => {
         onEdit={handleOpenModal}
         onDelete={deleteEmpleado}
         onReactivate={reactivateEmpleado}
+      />
+      <RolesModal
+        isOpen={showRolesModal}
+        onClose={() => setShowRolesModal(false)}
+        currentRoles={getCurrentRoles().rolesDisplay}
+        onUpdateRoles={handleUpdateRoles}
+        saving={rolesSaving}
       />
       {/* Notificaciones Toast */}
       {notification && (

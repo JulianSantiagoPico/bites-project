@@ -13,7 +13,7 @@ import {
 import {
   getStatusColor,
   getRoleIcon,
-  rolesDisplay,
+  getCurrentRoles,
 } from "../../utils/empleadosUtils";
 
 /**
@@ -28,6 +28,7 @@ const EmpleadoCard = ({
   onReactivate,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const { rolesDisplay } = getCurrentRoles();
   const statusColor = getStatusColor(employee.activo);
 
   return (

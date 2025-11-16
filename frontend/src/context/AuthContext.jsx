@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { authService, restauranteService } from "../services/api";
+import { loadCustomPermissionsFromBackend } from "../utils/permissions";
 
 const AuthContext = createContext(null);
 
@@ -18,13 +19,20 @@ export const AuthProvider = ({ children }) => {
 
   // Verificar si hay un usuario autenticado al cargar
   useEffect(() => {
-    const initAuth = () => {
+    const initAuth = async () => {
       const token = localStorage.getItem("token");
       const storedUser = authService.getCurrentUser();
 
       if (token && storedUser) {
         setUser(storedUser);
         setIsAuthenticated(true);
+
+        // Cargar permisos personalizados desde el backend
+        try {
+          await loadCustomPermissionsFromBackend();
+        } catch (error) {
+          console.error("Error al cargar permisos personalizados:", error);
+        }
       }
 
       setLoading(false);
@@ -81,8 +89,11 @@ export const AuthProvider = ({ children }) => {
 
       // Actualizar el usuario con el que devuelve el backend (incluye configuracionCompleta: true)
       const updatedUser = response.data.usuario;
-      console.log("AuthContext - Usuario actualizado del backend:", updatedUser);
-      
+      console.log(
+        "AuthContext - Usuario actualizado del backend:",
+        updatedUser
+      );
+
       setUser(updatedUser);
       authService.updateCurrentUser(updatedUser);
 

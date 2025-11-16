@@ -1,5 +1,5 @@
 import { Search, X, Filter, Briefcase } from "lucide-react";
-import { rolesDisplay, roles } from "../../utils/empleadosUtils";
+import { getCurrentRoles } from "../../utils/empleadosUtils";
 
 /**
  * Componente de filtros para búsqueda y filtrado de empleados
@@ -11,6 +11,8 @@ const EmpleadosFilters = ({
   onSearchChange,
   onRoleChange,
 }) => {
+  const { rolesDisplay, roles } = getCurrentRoles();
+
   const handleClearSearch = () => {
     onSearchChange("");
   };

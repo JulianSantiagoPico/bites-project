@@ -84,7 +84,6 @@ const reservaSchema = new mongoose.Schema(
     // Ocasión especial
     ocasion: {
       type: String,
-      enum: ["ninguna", "cumpleaños", "aniversario", "cita", "negocio", "otro"],
       default: "ninguna",
     },
 

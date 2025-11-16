@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { CalendarX2 } from "lucide-react";
+import { CalendarX2, PartyPopper } from "lucide-react";
 import ReservasStats from "../../components/Reservas/ReservasStats";
 import ReservasFilters from "../../components/Reservas/ReservasFilters";
 import ReservasTable from "../../components/Reservas/ReservasTable";
 import ReservaModal from "../../components/Reservas/ReservaModal";
 import ReservaDetailModal from "../../components/Reservas/ReservaDetailModal";
 import AsignarMesaModal from "../../components/Reservas/AsignarMesaModal";
+import OcasionesModal from "../../components/Reservas/OcasionesModal";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useReservas } from "../../hooks/useReservas";
+import { useOcasiones } from "../../hooks/useOcasiones";
 
 const Reservas = () => {
   // Estados locales del componente (UI)
@@ -18,6 +20,7 @@ const Reservas = () => {
   const [selectedReserva, setSelectedReserva] = useState(null);
   const [showAsignarModal, setShowAsignarModal] = useState(false);
   const [asigningReserva, setAsigningReserva] = useState(null);
+  const [showOcasionesModal, setShowOcasionesModal] = useState(false);
 
   // Hook personalizado con toda la lógica de reservas
   const {
@@ -42,6 +45,14 @@ const Reservas = () => {
     closeNotification,
     closeConfirmDialog,
   } = useReservas();
+
+  // Hook de ocasiones
+  const {
+    ocasiones,
+    saving: savingOcasiones,
+    updateOcasiones,
+    getCurrentOcasiones,
+  } = useOcasiones();
 
   const handleOpenModal = (reserva = null) => {
     setEditingReserva(reserva);
@@ -103,25 +114,35 @@ const Reservas = () => {
             Gestión de reservas del restaurante
           </p>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowOcasionesModal(true)}
+            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2"
+            title="Gestionar Ocasiones"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Nueva Reserva
-        </button>
+            <PartyPopper className="w-5 h-5" />
+            <span className="hidden md:inline">Gestionar Ocasiones</span>
+          </button>
+          <button
+            onClick={() => handleOpenModal()}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Nueva Reserva
+          </button>
+        </div>
       </div>
       {/* Stats */}
       <ReservasStats stats={stats} />
@@ -213,6 +234,17 @@ const Reservas = () => {
         reserva={asigningReserva}
         onClose={handleCloseAsignarModal}
         onConfirm={handleAsignarMesa}
+      />
+      {/* Modal de Ocasiones */}
+      <OcasionesModal
+        isOpen={showOcasionesModal}
+        onClose={() => setShowOcasionesModal(false)}
+        currentOcasiones={getCurrentOcasiones()}
+        onUpdateOcasiones={async (newOcasiones) => {
+          await updateOcasiones(newOcasiones);
+          setShowOcasionesModal(false);
+        }}
+        saving={savingOcasiones}
       />
       {/* Notificaciones Toast */}
       {notification && (

@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     // Información del rol
     rol: {
       type: String,
-      enum: Object.values(ROLES),
+      required: [true, "El rol es requerido"],
       default: ROLES.ADMIN,
     },
 

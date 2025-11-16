@@ -25,13 +25,7 @@ export const getStatusColor = (activo) => {
  * Retorna el icono emoji correspondiente al rol del empleado
  */
 export const getRoleIcon = (rol) => {
-  const icons = {
-    mesero: "🍽️",
-    cocinero: "👨‍🍳",
-    cajero: "💰",
-    host: "👔",
-  };
-  return icons[rol] || "👤";
+  return rolesIcons[rol] || "👤";
 };
 
 /**
@@ -48,7 +42,7 @@ export const formatDate = (dateString) => {
 /**
  * Diccionario de roles con sus etiquetas de visualización
  */
-export const rolesDisplay = {
+export let rolesDisplay = {
   mesero: "Mesero",
   cocinero: "Cocinero",
   cajero: "Cajero",
@@ -58,7 +52,50 @@ export const rolesDisplay = {
 /**
  * Lista de roles disponibles para filtros
  */
-export const roles = ["Todos", "mesero", "cocinero", "cajero", "host"];
+export let roles = ["Todos", "mesero", "cocinero", "cajero", "host"];
+
+/**
+ * Iconos para cada rol
+ */
+export let rolesIcons = {
+  mesero: "🍽️",
+  cocinero: "👨‍🍳",
+  cajero: "💰",
+  host: "👔",
+};
+
+/**
+ * Actualizar los roles del sistema (en memoria y backend)
+ */
+export const updateRoles = (newRolesDisplay, newRolesList, newRolesIcons) => {
+  rolesDisplay = { ...newRolesDisplay };
+  roles = [...newRolesList];
+  rolesIcons = { ...newRolesIcons };
+};
+
+/**
+ * Cargar roles desde el backend y actualizar el estado local
+ */
+export const loadRolesFromBackend = (backendRoles) => {
+  if (backendRoles.rolesDisplay) {
+    rolesDisplay = { ...backendRoles.rolesDisplay };
+  }
+  if (backendRoles.rolesList) {
+    roles = [...backendRoles.rolesList];
+  }
+  if (backendRoles.rolesIcons) {
+    rolesIcons = { ...backendRoles.rolesIcons };
+  }
+};
+
+/**
+ * Obtener roles actuales
+ */
+export const getCurrentRoles = () => ({
+  rolesDisplay: { ...rolesDisplay },
+  roles: [...roles],
+  rolesIcons: { ...rolesIcons },
+});
 
 /**
  * Retorna las clases de estilo para los tipos de notificación

@@ -20,10 +20,6 @@ const productoSchema = new mongoose.Schema(
     categoria: {
       type: String,
       required: [true, "La categoría es requerida"],
-      enum: {
-        values: ["Entradas", "Platos Fuertes", "Postres", "Bebidas", "Otros"],
-        message: "Categoría no válida",
-      },
     },
 
     // Precio

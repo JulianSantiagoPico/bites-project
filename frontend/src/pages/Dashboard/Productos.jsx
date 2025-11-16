@@ -4,9 +4,12 @@ import ProductosFilters from "../../components/Productos/ProductosFilters";
 import ProductosTable from "../../components/Productos/ProductosTable";
 import ProductoModal from "../../components/Productos/ProductoModal";
 import ProductoDetailModal from "../../components/Productos/ProductoDetailModal";
+import CategoriasModal from "../../components/Productos/CategoriasModal";
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useProductos } from "../../hooks/useProductos";
+import { useCategorias } from "../../hooks/useCategorias";
+import { Settings } from "lucide-react";
 
 const Productos = () => {
   // Estados locales del componente (UI)
@@ -14,6 +17,7 @@ const Productos = () => {
   const [editingProducto, setEditingProducto] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState(null);
+  const [showCategoriasModal, setShowCategoriasModal] = useState(false);
 
   // Hook personalizado con toda la lógica de productos
   const {
@@ -36,6 +40,13 @@ const Productos = () => {
     closeNotification,
     closeConfirmDialog,
   } = useProductos();
+
+  const {
+    categorias,
+    saving: savingCategorias,
+    updateCategorias,
+    getCurrentCategorias,
+  } = useCategorias();
 
   const handleOpenModal = (producto = null) => {
     setEditingProducto(producto);
@@ -62,6 +73,15 @@ const Productos = () => {
     setSelectedProducto(null);
   };
 
+  const handleUpdateCategorias = async (categoriasData) => {
+    const result = await updateCategorias(categoriasData);
+    if (result.success) {
+      setShowCategoriasModal(false);
+      // Recargar productos para reflejar los cambios
+      await loadProductos();
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -74,25 +94,35 @@ const Productos = () => {
             Administra el menú y los productos del restaurante
           </p>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowCategoriasModal(true)}
+            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-colors flex items-center gap-2 justify-center"
+            title="Gestionar Categorías"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Nuevo Producto
-        </button>
+            <Settings className="w-5 h-5" />
+            <span className="hidden sm:inline">Gestionar Categorías</span>
+          </button>
+          <button
+            onClick={() => handleOpenModal()}
+            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Nuevo Producto
+          </button>
+        </div>
       </div>
 
       {/* Estadísticas */}
@@ -149,6 +179,15 @@ const Productos = () => {
         isOpen={showDetailModal}
         onClose={handleCloseDetailModal}
         producto={selectedProducto}
+      />
+
+      {/* Modal de categorías */}
+      <CategoriasModal
+        isOpen={showCategoriasModal}
+        onClose={() => setShowCategoriasModal(false)}
+        currentCategorias={getCurrentCategorias()}
+        onUpdateCategorias={handleUpdateCategorias}
+        saving={savingCategorias}
       />
 
       {/* Notificaciones */}

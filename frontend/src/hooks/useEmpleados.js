@@ -76,10 +76,27 @@ export const useEmpleados = () => {
     } catch (err) {
       console.error("Error al guardar empleado:", err);
 
-      if (!err.errors) {
+      if (err && err.errors) {
+        console.error("Errores de validación:", err.errors);
+      }
+
+      if (
+        err &&
+        err.errors &&
+        Array.isArray(err.errors) &&
+        err.errors.length > 0
+      ) {
+        // Mostrar el primer error de validación
+        const firstError = err.errors[0];
         showNotification(
-          err.message ||
-            "Error al guardar empleado. Por favor intenta de nuevo.",
+          firstError.msg || firstError.message || "Error de validación",
+          "error"
+        );
+      } else if (err && err.message) {
+        showNotification(err.message, "error");
+      } else {
+        showNotification(
+          "Error al guardar empleado. Por favor intenta de nuevo.",
           "error"
         );
       }

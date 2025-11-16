@@ -21,10 +21,6 @@ const mesaSchema = new mongoose.Schema(
     ubicacion: {
       type: String,
       required: [true, "La ubicación es requerida"],
-      enum: {
-        values: ["Interior", "Terraza", "Bar", "VIP"],
-        message: "Ubicación no válida",
-      },
     },
 
     // Estado actual de la mesa

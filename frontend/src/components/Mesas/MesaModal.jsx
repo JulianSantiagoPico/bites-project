@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import {
+  getCurrentUbicaciones,
+  getUbicacionIcon,
+} from "../../utils/mesasUtils";
 
 const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
+  const [ubicacionesDisponibles, setUbicacionesDisponibles] = useState({});
   const [formData, setFormData] = useState({
     numero: "",
     capacidad: "",
-    ubicacion: "Interior",
+    ubicacion: "interior",
     estado: "disponible",
     notas: "",
   });
@@ -12,21 +17,36 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Cargar ubicaciones disponibles
+  useEffect(() => {
+    const ubicaciones = getCurrentUbicaciones();
+    setUbicacionesDisponibles(ubicaciones);
+    // Si no hay ubicación seleccionada, usar la primera disponible
+    if (!formData.ubicacion && Object.keys(ubicaciones).length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        ubicacion: Object.keys(ubicaciones)[0],
+      }));
+    }
+  }, [isOpen]);
+
   // Cargar datos iniciales cuando se edita
   useEffect(() => {
     if (initialData) {
       setFormData({
         numero: initialData.numero || "",
         capacidad: initialData.capacidad || "",
-        ubicacion: initialData.ubicacion || "Interior",
+        ubicacion: initialData.ubicacion || "interior",
         estado: initialData.estado || "disponible",
         notas: initialData.notas || "",
       });
     } else {
+      const ubicaciones = getCurrentUbicaciones();
+      const primeraUbicacion = Object.keys(ubicaciones)[0] || "interior";
       setFormData({
         numero: "",
         capacidad: "",
-        ubicacion: "Interior",
+        ubicacion: primeraUbicacion,
         estado: "disponible",
         notas: "",
       });
@@ -207,10 +227,11 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
                 errors.ubicacion ? "border-red-500" : "border-gray-300"
               }`}
             >
-              <option value="Interior">🏠 Interior</option>
-              <option value="Terraza">🌳 Terraza</option>
-              <option value="Bar">🍷 Bar</option>
-              <option value="VIP">⭐ VIP</option>
+              {Object.entries(ubicacionesDisponibles).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {getUbicacionIcon(key)} {label}
+                </option>
+              ))}
             </select>
             {errors.ubicacion && (
               <p className="mt-1 text-sm text-red-500">{errors.ubicacion}</p>

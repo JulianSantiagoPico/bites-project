@@ -54,12 +54,11 @@ const MesasStats = ({ stats }) => {
       },
       {
         id: "capacidad",
-        label: "Capacidad Total",
+        label: "Capacidad Total (personas)",
         value: stats.capacidadTotal,
         icon: Users,
         color: "#F97316", // Orange (accent)
         bgColor: "rgba(249, 115, 22, 0.1)",
-        subtitle: "personas",
       },
     ],
     [stats]

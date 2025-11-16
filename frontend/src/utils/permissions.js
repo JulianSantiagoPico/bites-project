@@ -1,3 +1,7 @@
+/**
+ * Definición de permisos del sistema (sincronizado con backend)
+ */
+
 // Roles disponibles en el sistema
 export const ROLES = {
   ADMIN: "admin",
@@ -72,7 +76,7 @@ export const PERMISSIONS = {
   },
 };
 
-// Definición de permisos por rol
+// Definición de permisos por rol (debe estar sincronizado con el backend)
 export const ROLE_PERMISSIONS = {
   [ROLES.ADMIN]: [
     // Admin tiene acceso a todo
@@ -137,12 +141,101 @@ export const ROLE_PERMISSIONS = {
   ],
 };
 
-// Verificar si un rol tiene un permiso específico
-export const hasPermission = (role, permission) => {
-  return ROLE_PERMISSIONS[role]?.includes(permission) || false;
+/**
+ * Verificar si un usuario tiene un permiso específico
+ */
+export const hasPermission = (userRole, permission) => {
+  const permissions = ROLE_PERMISSIONS[userRole] || [];
+  return permissions.includes(permission);
 };
 
-// Obtener todos los permisos de un rol
+/**
+ * Verificar si un usuario tiene al menos uno de los permisos
+ */
+export const hasAnyPermission = (userRole, permissionsList) => {
+  return permissionsList.some((permission) =>
+    hasPermission(userRole, permission)
+  );
+};
+
+/**
+ * Verificar si un usuario tiene todos los permisos
+ */
+export const hasAllPermissions = (userRole, permissionsList) => {
+  return permissionsList.every((permission) =>
+    hasPermission(userRole, permission)
+  );
+};
+
+/**
+ * Obtener todos los permisos de un rol
+ */
 export const getRolePermissions = (role) => {
+  // Primero intentar obtener permisos personalizados del localStorage
+  const customPermissions = getCustomRolePermissions();
+
+  if (customPermissions[role]) {
+    return customPermissions[role];
+  }
+
+  // Si no hay permisos personalizados, usar los predeterminados
   return ROLE_PERMISSIONS[role] || [];
+};
+
+/**
+ * Establecer permisos personalizados para un rol
+ */
+export const setRolePermissions = async (role, permissions) => {
+  // Actualizar localStorage
+  const customPermissions = getCustomRolePermissions();
+  customPermissions[role] = permissions;
+  localStorage.setItem(
+    "customRolePermissions",
+    JSON.stringify(customPermissions)
+  );
+
+  // Actualizar en el backend
+  try {
+    const { fetchAPI } = await import("../services/config");
+    await fetchAPI(`/roles/permissions/${role}`, {
+      method: "PUT",
+      body: JSON.stringify({ permissions }),
+    });
+  } catch (error) {
+    console.error("Error al actualizar permisos en el backend:", error);
+    throw error;
+  }
+};
+
+/**
+ * Obtener permisos personalizados de todos los roles desde localStorage
+ */
+export const getCustomRolePermissions = () => {
+  try {
+    const stored = localStorage.getItem("customRolePermissions");
+    return stored ? JSON.parse(stored) : {};
+  } catch (error) {
+    console.error("Error al leer permisos personalizados:", error);
+    return {};
+  }
+};
+
+/**
+ * Cargar permisos personalizados desde el backend
+ */
+export const loadCustomPermissionsFromBackend = async () => {
+  try {
+    const { fetchAPI } = await import("../services/config");
+    const response = await fetchAPI("/roles/permissions", {
+      method: "GET",
+    });
+
+    if (response) {
+      localStorage.setItem("customRolePermissions", JSON.stringify(response));
+      return response;
+    }
+  } catch (error) {
+    console.error("Error al cargar permisos desde el backend:", error);
+  }
+  return {};
 };

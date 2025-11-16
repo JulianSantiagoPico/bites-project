@@ -28,14 +28,87 @@ export const getEstadoColor = (estado) => {
 
 // Obtener icono según la ubicación
 export const getUbicacionIcon = (ubicacion) => {
+  // Obtener ubicaciones personalizadas del localStorage
+  const customUbicaciones = localStorage.getItem("customUbicaciones");
+  if (customUbicaciones) {
+    try {
+      const { ubicacionesIcons } = JSON.parse(customUbicaciones);
+      if (ubicacionesIcons && ubicacionesIcons[ubicacion]) {
+        return ubicacionesIcons[ubicacion];
+      }
+    } catch (e) {
+      console.error("Error parsing customUbicaciones:", e);
+    }
+  }
+
+  // Iconos por defecto
   const iconos = {
-    Interior: "🏠",
-    Terraza: "🌳",
-    Bar: "🍷",
-    VIP: "⭐",
+    interior: "🏠",
+    exterior: "🌳",
+    terraza: "☀️",
+    barra: "🍺",
+    privado: "🔒",
   };
 
   return iconos[ubicacion] || "📍";
+};
+
+// Obtener label según la ubicación
+export const getUbicacionLabel = (ubicacion) => {
+  // Obtener ubicaciones personalizadas del localStorage
+  const customUbicaciones = localStorage.getItem("customUbicaciones");
+  if (customUbicaciones) {
+    try {
+      const { ubicacionesDisplay } = JSON.parse(customUbicaciones);
+      if (ubicacionesDisplay && ubicacionesDisplay[ubicacion]) {
+        return ubicacionesDisplay[ubicacion];
+      }
+    } catch (e) {
+      console.error("Error parsing customUbicaciones:", e);
+    }
+  }
+
+  // Labels por defecto
+  const labels = {
+    interior: "Interior",
+    exterior: "Exterior",
+    terraza: "Terraza",
+    barra: "Barra",
+    privado: "Privado",
+  };
+
+  return labels[ubicacion] || ubicacion;
+};
+
+// Función helper para obtener todas las ubicaciones disponibles
+export const getCurrentUbicaciones = () => {
+  // Ubicaciones predeterminadas
+  const defaultUbicaciones = {
+    interior: "Interior",
+    exterior: "Exterior",
+    terraza: "Terraza",
+    barra: "Barra",
+    privado: "Privado",
+  };
+
+  // Obtener ubicaciones personalizadas del localStorage
+  const customUbicaciones = localStorage.getItem("customUbicaciones");
+  if (customUbicaciones) {
+    try {
+      const { ubicacionesDisplay } = JSON.parse(customUbicaciones);
+      if (ubicacionesDisplay && Object.keys(ubicacionesDisplay).length > 0) {
+        // Combinar ubicaciones predeterminadas con personalizadas
+        return {
+          ...defaultUbicaciones,
+          ...ubicacionesDisplay,
+        };
+      }
+    } catch (e) {
+      console.error("Error parsing customUbicaciones:", e);
+    }
+  }
+
+  return defaultUbicaciones;
 };
 
 // Formatear estado para display
