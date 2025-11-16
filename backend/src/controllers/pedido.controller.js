@@ -1,6 +1,12 @@
 import Pedido from "../models/Pedido.js";
 import Mesa from "../models/Mesa.js";
 import Producto from "../models/Producto.js";
+import {
+  emitNuevoPedido,
+  emitCambioEstado,
+  emitPedidoActualizado,
+  emitPedidoCancelado,
+} from "../sockets/pedidoSocket.js";
 
 /**
  * @desc    Obtener todos los pedidos del restaurante
@@ -263,6 +269,16 @@ export const createPedido = async (req, res) => {
     await pedido.populate("mesaId", "numero ubicacion");
     await pedido.populate("meseroId", "nombre apellido");
 
+    // Emitir evento de nuevo pedido via WebSocket
+    const io = req.app.get("io");
+    if (io) {
+      emitNuevoPedido(
+        io,
+        req.user.restauranteId.toString(),
+        pedido.toPublicJSON()
+      );
+    }
+
     res.status(201).json({
       success: true,
       message: "Pedido creado exitosamente",
@@ -380,6 +396,16 @@ export const updatePedido = async (req, res) => {
     await pedido.populate("mesaId", "numero ubicacion");
     await pedido.populate("meseroId", "nombre apellido");
 
+    // Emitir evento de pedido actualizado via WebSocket
+    const io = req.app.get("io");
+    if (io) {
+      emitPedidoActualizado(
+        io,
+        req.user.restauranteId.toString(),
+        pedido.toPublicJSON()
+      );
+    }
+
     res.json({
       success: true,
       message: "Pedido actualizado exitosamente",
@@ -456,6 +482,7 @@ export const changeEstado = async (req, res) => {
       });
     }
 
+    const estadoAnterior = pedido.estado;
     pedido.estado = estado;
     pedido.modificadoPor = req.user._id;
 
@@ -482,6 +509,17 @@ export const changeEstado = async (req, res) => {
     // Poblar datos para respuesta
     await pedido.populate("mesaId", "numero ubicacion");
     await pedido.populate("meseroId", "nombre apellido");
+
+    // Emitir evento de cambio de estado via WebSocket
+    const io = req.app.get("io");
+    if (io) {
+      emitCambioEstado(
+        io,
+        req.user.restauranteId.toString(),
+        pedido.toPublicJSON(),
+        estadoAnterior
+      );
+    }
 
     res.json({
       success: true,
@@ -545,6 +583,20 @@ export const cancelPedido = async (req, res) => {
       await Mesa.findByIdAndUpdate(pedido.mesaId, {
         estado: "disponible",
       });
+    }
+
+    // Poblar datos para respuesta
+    await pedido.populate("mesaId", "numero ubicacion");
+    await pedido.populate("meseroId", "nombre apellido");
+
+    // Emitir evento de pedido cancelado via WebSocket
+    const io = req.app.get("io");
+    if (io) {
+      emitPedidoCancelado(
+        io,
+        req.user.restauranteId.toString(),
+        pedido.toPublicJSON()
+      );
     }
 
     res.json({
