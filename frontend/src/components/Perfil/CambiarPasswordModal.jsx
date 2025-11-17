@@ -144,7 +144,7 @@ export const CambiarPasswordModal = ({
                 name="currentPassword"
                 value={formData.currentPassword}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.currentPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}
@@ -180,7 +180,7 @@ export const CambiarPasswordModal = ({
                 name="newPassword"
                 value={formData.newPassword}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.newPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}
@@ -238,7 +238,7 @@ export const CambiarPasswordModal = ({
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.confirmPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}

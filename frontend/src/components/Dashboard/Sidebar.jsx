@@ -1,5 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useRestaurante } from "../../hooks/useRestaurante";
+import { useEffect } from "react";
 import {
   Home,
   ClipboardList,
@@ -20,6 +22,26 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const { restaurante, cargarRestaurante } = useRestaurante();
+
+  useEffect(() => {
+    cargarRestaurante();
+
+    // Listener para actualizar cuando cambie el restaurante
+    const handleRestauranteUpdate = () => {
+      cargarRestaurante();
+    };
+
+    window.addEventListener("restaurante-updated", handleRestauranteUpdate);
+
+    return () => {
+      window.removeEventListener(
+        "restaurante-updated",
+        handleRestauranteUpdate
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -85,7 +107,9 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-white/10">
         {!isCollapsed && (
-          <h1 className="text-2xl font-bold text-white">Bites</h1>
+          <h1 className="text-2xl font-bold text-white">
+            {restaurante?.nombre || "Bites"}
+          </h1>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -157,7 +181,9 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-white font-medium truncate">
-                {user?.nombre || "Usuario"}
+                {user?.nombre && user?.apellido
+                  ? `${user.nombre} ${user.apellido}`
+                  : user?.nombre || "Usuario"}
               </p>
               <p className="text-xs truncate text-accent">
                 {user?.rol || "Administrador"}

@@ -251,7 +251,7 @@ export const changePassword = async (req, res) => {
     }
 
     // Verificar contraseña actual
-    const isMatch = await user.matchPassword(currentPassword);
+    const isMatch = await user.comparePassword(currentPassword);
 
     if (!isMatch) {
       return res.status(401).json({

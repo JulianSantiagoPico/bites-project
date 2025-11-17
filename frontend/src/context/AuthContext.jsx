@@ -107,6 +107,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Actualizar usuario en el contexto
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    authService.updateCurrentUser(updatedUser);
+  };
+
   const value = {
     user,
     isAuthenticated,
@@ -115,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     completarConfiguracion,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

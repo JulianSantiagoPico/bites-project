@@ -36,6 +36,8 @@ export const useRestaurante = () => {
           ...prev,
           nombre: response.data.nombre,
         }));
+        // Disparar evento para notificar cambio
+        window.dispatchEvent(new Event("restaurante-updated"));
         return { success: true, message: response.message };
       } else {
         setError(response.message || "Error al actualizar el nombre");

@@ -134,7 +134,7 @@ export const InformacionPersonal = ({ perfil, onActualizar, actualizando }) => {
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.nombre ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}
@@ -153,7 +153,7 @@ export const InformacionPersonal = ({ perfil, onActualizar, actualizando }) => {
                 name="apellido"
                 value={formData.apellido}
                 onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.apellido ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}
@@ -171,7 +171,7 @@ export const InformacionPersonal = ({ perfil, onActualizar, actualizando }) => {
                 type="email"
                 value={perfil.email}
                 disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed text-textMain"
               />
               <p className="text-xs text-gray-500 mt-1">
                 No puedes cambiar tu email
@@ -188,7 +188,7 @@ export const InformacionPersonal = ({ perfil, onActualizar, actualizando }) => {
                 value={formData.telefono}
                 onChange={handleChange}
                 placeholder="Ej: 12345678"
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-textMain ${
                   errores.telefono ? "border-red-500" : "border-gray-300"
                 }`}
                 disabled={actualizando}
