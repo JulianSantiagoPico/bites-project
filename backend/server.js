@@ -22,6 +22,7 @@ import rolesRoutes from "./src/routes/roles.routes.js";
 import ocasionesRoutes from "./src/routes/ocasiones.routes.js";
 import ubicacionesRoutes from "./src/routes/ubicaciones.routes.js";
 import categoriasRoutes from "./src/routes/categorias.routes.js";
+import estadisticasRoutes from "./src/routes/estadisticas.routes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -78,6 +79,7 @@ app.get("/", (req, res) => {
       ocasiones: "/api/ocasiones",
       ubicaciones: "/api/ubicaciones",
       categorias: "/api/categorias",
+      estadisticas: "/api/estadisticas",
     },
   });
 });
@@ -96,6 +98,7 @@ app.use("/api/roles", rolesRoutes);
 app.use("/api/ocasiones", ocasionesRoutes);
 app.use("/api/ubicaciones", ubicacionesRoutes);
 app.use("/api/categorias", categoriasRoutes);
+app.use("/api/estadisticas", estadisticasRoutes);
 
 // Manejo de rutas no encontradas
 app.use("*", (req, res) => {

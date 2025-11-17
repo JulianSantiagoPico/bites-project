@@ -1,0 +1,175 @@
+### ============================================
+### API TESTS - ESTADÍSTICAS
+### Sistema de métricas y analíticas del restaurante
+### ============================================
+
+### Variables
+@baseURL = http://localhost:5000/api
+@token = YOUR_TOKEN_HERE
+
+### --------------------------------------------
+### 1. ESTADÍSTICAS GENERALES DEL DASHBOARD
+### --------------------------------------------
+
+### Estadísticas de hoy
+GET {{baseURL}}/estadisticas/generales?periodo=hoy
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas de ayer
+GET {{baseURL}}/estadisticas/generales?periodo=ayer
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas de la semana
+GET {{baseURL}}/estadisticas/generales?periodo=semana
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas del mes
+GET {{baseURL}}/estadisticas/generales?periodo=mes
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas del trimestre
+GET {{baseURL}}/estadisticas/generales?periodo=trimestre
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas del año
+GET {{baseURL}}/estadisticas/generales?periodo=año
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 2. ESTADÍSTICAS DE VENTAS
+### --------------------------------------------
+
+### Ventas del mes
+GET {{baseURL}}/estadisticas/ventas?periodo=mes
+Authorization: Bearer {{token}}
+
+###
+### Ventas de la semana
+GET {{baseURL}}/estadisticas/ventas?periodo=semana
+Authorization: Bearer {{token}}
+
+###
+### Ventas con fechas personalizadas
+GET {{baseURL}}/estadisticas/ventas?fechaInicio=2024-11-01&fechaFin=2024-11-15
+Authorization: Bearer {{token}}
+
+###
+### Ventas de hoy
+GET {{baseURL}}/estadisticas/ventas?periodo=hoy
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 3. ESTADÍSTICAS DE PRODUCTOS
+### --------------------------------------------
+
+### Top 10 productos más vendidos (default)
+GET {{baseURL}}/estadisticas/productos?periodo=mes
+Authorization: Bearer {{token}}
+
+###
+### Top 5 productos más vendidos
+GET {{baseURL}}/estadisticas/productos?periodo=mes&limit=5
+Authorization: Bearer {{token}}
+
+###
+### Top 20 productos de la semana
+GET {{baseURL}}/estadisticas/productos?periodo=semana&limit=20
+Authorization: Bearer {{token}}
+
+###
+### Productos más vendidos hoy
+GET {{baseURL}}/estadisticas/productos?periodo=hoy&limit=10
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 4. ESTADÍSTICAS DE MESAS
+### --------------------------------------------
+
+### Estadísticas de mesas de hoy (default)
+GET {{baseURL}}/estadisticas/mesas
+Authorization: Bearer {{token}}
+
+###
+### Estadísticas de mesas de una fecha específica
+GET {{baseURL}}/estadisticas/mesas?fecha=2024-11-15
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 5. ESTADÍSTICAS DE EMPLEADOS (MESEROS)
+### --------------------------------------------
+
+### Performance de meseros del mes
+GET {{baseURL}}/estadisticas/empleados?periodo=mes
+Authorization: Bearer {{token}}
+
+###
+### Performance de meseros de la semana
+GET {{baseURL}}/estadisticas/empleados?periodo=semana
+Authorization: Bearer {{token}}
+
+###
+### Performance de meseros de hoy
+GET {{baseURL}}/estadisticas/empleados?periodo=hoy
+Authorization: Bearer {{token}}
+
+###
+### Performance de meseros del trimestre
+GET {{baseURL}}/estadisticas/empleados?periodo=trimestre
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 6. ESTADÍSTICAS DE INVENTARIO
+### --------------------------------------------
+
+### Estadísticas y alertas de inventario
+GET {{baseURL}}/estadisticas/inventario
+Authorization: Bearer {{token}}
+
+### --------------------------------------------
+### 7. ESTADÍSTICAS DE RESERVAS
+### --------------------------------------------
+
+### Reservas del mes
+GET {{baseURL}}/estadisticas/reservas?periodo=mes
+Authorization: Bearer {{token}}
+
+###
+### Reservas de la semana
+GET {{baseURL}}/estadisticas/reservas?periodo=semana
+Authorization: Bearer {{token}}
+
+###
+### Reservas de hoy
+GET {{baseURL}}/estadisticas/reservas?periodo=hoy
+Authorization: Bearer {{token}}
+
+###
+### Reservas del trimestre
+GET {{baseURL}}/estadisticas/reservas?periodo=trimestre
+Authorization: Bearer {{token}}
+
+### ============================================
+### NOTAS:
+### 
+### - Todos los endpoints requieren autenticación (token JWT)
+### - Solo usuarios con rol ADMIN pueden acceder
+### - Reemplaza {{token}} con tu token de autenticación
+### 
+### Períodos disponibles:
+### - hoy: Día actual
+### - ayer: Día anterior
+### - semana: Últimos 7 días
+### - mes: Últimos 30 días
+### - trimestre: Últimos 90 días
+### - año: Últimos 365 días
+### 
+### Para obtener un token:
+### 1. Usa el endpoint POST {{baseURL}}/auth/login
+### 2. Copia el token de la respuesta
+### 3. Reemplaza YOUR_TOKEN_HERE con tu token
+### ============================================
