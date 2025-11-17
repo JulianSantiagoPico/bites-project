@@ -25,7 +25,7 @@ export const getRoles = async (req, res) => {
       mesero: "Mesero",
       cocinero: "Cocinero",
       cajero: "Cajero",
-      host: "Host",
+      gerente: "Gerente",
     };
 
     // Iconos por defecto
@@ -33,7 +33,7 @@ export const getRoles = async (req, res) => {
       mesero: "🍽️",
       cocinero: "👨‍🍳",
       cajero: "💰",
-      host: "👔",
+      gerente: "👔",
     };
 
     const rolesDisplay =

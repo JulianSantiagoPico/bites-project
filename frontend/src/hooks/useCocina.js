@@ -36,7 +36,6 @@ export const useCocina = () => {
       const estado = filterEstado !== "Todos" ? filterEstado : null;
       const response = await cocinaService.getPedidosCocina(estado);
 
-      console.log("Órdenes cargadas:", response.data.pedidos);
       setOrdenes(response.data.pedidos || []);
     } catch (err) {
       console.error("Error al cargar órdenes:", err);
@@ -70,7 +69,6 @@ export const useCocina = () => {
         return;
       }
 
-      console.log("Comenzando preparación de orden:", orden._id);
       await cocinaService.comenzarPreparacion(orden._id);
 
       // Actualizar localmente
@@ -105,7 +103,6 @@ export const useCocina = () => {
         return;
       }
 
-      console.log("Terminando preparación de orden:", orden._id);
       await cocinaService.terminarPreparacion(orden._id);
 
       // Remover de la lista (ya no es relevante para cocina)
@@ -174,8 +171,6 @@ export const useCocina = () => {
 
     // Nuevo pedido
     const handleNuevoPedido = (data) => {
-      console.log("🔔 Nuevo pedido recibido:", data.pedido);
-
       // Solo agregar si está en el filtro actual
       if (
         filterEstado === "Todos" ||
@@ -201,8 +196,6 @@ export const useCocina = () => {
 
     // Cambio de estado
     const handleCambioEstado = (data) => {
-      console.log("🔄 Cambio de estado:", data);
-
       setOrdenes((prev) => {
         // Si el pedido cambió a un estado que no es relevante para cocina, removerlo
         if (!["pendiente", "en_preparacion"].includes(data.pedido.estado)) {
@@ -230,8 +223,6 @@ export const useCocina = () => {
 
     // Pedido actualizado
     const handlePedidoActualizado = (data) => {
-      console.log("✏️ Pedido actualizado:", data);
-
       setOrdenes((prev) =>
         prev.map((o) => (o._id === data.pedido._id ? { ...data.pedido } : o))
       );
@@ -239,8 +230,6 @@ export const useCocina = () => {
 
     // Pedido cancelado
     const handlePedidoCancelado = (data) => {
-      console.log("❌ Pedido cancelado:", data);
-
       // Remover de la lista
       setOrdenes((prev) => prev.filter((o) => o._id !== data.pedido._id));
 

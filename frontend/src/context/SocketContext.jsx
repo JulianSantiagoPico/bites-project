@@ -23,7 +23,6 @@ export const SocketProvider = ({ children }) => {
     if (!isAuthenticated || !user?.restauranteId) {
       // Desconectar si existe una conexión previa
       if (socketRef.current) {
-        console.log("🔌 Desconectando socket...");
         socketRef.current.disconnect();
         socketRef.current = null;
         setSocket(null);
@@ -37,8 +36,6 @@ export const SocketProvider = ({ children }) => {
       const SOCKET_URL =
         import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
 
-      console.log("🔌 Conectando a WebSocket...", SOCKET_URL);
-
       const newSocket = io(SOCKET_URL, {
         transports: ["websocket", "polling"],
         reconnection: true,
@@ -48,13 +45,11 @@ export const SocketProvider = ({ children }) => {
 
       // Eventos de conexión
       newSocket.on("connect", () => {
-        console.log("✅ WebSocket conectado:", newSocket.id);
         setConnected(true);
 
         // Unirse a la sala del restaurante
         if (user?.restauranteId) {
           newSocket.emit("join:restaurante", user.restauranteId);
-          console.log(`📡 Unido a restaurante:${user.restauranteId}`);
         }
       });
 
@@ -69,7 +64,6 @@ export const SocketProvider = ({ children }) => {
       });
 
       newSocket.on("reconnect", (attemptNumber) => {
-        console.log(`🔄 Reconectado después de ${attemptNumber} intentos`);
         setConnected(true);
 
         // Re-unirse a la sala del restaurante
@@ -85,7 +79,6 @@ export const SocketProvider = ({ children }) => {
     // Cleanup al desmontar
     return () => {
       if (socketRef.current) {
-        console.log("🔌 Limpiando conexión socket...");
         socketRef.current.disconnect();
         socketRef.current = null;
       }
@@ -98,7 +91,6 @@ export const SocketProvider = ({ children }) => {
   const joinCocina = () => {
     if (socketRef.current && user?.restauranteId) {
       socketRef.current.emit("join:cocina", user.restauranteId);
-      console.log(`👨‍🍳 Unido a cocina:${user.restauranteId}`);
     }
   };
 

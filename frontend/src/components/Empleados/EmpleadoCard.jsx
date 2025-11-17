@@ -86,39 +86,43 @@ const EmpleadoCard = ({
                     <Eye className="w-4 h-4" />
                     Ver perfil
                   </button>
-                  <button
-                    onClick={() => {
-                      onEdit(employee);
-                      setShowMenu(false);
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2 text-sm text-textMain"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Editar
-                  </button>
-                  <hr className="my-1" style={{ borderColor: "#E5E7EB" }} />
-                  {employee.activo ? (
-                    <button
-                      onClick={() => {
-                        onDelete(employee);
-                        setShowMenu(false);
-                      }}
-                      className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 text-sm"
-                    >
-                      <UserX className="w-4 h-4" />
-                      Desactivar
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        onReactivate(employee);
-                        setShowMenu(false);
-                      }}
-                      className="w-full text-left px-3 py-2 hover:bg-green-50 text-green-600 flex items-center gap-2 text-sm"
-                    >
-                      <CheckCircle className="w-4 h-4" />
-                      Reactivar
-                    </button>
+                  {employee.rol !== "admin" && (
+                    <>
+                      <button
+                        onClick={() => {
+                          onEdit(employee);
+                          setShowMenu(false);
+                        }}
+                        className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2 text-sm text-textMain"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                        Editar
+                      </button>
+                      <hr className="my-1" style={{ borderColor: "#E5E7EB" }} />
+                      {employee.activo ? (
+                        <button
+                          onClick={() => {
+                            onDelete(employee);
+                            setShowMenu(false);
+                          }}
+                          className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 text-sm"
+                        >
+                          <UserX className="w-4 h-4" />
+                          Desactivar
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            onReactivate(employee);
+                            setShowMenu(false);
+                          }}
+                          className="w-full text-left px-3 py-2 hover:bg-green-50 text-green-600 flex items-center gap-2 text-sm"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          Reactivar
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </>

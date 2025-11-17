@@ -17,7 +17,7 @@ export const PerfilHeader = ({ perfil }) => {
       MESERO: "from-[#35524a] to-[#2d4a43]",
       COCINERO: "from-[#e6af2e] to-[#d89a1a]",
       CAJERO: "from-[#6bbf59] to-[#5aa649]",
-      HOST: "from-[#ffd166] to-[#f0c04b]",
+      GERENTE: "from-[#ffd166] to-[#f0c04b]",
     };
     return colors[rol?.toUpperCase()] || "from-gray-600 to-gray-700";
   };
@@ -28,7 +28,7 @@ export const PerfilHeader = ({ perfil }) => {
       MESERO: "bg-[#35524a] text-white",
       COCINERO: "bg-[#e6af2e] text-gray-900",
       CAJERO: "bg-[#6bbf59] text-white",
-      HOST: "bg-[#ffd166] text-gray-900",
+      GERENTE: "bg-[#ffd166] text-gray-900",
     };
     return colors[rol?.toUpperCase()] || "bg-gray-600 text-white";
   };

@@ -9,7 +9,9 @@ const DashboardLayout = () => {
   const { user, completarConfiguracion } = useAuth();
 
   // Calcular si debe mostrar el modal directamente del estado del usuario
-  const showSetupModal = user && !user.configuracionCompleta;
+  // Solo mostrar para usuarios admin que no hayan completado la configuración
+  const showSetupModal =
+    user && user.rol === "admin" && !user.configuracionCompleta;
 
   // Manejar la finalización de la configuración
   const handleSetupComplete = async (restauranteData) => {

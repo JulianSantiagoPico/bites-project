@@ -4,7 +4,7 @@ export const ROLES = {
   MESERO: "mesero",
   COCINERO: "cocinero",
   CAJERO: "cajero",
-  HOST: "host",
+  GERENTE: "gerente",
 };
 
 // Permisos por módulo
@@ -128,16 +128,14 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.DASHBOARD.VIEW,
   ],
 
-  [ROLES.HOST]: [
-    // Host: Gestionar reservas y mesas
-    PERMISSIONS.RESERVAS.VIEW,
-    PERMISSIONS.RESERVAS.CREATE,
-    PERMISSIONS.RESERVAS.UPDATE,
-    PERMISSIONS.RESERVAS.DELETE,
-    PERMISSIONS.MESAS.VIEW,
-    PERMISSIONS.MESAS.UPDATE,
-    PERMISSIONS.MESAS.CHANGE_STATUS,
-    PERMISSIONS.MESAS.ASSIGN,
+  [ROLES.GERENTE]: [
+    // Gerente: Acceso completo excepto gestión de empleados y configuración del sistema
+    ...Object.values(PERMISSIONS.PRODUCTOS),
+    ...Object.values(PERMISSIONS.INVENTARIO),
+    ...Object.values(PERMISSIONS.ORDENES),
+    ...Object.values(PERMISSIONS.MESAS),
+    ...Object.values(PERMISSIONS.RESERVAS),
+    ...Object.values(PERMISSIONS.ESTADISTICAS),
     PERMISSIONS.PERFIL.VIEW,
     PERMISSIONS.PERFIL.UPDATE,
     PERMISSIONS.DASHBOARD.VIEW,

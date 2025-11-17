@@ -4,7 +4,7 @@ import Mesa from "../models/Mesa.js";
 /**
  * @desc    Obtener todas las reservas del restaurante
  * @route   GET /api/reservas
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const getReservas = async (req, res) => {
   try {
@@ -59,7 +59,7 @@ export const getReservas = async (req, res) => {
 /**
  * @desc    Obtener una reserva por ID
  * @route   GET /api/reservas/:id
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const getReservaById = async (req, res) => {
   try {
@@ -97,7 +97,7 @@ export const getReservaById = async (req, res) => {
 /**
  * @desc    Crear nueva reserva
  * @route   POST /api/reservas
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const createReserva = async (req, res) => {
   try {
@@ -213,7 +213,7 @@ export const createReserva = async (req, res) => {
 /**
  * @desc    Actualizar reserva
  * @route   PUT /api/reservas/:id
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const updateReserva = async (req, res) => {
   try {
@@ -351,7 +351,7 @@ export const updateReserva = async (req, res) => {
 /**
  * @desc    Eliminar reserva (soft delete)
  * @route   DELETE /api/reservas/:id
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const deleteReserva = async (req, res) => {
   try {
@@ -388,7 +388,7 @@ export const deleteReserva = async (req, res) => {
 /**
  * @desc    Cambiar estado de la reserva
  * @route   PATCH /api/reservas/:id/estado
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const changeEstado = async (req, res) => {
   try {
@@ -478,7 +478,7 @@ export const changeEstado = async (req, res) => {
 /**
  * @desc    Asignar mesa a una reserva
  * @route   PATCH /api/reservas/:id/asignar-mesa
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const asignarMesa = async (req, res) => {
   try {
@@ -612,7 +612,7 @@ export const asignarMesa = async (req, res) => {
 /**
  * @desc    Obtener estadísticas de reservas
  * @route   GET /api/reservas/estadisticas
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const getEstadisticas = async (req, res) => {
   try {

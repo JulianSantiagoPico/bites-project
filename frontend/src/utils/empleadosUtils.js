@@ -43,25 +43,34 @@ export const formatDate = (dateString) => {
  * Diccionario de roles con sus etiquetas de visualización
  */
 export let rolesDisplay = {
+  admin: "Administrador",
   mesero: "Mesero",
   cocinero: "Cocinero",
   cajero: "Cajero",
-  host: "Host",
+  gerente: "Gerente",
 };
 
 /**
  * Lista de roles disponibles para filtros
  */
-export let roles = ["Todos", "mesero", "cocinero", "cajero", "host"];
+export let roles = [
+  "Todos",
+  "admin",
+  "mesero",
+  "cocinero",
+  "cajero",
+  "gerente",
+];
 
 /**
  * Iconos para cada rol
  */
 export let rolesIcons = {
+  admin: "👑",
   mesero: "🍽️",
   cocinero: "👨‍🍳",
   cajero: "💰",
-  host: "👔",
+  gerente: "👔",
 };
 
 /**

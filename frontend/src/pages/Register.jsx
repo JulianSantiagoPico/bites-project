@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import RestaurantSetupModal from "../components/RestaurantSetupModal";
 import "../styles/Register.css";
@@ -22,6 +23,8 @@ function Register() {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [registeredRestaurantName, setRegisteredRestaurantName] = useState("");
   const [skipDashboardRedirect, setSkipDashboardRedirect] = useState(false);
+  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [mostrarConfirmPassword, setMostrarConfirmPassword] = useState(false);
 
   // Redirigir al dashboard si ya está autenticado (pero no si está configurando el restaurante)
   useEffect(() => {
@@ -287,16 +290,31 @@ function Register() {
                 >
                   Contraseña <span className="text-accent">*</span>
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  required
-                  className="text-textMain px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary transition"
-                />
+                <div className="relative">
+                  <input
+                    type={mostrarPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                    className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
+                      errors.password ? "border-red-500" : "border-gray-300"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setMostrarPassword(!mostrarPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {mostrarPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
                 {errors.password && (
                   <span className="text-xs text-accent">{errors.password}</span>
                 )}
@@ -309,16 +327,35 @@ function Register() {
                 >
                   Confirmar contraseña <span className="text-accent">*</span>
                 </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  required
-                  className="text-textMain px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary transition"
-                />
+                <div className="relative">
+                  <input
+                    type={mostrarConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    required
+                    className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
+                      errors.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMostrarConfirmPassword(!mostrarConfirmPassword)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {mostrarConfirmPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <span className="text-xs text-accent">
                     {errors.confirmPassword}

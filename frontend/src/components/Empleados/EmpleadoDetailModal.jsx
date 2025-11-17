@@ -121,34 +121,45 @@ const EmpleadoDetailModal = ({
 
           {/* Botones de acción */}
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={() => {
-                onClose();
-                onEdit(employee);
-              }}
-              className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
-            >
-              Editar
-            </button>
-            {employee.activo ? (
-              <button
-                onClick={() => {
-                  onClose();
-                  onDelete(employee);
-                }}
-                className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-red-500"
-              >
-                Desactivar
-              </button>
+            {employee.rol !== "admin" ? (
+              <>
+                <button
+                  onClick={() => {
+                    onClose();
+                    onEdit(employee);
+                  }}
+                  className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                >
+                  Editar
+                </button>
+                {employee.activo ? (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onDelete(employee);
+                    }}
+                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-red-500"
+                  >
+                    Desactivar
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onReactivate(employee);
+                    }}
+                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-green-500"
+                  >
+                    Reactivar
+                  </button>
+                )}
+              </>
             ) : (
               <button
-                onClick={() => {
-                  onClose();
-                  onReactivate(employee);
-                }}
-                className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-green-500"
+                onClick={onClose}
+                className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
               >
-                Reactivar
+                Cerrar
               </button>
             )}
           </div>

@@ -81,7 +81,7 @@ function Home() {
             <h2 className="text-4xl font-semibold text-center text-primary">
               Gestión completa, sin complicaciones
             </h2>
-            <p className="text-base text-center text-text">
+            <p className="text-base text-center text-textMain">
               Bites combina tecnología moderna y experiencia en la industria
               para ofrecerte una solución ERP sólida, escalable y fácil de usar.
             </p>

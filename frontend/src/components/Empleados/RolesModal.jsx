@@ -64,7 +64,7 @@ const RolesModal = ({
       mesero: "🍽️",
       cocinero: "👨‍🍳",
       cajero: "💰",
-      host: "👔",
+      gerente: "👔",
     };
     return icons[role] || "👤";
   };

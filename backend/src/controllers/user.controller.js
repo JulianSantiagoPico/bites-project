@@ -112,6 +112,7 @@ export const createUser = async (req, res) => {
     }
 
     // Crear el empleado
+    // Los empleados (no admin) no necesitan completar configuración del restaurante
     const user = await User.create({
       nombre,
       apellido,
@@ -121,6 +122,7 @@ export const createUser = async (req, res) => {
       telefono,
       restauranteId: req.user.restauranteId,
       creadoPor: req.user.id,
+      configuracionCompleta: true, // Los empleados no configuran el restaurante
     });
 
     res.status(201).json({

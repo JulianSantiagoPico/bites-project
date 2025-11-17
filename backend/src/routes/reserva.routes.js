@@ -26,32 +26,32 @@ router.use(protect);
 // Rutas de estadísticas (deben ir antes de /:id)
 router.get(
   "/estadisticas",
-  authorize(ROLES.ADMIN, ROLES.HOST),
+  authorize(ROLES.ADMIN, ROLES.GERENTE),
   getEstadisticas
 );
 
-// Rutas principales de reservas - Solo Admin y Host
+// Rutas principales de reservas - Solo Admin y Gerente
 router
   .route("/")
-  .get(authorize(ROLES.ADMIN, ROLES.HOST), getReservas)
+  .get(authorize(ROLES.ADMIN, ROLES.GERENTE), getReservas)
   .post(
-    authorize(ROLES.ADMIN, ROLES.HOST),
+    authorize(ROLES.ADMIN, ROLES.GERENTE),
     validateCreateReserva,
     createReserva
   );
 
-// Ruta para cambiar estado - Admin y Host
+// Ruta para cambiar estado - Admin y Gerente
 router.patch(
   "/:id/estado",
-  authorize(ROLES.ADMIN, ROLES.HOST),
+  authorize(ROLES.ADMIN, ROLES.GERENTE),
   validateChangeEstadoReserva,
   changeEstado
 );
 
-// Ruta para asignar mesa - Admin y Host
+// Ruta para asignar mesa - Admin y Gerente
 router.patch(
   "/:id/asignar-mesa",
-  authorize(ROLES.ADMIN, ROLES.HOST),
+  authorize(ROLES.ADMIN, ROLES.GERENTE),
   validateAsignarMesaReserva,
   asignarMesa
 );
@@ -59,8 +59,12 @@ router.patch(
 // Rutas por ID
 router
   .route("/:id")
-  .get(authorize(ROLES.ADMIN, ROLES.HOST), getReservaById)
-  .put(authorize(ROLES.ADMIN, ROLES.HOST), validateUpdateReserva, updateReserva)
-  .delete(authorize(ROLES.ADMIN, ROLES.HOST), deleteReserva);
+  .get(authorize(ROLES.ADMIN, ROLES.GERENTE), getReservaById)
+  .put(
+    authorize(ROLES.ADMIN, ROLES.GERENTE),
+    validateUpdateReserva,
+    updateReserva
+  )
+  .delete(authorize(ROLES.ADMIN, ROLES.GERENTE), deleteReserva);
 
 export default router;

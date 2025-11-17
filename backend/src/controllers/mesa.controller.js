@@ -270,7 +270,7 @@ export const deleteMesa = async (req, res) => {
 /**
  * @desc    Cambiar estado de la mesa
  * @route   PATCH /api/mesas/:id/estado
- * @access  Private (Admin, Mesero, Host)
+ * @access  Private (Admin, Mesero, Gerente)
  */
 export const changeEstado = async (req, res) => {
   try {
@@ -338,7 +338,7 @@ export const changeEstado = async (req, res) => {
 /**
  * @desc    Asignar mesero a una mesa
  * @route   PATCH /api/mesas/:id/asignar
- * @access  Private (Admin, Host)
+ * @access  Private (Admin, Gerente)
  */
 export const asignarMesero = async (req, res) => {
   try {
