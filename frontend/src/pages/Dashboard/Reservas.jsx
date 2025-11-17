@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarX2, PartyPopper } from "lucide-react";
+import { CalendarX2, PartyPopper, Calendar, Plus } from "lucide-react";
 import ReservasStats from "../../components/Reservas/ReservasStats";
 import ReservasFilters from "../../components/Reservas/ReservasFilters";
 import ReservasTable from "../../components/Reservas/ReservasTable";
@@ -108,11 +108,16 @@ const Reservas = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-primary">Reservas</h2>
-          <p className="text-textSecondary">
-            Gestión de reservas del restaurante
-          </p>
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-primary/10">
+            <Calendar size={32} className="text-primary" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-primary">Reservas</h2>
+            <p className="text-textSecondary">
+              Gestión de reservas del restaurante
+            </p>
+          </div>
         </div>
         <div className="flex gap-3">
           <button
@@ -127,19 +132,7 @@ const Reservas = () => {
             onClick={() => handleOpenModal()}
             className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
+            <Plus className="w-5 h-5" />
             Nueva Reserva
           </button>
         </div>

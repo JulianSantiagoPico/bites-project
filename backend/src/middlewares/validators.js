@@ -1068,3 +1068,284 @@ export const validateChangeEstadoPedido = [
 
   handleValidationErrors,
 ];
+
+// Validaciones para restaurante
+export const validateUpdateNombre = [
+  body("nombre")
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre es requerido")
+    .isLength({ min: 2, max: 100 })
+    .withMessage("El nombre debe tener entre 2 y 100 caracteres"),
+
+  handleValidationErrors,
+];
+
+export const validateUpdateHorarios = [
+  body("horarios")
+    .notEmpty()
+    .withMessage("Los horarios son requeridos")
+    .isObject()
+    .withMessage("Los horarios deben ser un objeto"),
+
+  body("horarios.lunes")
+    .optional()
+    .isObject()
+    .withMessage("El horario de lunes debe ser un objeto"),
+  body("horarios.lunes.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.lunes.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.lunes.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.martes")
+    .optional()
+    .isObject()
+    .withMessage("El horario de martes debe ser un objeto"),
+  body("horarios.martes.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.martes.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.martes.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.miercoles")
+    .optional()
+    .isObject()
+    .withMessage("El horario de miércoles debe ser un objeto"),
+  body("horarios.miercoles.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.miercoles.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.miercoles.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.jueves")
+    .optional()
+    .isObject()
+    .withMessage("El horario de jueves debe ser un objeto"),
+  body("horarios.jueves.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.jueves.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.jueves.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.viernes")
+    .optional()
+    .isObject()
+    .withMessage("El horario de viernes debe ser un objeto"),
+  body("horarios.viernes.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.viernes.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.viernes.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.sabado")
+    .optional()
+    .isObject()
+    .withMessage("El horario de sábado debe ser un objeto"),
+  body("horarios.sabado.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.sabado.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.sabado.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  body("horarios.domingo")
+    .optional()
+    .isObject()
+    .withMessage("El horario de domingo debe ser un objeto"),
+  body("horarios.domingo.cerrado")
+    .optional()
+    .isBoolean()
+    .withMessage("cerrado debe ser booleano"),
+  body("horarios.domingo.apertura")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de apertura inválido (HH:MM)"),
+  body("horarios.domingo.cierre")
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .withMessage("Formato de cierre inválido (HH:MM)"),
+
+  handleValidationErrors,
+];
+
+export const validateUpdateContacto = [
+  body("telefono")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El teléfono no puede estar vacío")
+    .custom((value) => {
+      const telefonoLimpio = value.replace(/[\s-()]/g, "");
+      if (telefonoLimpio.length < 8 || !/^\+?\d+$/.test(telefonoLimpio)) {
+        throw new Error("Formato de teléfono inválido");
+      }
+      return true;
+    }),
+
+  body("email")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El email no puede estar vacío")
+    .isEmail()
+    .withMessage("Formato de email inválido")
+    .normalizeEmail(),
+
+  body("direccion")
+    .optional()
+    .isObject()
+    .withMessage("La dirección debe ser un objeto"),
+
+  body("direccion.calle")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("La calle es requerida")
+    .isLength({ min: 3, max: 200 })
+    .withMessage("La calle debe tener entre 3 y 200 caracteres"),
+
+  body("direccion.ciudad")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("La ciudad es requerida")
+    .isLength({ min: 2, max: 100 })
+    .withMessage("La ciudad debe tener entre 2 y 100 caracteres"),
+
+  body("direccion.estado")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El estado es requerido")
+    .isLength({ min: 2, max: 100 })
+    .withMessage("El estado debe tener entre 2 y 100 caracteres"),
+
+  body("direccion.codigoPostal")
+    .optional()
+    .trim()
+    .isLength({ min: 3, max: 20 })
+    .withMessage("El código postal debe tener entre 3 y 20 caracteres"),
+
+  body("direccion.pais")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El país es requerido")
+    .isLength({ min: 2, max: 100 })
+    .withMessage("El país debe tener entre 2 y 100 caracteres"),
+
+  handleValidationErrors,
+];
+
+// Validaciones para perfil de usuario
+export const validateUpdateProfile = [
+  body("nombre")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("El nombre debe tener entre 2 y 50 caracteres")
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+    .withMessage("El nombre solo puede contener letras"),
+
+  body("apellido")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El apellido no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("El apellido debe tener entre 2 y 50 caracteres")
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+    .withMessage("El apellido solo puede contener letras"),
+
+  body("telefono")
+    .optional()
+    .trim()
+    .custom((value) => {
+      if (!value) return true;
+      const telefonoLimpio = value.replace(/[\s-()]/g, "");
+      if (telefonoLimpio.length < 8 || !/^\+?\d+$/.test(telefonoLimpio)) {
+        throw new Error("Formato de teléfono inválido");
+      }
+      return true;
+    }),
+
+  body("foto")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La URL de la foto es demasiado larga"),
+
+  handleValidationErrors,
+];
+
+export const validateChangePassword = [
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("La contraseña actual es requerida"),
+
+  body("newPassword")
+    .notEmpty()
+    .withMessage("La nueva contraseña es requerida")
+    .isLength({ min: 8 })
+    .withMessage("La nueva contraseña debe tener al menos 8 caracteres")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage(
+      "La nueva contraseña debe contener al menos una mayúscula, una minúscula y un número"
+    ),
+
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("La confirmación de contraseña es requerida")
+    .custom((value, { req }) => {
+      if (value !== req.body.newPassword) {
+        throw new Error("Las contraseñas no coinciden");
+      }
+      return true;
+    }),
+
+  handleValidationErrors,
+];

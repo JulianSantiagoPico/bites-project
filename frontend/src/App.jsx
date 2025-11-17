@@ -15,6 +15,8 @@ import Mesas from "./pages/Dashboard/Mesas.jsx";
 import Reservas from "./pages/Dashboard/Reservas.jsx";
 import Inventario from "./pages/Dashboard/Inventario.jsx";
 import Empleados from "./pages/Dashboard/Empleados.jsx";
+import Estadisticas from "./pages/Dashboard/Estadisticas.jsx";
+import Configuracion from "./pages/Dashboard/Configuracion.jsx";
 import Perfil from "./pages/Dashboard/Perfil.jsx";
 import "./App.css";
 
@@ -45,6 +47,8 @@ function App() {
             <Route path="reservas" element={<Reservas />} />
             <Route path="inventario" element={<Inventario />} />
             <Route path="empleados" element={<Empleados />} />
+            <Route path="estadisticas" element={<Estadisticas />} />
+            <Route path="configuracion" element={<Configuracion />} />
             <Route path="perfil" element={<Perfil />} />
           </Route>
 

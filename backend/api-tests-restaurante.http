@@ -1,0 +1,563 @@
+### API Tests - Módulo de Restaurante
+### Configuración y gestión de datos del restaurante
+
+@baseUrl = http://localhost:5000/api
+@token = TU_TOKEN_AQUI
+
+### ==========================================
+### 1. OBTENER INFORMACIÓN DEL RESTAURANTE
+### ==========================================
+
+### 1.1 Obtener información completa del restaurante
+GET {{baseUrl}}/restaurante
+Authorization: Bearer {{token}}
+
+### ==========================================
+### 2. OBTENER CONFIGURACIÓN DEL RESTAURANTE
+### ==========================================
+
+### 2.1 Obtener solo configuración relevante
+GET {{baseUrl}}/restaurante/configuracion
+Authorization: Bearer {{token}}
+
+### ==========================================
+### 3. ACTUALIZAR NOMBRE DEL RESTAURANTE
+### ==========================================
+
+### 3.1 Actualizar nombre (éxito)
+PUT {{baseUrl}}/restaurante/nombre
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Restaurante El Buen Sabor"
+}
+
+### 3.2 Actualizar nombre (error - nombre vacío)
+PUT {{baseUrl}}/restaurante/nombre
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": ""
+}
+
+### 3.3 Actualizar nombre (error - nombre muy corto)
+PUT {{baseUrl}}/restaurante/nombre
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "A"
+}
+
+### 3.4 Actualizar nombre (error - sin nombre)
+PUT {{baseUrl}}/restaurante/nombre
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+}
+
+### ==========================================
+### 4. ACTUALIZAR HORARIOS DEL RESTAURANTE
+### ==========================================
+
+### 4.1 Actualizar horarios completos (éxito)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "23:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "10:00",
+      "cierre": "23:00"
+    },
+    "domingo": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    }
+  }
+}
+
+### 4.2 Actualizar horarios con día cerrado
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "martes": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "23:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "10:00",
+      "cierre": "23:00"
+    },
+    "domingo": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    }
+  }
+}
+
+### 4.3 Actualizar horarios (error - formato de hora inválido)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "9:00",
+      "cierre": "22:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "23:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "10:00",
+      "cierre": "23:00"
+    },
+    "domingo": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    }
+  }
+}
+
+### 4.4 Actualizar horarios (error - día inválido)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunez": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    }
+  }
+}
+
+### 4.5 Actualizar horarios (error - falta horario de cierre)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "09:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "23:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "10:00",
+      "cierre": "23:00"
+    },
+    "domingo": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    }
+  }
+}
+
+### 4.6 Actualizar horarios (error - sin horarios)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+}
+
+### ==========================================
+### 5. ACTUALIZAR INFORMACIÓN DE CONTACTO
+### ==========================================
+
+### 5.1 Actualizar solo teléfono (éxito)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "+52 55 1234 5678"
+}
+
+### 5.2 Actualizar solo email (éxito)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "contacto@restaurante.com"
+}
+
+### 5.3 Actualizar solo dirección (éxito)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "direccion": {
+    "calle": "Av. Insurgentes Sur 1234",
+    "ciudad": "Ciudad de México",
+    "estado": "CDMX",
+    "codigoPostal": "03100",
+    "pais": "México"
+  }
+}
+
+### 5.4 Actualizar todo el contacto (éxito)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "+52 55 9876 5432",
+  "email": "info@restaurante.com",
+  "direccion": {
+    "calle": "Calle Reforma 567",
+    "ciudad": "Guadalajara",
+    "estado": "Jalisco",
+    "codigoPostal": "44100",
+    "pais": "México"
+  }
+}
+
+### 5.5 Actualizar contacto (error - email inválido)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "correo-invalido"
+}
+
+### 5.6 Actualizar contacto (error - teléfono inválido)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "telefono": "123"
+}
+
+### 5.7 Actualizar contacto (error - dirección incompleta)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "direccion": {
+    "calle": "Calle Principal",
+    "ciudad": "Ciudad"
+  }
+}
+
+### 5.8 Actualizar contacto (error - calle vacía)
+PUT {{baseUrl}}/restaurante/contacto
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "direccion": {
+    "calle": "",
+    "ciudad": "Ciudad",
+    "estado": "Estado",
+    "pais": "País"
+  }
+}
+
+### ==========================================
+### 6. ACTUALIZACIÓN GENERAL DEL RESTAURANTE
+### ==========================================
+
+### 6.1 Actualizar múltiples campos (éxito)
+PUT {{baseUrl}}/restaurante
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "El mejor restaurante de comida mexicana en la ciudad",
+  "telefono": "+52 55 1111 2222",
+  "email": "contacto@elbuen sabor.com",
+  "moneda": "MXN",
+  "direccion": {
+    "calle": "Av. Juárez 123",
+    "ciudad": "Monterrey",
+    "estado": "Nuevo León",
+    "codigoPostal": "64000",
+    "pais": "México"
+  }
+}
+
+### 6.2 Actualizar configuración con horarios
+PUT {{baseUrl}}/restaurante
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "Restaurante familiar con platillos tradicionales",
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "08:00",
+      "cierre": "21:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "08:00",
+      "cierre": "21:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "08:00",
+      "cierre": "21:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "08:00",
+      "cierre": "21:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "08:00",
+      "cierre": "22:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "domingo": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "20:00"
+    }
+  }
+}
+
+### ==========================================
+### 7. COMPLETAR CONFIGURACIÓN INICIAL
+### ==========================================
+
+### 7.1 Completar configuración (éxito)
+POST {{baseUrl}}/restaurante/completar-configuracion
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "Restaurante de comida internacional",
+  "telefono": "+52 55 5555 6666",
+  "email": "info@restaurante.mx",
+  "moneda": "MXN",
+  "direccion": {
+    "calle": "Boulevard Centro Sur 789",
+    "ciudad": "Querétaro",
+    "estado": "Querétaro",
+    "codigoPostal": "76090",
+    "pais": "México"
+  },
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "23:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "23:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "23:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "23:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "00:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "12:00",
+      "cierre": "00:00"
+    },
+    "domingo": {
+      "cerrado": false,
+      "apertura": "13:00",
+      "cierre": "22:00"
+    }
+  }
+}
+
+### ==========================================
+### 8. PRUEBAS DE AUTORIZACIÓN
+### ==========================================
+
+### 8.1 Intentar actualizar nombre sin token (debe fallar)
+PUT {{baseUrl}}/restaurante/nombre
+Content-Type: application/json
+
+{
+  "nombre": "Restaurante Prueba"
+}
+
+### 8.2 Intentar actualizar horarios con token de mesero (debe fallar si no es ADMIN)
+PUT {{baseUrl}}/restaurante/horarios
+Authorization: Bearer TOKEN_DE_MESERO
+Content-Type: application/json
+
+{
+  "horarios": {
+    "lunes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "martes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "miercoles": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "jueves": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "22:00"
+    },
+    "viernes": {
+      "cerrado": false,
+      "apertura": "09:00",
+      "cierre": "23:00"
+    },
+    "sabado": {
+      "cerrado": false,
+      "apertura": "10:00",
+      "cierre": "23:00"
+    },
+    "domingo": {
+      "cerrado": true,
+      "apertura": "",
+      "cierre": ""
+    }
+  }
+}
+
+### ==========================================
+### NOTAS DE USO
+### ==========================================
+###
+### 1. Reemplaza TU_TOKEN_AQUI con un token válido de administrador
+### 2. Los endpoints de actualización requieren rol ADMIN
+### 3. Los endpoints GET (obtener información) están disponibles para todos los usuarios autenticados
+### 4. Formato de horarios: HH:MM (24 horas)
+### 5. Teléfono debe tener al menos 8 dígitos
+### 6. Email debe tener formato válido
+### 7. Dirección requiere: calle, ciudad, estado y país (codigoPostal es opcional)
+###

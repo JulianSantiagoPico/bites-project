@@ -146,8 +146,264 @@ export const completarConfiguracion = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Obtener configuración del restaurante
+ * @route   GET /api/restaurante/configuracion
+ * @access  Private
+ */
+export const getConfiguracion = async (req, res) => {
+  try {
+    const restaurante = await Restaurante.findById(
+      req.user.restauranteId
+    ).select(
+      "nombre descripcion telefono email direccion horarios moneda logo"
+    );
+
+    if (!restaurante) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurante no encontrado",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: restaurante,
+    });
+  } catch (error) {
+    console.error("Error al obtener configuración:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener la configuración del restaurante",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Actualizar nombre del restaurante
+ * @route   PUT /api/restaurante/nombre
+ * @access  Private (Admin)
+ */
+export const updateNombre = async (req, res) => {
+  try {
+    const { nombre } = req.body;
+
+    if (!nombre || nombre.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "El nombre es requerido",
+      });
+    }
+
+    const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+    if (!restaurante) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurante no encontrado",
+      });
+    }
+
+    restaurante.nombre = nombre.trim();
+    await restaurante.save();
+
+    res.json({
+      success: true,
+      message: "Nombre actualizado exitosamente",
+      data: {
+        nombre: restaurante.nombre,
+      },
+    });
+  } catch (error) {
+    console.error("Error al actualizar nombre:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al actualizar el nombre del restaurante",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Actualizar horarios del restaurante
+ * @route   PUT /api/restaurante/horarios
+ * @access  Private (Admin)
+ */
+export const updateHorarios = async (req, res) => {
+  try {
+    const { horarios } = req.body;
+
+    if (!horarios) {
+      return res.status(400).json({
+        success: false,
+        message: "Los horarios son requeridos",
+      });
+    }
+
+    // Validar estructura de horarios
+    const diasValidos = [
+      "lunes",
+      "martes",
+      "miercoles",
+      "jueves",
+      "viernes",
+      "sabado",
+      "domingo",
+    ];
+    const horariosInvalidos = Object.keys(horarios).filter(
+      (dia) => !diasValidos.includes(dia)
+    );
+
+    if (horariosInvalidos.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Días inválidos: ${horariosInvalidos.join(", ")}`,
+      });
+    }
+
+    // Validar formato de horarios
+    for (const [dia, horario] of Object.entries(horarios)) {
+      if (horario.cerrado === false) {
+        if (!horario.apertura || !horario.cierre) {
+          return res.status(400).json({
+            success: false,
+            message: `El ${dia} debe tener horarios de apertura y cierre`,
+          });
+        }
+
+        // Validar formato HH:MM
+        const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        if (
+          !timeRegex.test(horario.apertura) ||
+          !timeRegex.test(horario.cierre)
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: `Formato de hora inválido para ${dia}. Use HH:MM`,
+          });
+        }
+      }
+    }
+
+    const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+    if (!restaurante) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurante no encontrado",
+      });
+    }
+
+    restaurante.horarios = horarios;
+    await restaurante.save();
+
+    res.json({
+      success: true,
+      message: "Horarios actualizados exitosamente",
+      data: {
+        horarios: restaurante.horarios,
+      },
+    });
+  } catch (error) {
+    console.error("Error al actualizar horarios:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al actualizar los horarios",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Actualizar información de contacto del restaurante
+ * @route   PUT /api/restaurante/contacto
+ * @access  Private (Admin)
+ */
+export const updateContacto = async (req, res) => {
+  try {
+    const { telefono, email, direccion } = req.body;
+
+    // Validar email si se proporciona
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Formato de email inválido",
+        });
+      }
+    }
+
+    // Validar teléfono si se proporciona
+    if (telefono) {
+      const telefonoLimpio = telefono.replace(/[\s-()]/g, "");
+      if (telefonoLimpio.length < 8 || !/^\+?\d+$/.test(telefonoLimpio)) {
+        return res.status(400).json({
+          success: false,
+          message: "Formato de teléfono inválido",
+        });
+      }
+    }
+
+    // Validar dirección si se proporciona
+    if (direccion) {
+      const camposRequeridos = ["calle", "ciudad", "estado", "pais"];
+      const camposFaltantes = camposRequeridos.filter(
+        (campo) => !direccion[campo] || direccion[campo].trim() === ""
+      );
+
+      if (camposFaltantes.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Campos requeridos en la dirección: ${camposFaltantes.join(
+            ", "
+          )}`,
+        });
+      }
+    }
+
+    const restaurante = await Restaurante.findById(req.user.restauranteId);
+
+    if (!restaurante) {
+      return res.status(404).json({
+        success: false,
+        message: "Restaurante no encontrado",
+      });
+    }
+
+    // Actualizar solo los campos proporcionados
+    if (telefono !== undefined) restaurante.telefono = telefono;
+    if (email !== undefined) restaurante.email = email;
+    if (direccion !== undefined) restaurante.direccion = direccion;
+
+    await restaurante.save();
+
+    res.json({
+      success: true,
+      message: "Información de contacto actualizada exitosamente",
+      data: {
+        telefono: restaurante.telefono,
+        email: restaurante.email,
+        direccion: restaurante.direccion,
+      },
+    });
+  } catch (error) {
+    console.error("Error al actualizar contacto:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al actualizar la información de contacto",
+      error: error.message,
+    });
+  }
+};
+
 export default {
   getRestaurante,
   updateRestaurante,
   completarConfiguracion,
+  getConfiguracion,
+  updateNombre,
+  updateHorarios,
+  updateContacto,
 };

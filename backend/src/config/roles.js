@@ -70,6 +70,12 @@ export const PERMISSIONS = {
   DASHBOARD: {
     VIEW: "dashboard:view",
   },
+
+  // Módulo de estadísticas
+  ESTADISTICAS: {
+    VIEW: "estadisticas:view",
+    EXPORT: "estadisticas:export",
+  },
 };
 
 // Definición de permisos por rol
@@ -84,6 +90,7 @@ export const ROLE_PERMISSIONS = {
     ...Object.values(PERMISSIONS.RESERVAS),
     ...Object.values(PERMISSIONS.PERFIL),
     ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.ESTADISTICAS),
   ],
 
   [ROLES.MESERO]: [

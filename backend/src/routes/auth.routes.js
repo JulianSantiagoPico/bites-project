@@ -4,9 +4,16 @@ import {
   login,
   getMe,
   updateMe,
+  changePassword,
+  getUserStats,
 } from "../controllers/auth.controller.js";
 import { protect } from "../middlewares/auth.js";
-import { validateRegister, validateLogin } from "../middlewares/validators.js";
+import {
+  validateRegister,
+  validateLogin,
+  validateUpdateProfile,
+  validateChangePassword,
+} from "../middlewares/validators.js";
 
 const router = express.Router();
 
@@ -16,6 +23,8 @@ router.post("/login", validateLogin, login);
 
 // Rutas protegidas
 router.get("/me", protect, getMe);
-router.put("/me", protect, updateMe);
+router.put("/me", protect, validateUpdateProfile, updateMe);
+router.put("/me/password", protect, validateChangePassword, changePassword);
+router.get("/me/stats", protect, getUserStats);
 
 export default router;
