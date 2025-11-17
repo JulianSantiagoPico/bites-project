@@ -39,6 +39,31 @@ export const authService = {
     return await fetchAPI("/auth/me");
   },
 
+  // Actualizar perfil
+  updateProfile: async (profileData) => {
+    return await fetchAPI("/auth/me", {
+      method: "PUT",
+      body: JSON.stringify(profileData),
+    });
+  },
+
+  // Cambiar contraseña
+  changePassword: async (currentPassword, newPassword, confirmPassword) => {
+    return await fetchAPI("/auth/me/password", {
+      method: "PUT",
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      }),
+    });
+  },
+
+  // Obtener estadísticas del usuario
+  getUserStats: async () => {
+    return await fetchAPI("/auth/me/stats");
+  },
+
   // Logout
   logout: () => {
     localStorage.removeItem("token");

@@ -1278,3 +1278,74 @@ export const validateUpdateContacto = [
 
   handleValidationErrors,
 ];
+
+// Validaciones para perfil de usuario
+export const validateUpdateProfile = [
+  body("nombre")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("El nombre debe tener entre 2 y 50 caracteres")
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+    .withMessage("El nombre solo puede contener letras"),
+
+  body("apellido")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El apellido no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("El apellido debe tener entre 2 y 50 caracteres")
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
+    .withMessage("El apellido solo puede contener letras"),
+
+  body("telefono")
+    .optional()
+    .trim()
+    .custom((value) => {
+      if (!value) return true;
+      const telefonoLimpio = value.replace(/[\s-()]/g, "");
+      if (telefonoLimpio.length < 8 || !/^\+?\d+$/.test(telefonoLimpio)) {
+        throw new Error("Formato de teléfono inválido");
+      }
+      return true;
+    }),
+
+  body("foto")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La URL de la foto es demasiado larga"),
+
+  handleValidationErrors,
+];
+
+export const validateChangePassword = [
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("La contraseña actual es requerida"),
+
+  body("newPassword")
+    .notEmpty()
+    .withMessage("La nueva contraseña es requerida")
+    .isLength({ min: 8 })
+    .withMessage("La nueva contraseña debe tener al menos 8 caracteres")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage(
+      "La nueva contraseña debe contener al menos una mayúscula, una minúscula y un número"
+    ),
+
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("La confirmación de contraseña es requerida")
+    .custom((value, { req }) => {
+      if (value !== req.body.newPassword) {
+        throw new Error("Las contraseñas no coinciden");
+      }
+      return true;
+    }),
+
+  handleValidationErrors,
+];

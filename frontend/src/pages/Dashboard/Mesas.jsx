@@ -10,7 +10,7 @@ import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useMesas } from "../../hooks/useMesas";
 import { useUbicaciones } from "../../hooks/useUbicaciones";
-import { Settings } from "lucide-react";
+import { Settings, Table, Plus } from "lucide-react";
 
 const Mesas = () => {
   const [showModal, setShowModal] = useState(false);
@@ -97,9 +97,16 @@ const Mesas = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-primary">Mesas</h2>
-          <p className="text-textSecondary">Gestión de mesas del restaurante</p>
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-primary/10">
+            <Table size={32} className="text-primary" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-primary">Mesas</h2>
+            <p className="text-textSecondary">
+              Gestión de mesas del restaurante
+            </p>
+          </div>
         </div>
         <div className="flex gap-2">
           <button
@@ -114,19 +121,7 @@ const Mesas = () => {
             onClick={() => handleOpenModal()}
             className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
+            <Plus className="w-5 h-5" />
             Nueva Mesa
           </button>
         </div>

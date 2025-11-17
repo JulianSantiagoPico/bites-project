@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import Restaurante from "../models/Restaurante.js";
+import Pedido from "../models/Pedido.js";
+import Reserva from "../models/Reserva.js";
 import { ROLES } from "../config/roles.js";
 
 // Generar JWT
@@ -224,6 +226,182 @@ export const updateMe = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al actualizar perfil",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Cambiar contraseña del usuario actual
+ * @route   PUT /api/auth/me/password
+ * @access  Private
+ */
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    // Obtener usuario con la contraseña
+    const user = await User.findById(req.user.id).select("+password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado",
+      });
+    }
+
+    // Verificar contraseña actual
+    const isMatch = await user.matchPassword(currentPassword);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "La contraseña actual es incorrecta",
+      });
+    }
+
+    // Actualizar contraseña
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Contraseña actualizada exitosamente",
+    });
+  } catch (error) {
+    console.error("Error en changePassword:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al cambiar la contraseña",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Obtener estadísticas del usuario actual
+ * @route   GET /api/auth/me/stats
+ * @access  Private
+ */
+export const getUserStats = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const restauranteId = req.user.restauranteId;
+
+    let stats = {};
+
+    // Estadísticas según el rol
+    if (req.user.rol === ROLES.ADMIN) {
+      // Para admins: estadísticas generales del restaurante
+      const pedidos = await Pedido.find({ restauranteId });
+      const reservas = await Reserva.find({ restauranteId });
+      const empleados = await User.find({ restauranteId });
+
+      const ingresosTotales = pedidos
+        .filter((p) => p.estado === "entregado")
+        .reduce((sum, p) => sum + (p.total || 0), 0);
+
+      stats = {
+        totalPedidos: pedidos.length,
+        ingresosTotales: ingresosTotales,
+        totalReservas: reservas.length,
+        totalEmpleados: empleados.length,
+      };
+    } else if (req.user.rol === ROLES.MESERO) {
+      // Para meseros: pedidos asignados a él
+      const pedidos = await Pedido.find({
+        meseroId: userId,
+        restauranteId,
+      });
+
+      const pedidosCompletados = pedidos.filter(
+        (p) => p.estado === "entregado"
+      ).length;
+
+      // Contar mesas únicas atendidas
+      const mesasUnicas = [
+        ...new Set(pedidos.map((p) => p.mesaId?.toString())),
+      ];
+
+      stats = {
+        pedidosAsignados: pedidos.length,
+        pedidosCompletados: pedidosCompletados,
+        mesasAtendidas: mesasUnicas.filter((m) => m).length,
+      };
+    } else if (req.user.rol === ROLES.COCINERO) {
+      // Para cocineros: pedidos en preparación
+      const pedidos = await Pedido.find({
+        restauranteId,
+      });
+
+      const pedidosPreparados = pedidos.filter(
+        (p) => p.estado === "entregado" || p.estado === "listo"
+      ).length;
+
+      const enPreparacion = pedidos.filter(
+        (p) => p.estado === "en_preparacion"
+      ).length;
+
+      stats = {
+        pedidosPreparados: pedidosPreparados,
+        enPreparacion: enPreparacion,
+      };
+    } else if (req.user.rol === ROLES.HOST) {
+      // Para hosts: reservas gestionadas
+      const reservas = await Reserva.find({
+        restauranteId,
+      });
+
+      const reservasConfirmadas = reservas.filter(
+        (r) => r.estado === "confirmada" || r.estado === "completada"
+      ).length;
+
+      // Contar mesas únicas asignadas en reservas
+      const mesasAsignadas = [
+        ...new Set(reservas.map((r) => r.mesaId?.toString())),
+      ];
+
+      stats = {
+        reservasGestionadas: reservas.length,
+        reservasConfirmadas: reservasConfirmadas,
+        mesasAsignadas: mesasAsignadas.filter((m) => m).length,
+      };
+    } else if (req.user.rol === ROLES.CAJERO) {
+      // Para cajeros: transacciones procesadas
+      const pedidos = await Pedido.find({
+        restauranteId,
+        estado: "entregado",
+      });
+
+      const transaccionesProcesadas = pedidos.length;
+      const ingresosCobrados = pedidos.reduce(
+        (sum, p) => sum + (p.total || 0),
+        0
+      );
+
+      stats = {
+        transaccionesProcesadas: transaccionesProcesadas,
+        ingresosCobrados: ingresosCobrados,
+        promedioVenta:
+          transaccionesProcesadas > 0
+            ? Math.round(ingresosCobrados / transaccionesProcesadas)
+            : 0,
+      };
+    } else {
+      stats = {
+        message: "Estadísticas no disponibles para este rol",
+      };
+    }
+
+    res.json({
+      success: true,
+      data: stats,
+    });
+  } catch (error) {
+    console.error("Error en getUserStats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener estadísticas",
       error: error.message,
     });
   }

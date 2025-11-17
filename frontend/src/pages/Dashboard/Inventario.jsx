@@ -8,6 +8,7 @@ import StockAdjustmentModal from "../../components/Inventario/StockAdjustmentMod
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useInventario } from "../../hooks/useInventario";
+import { Package, Plus, AlertTriangle } from "lucide-react";
 
 const Inventario = () => {
   // Estados locales del componente (UI)
@@ -103,27 +104,20 @@ const Inventario = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-primary">Inventario</h2>
-          <p className="text-textSecondary">Control de stock y suministros</p>
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-primary/10">
+            <Package size={32} className="text-primary" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-primary">Inventario</h2>
+            <p className="text-textSecondary">Control de stock y suministros</p>
+          </div>
         </div>
         <button
           onClick={() => handleOpenModal()}
           className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <Plus className="w-5 h-5" />
           Agregar Item
         </button>
       </div>
@@ -142,20 +136,10 @@ const Inventario = () => {
             borderLeft: `4px solid #F59E0B`,
           }}
         >
-          <svg
+          <AlertTriangle
             className="w-6 h-6 shrink-0 mt-0.5"
             style={{ color: "#F59E0B" }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
+          />
           <div>
             <p className="font-bold text-[#F59E0B]">Alerta de Stock</p>
             <p className="text-sm text-textSecondary">
