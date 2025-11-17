@@ -116,7 +116,7 @@ const QuickActions = () => {
       textColor: "#ffffff",
       accentColor: "#e6af2e",
       onClick: () => navigate("/dashboard/estadisticas"),
-      permission: PERMISSIONS.DASHBOARD.VIEW,
+      permission: PERMISSIONS.ESTADISTICAS.VIEW,
     },
   ];
 

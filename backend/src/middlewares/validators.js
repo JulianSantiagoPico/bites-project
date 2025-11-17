@@ -119,7 +119,7 @@ export const validateCreateEmployee = [
         }
 
         // Roles predeterminados
-        const defaultRoles = ["mesero", "cocinero", "cajero", "host"];
+        const defaultRoles = ["mesero", "cocinero", "cajero", "gerente"];
 
         // Roles personalizados del restaurante (convertir Map a array de keys)
         let customRoles = [];
@@ -196,7 +196,13 @@ export const validateUpdateUser = [
         }
 
         // Roles predeterminados (incluir admin para validación)
-        const defaultRoles = ["admin", "mesero", "cocinero", "cajero", "host"];
+        const defaultRoles = [
+          "admin",
+          "mesero",
+          "cocinero",
+          "cajero",
+          "gerente",
+        ];
 
         // Roles personalizados del restaurante (convertir Map a array de keys)
         let customRoles = [];

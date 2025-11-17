@@ -24,12 +24,13 @@ const PermissionsModal = ({
 
   // Agrupar permisos por módulo
   const permissionGroups = {
+    Dashboard: Object.values(PERMISSIONS.DASHBOARD),
     Empleados: Object.values(PERMISSIONS.EMPLEADOS),
     Productos: Object.values(PERMISSIONS.PRODUCTOS),
-    Inventario: Object.values(PERMISSIONS.INVENTARIO),
     Pedidos: Object.values(PERMISSIONS.ORDENES),
     Mesas: Object.values(PERMISSIONS.MESAS),
     Reservas: Object.values(PERMISSIONS.RESERVAS),
+    Estadísticas: Object.values(PERMISSIONS.ESTADISTICAS),
     Perfil: Object.values(PERMISSIONS.PERFIL),
   };
 

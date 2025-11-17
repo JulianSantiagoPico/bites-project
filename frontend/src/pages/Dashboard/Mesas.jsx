@@ -199,43 +199,6 @@ const Mesas = () => {
         </div>
       )}
 
-      {filteredMesas.length > 0 && (
-        <div
-          className="rounded-xl p-4 flex items-start gap-3"
-          style={{
-            backgroundColor: "#3B82F620",
-            borderLeft: "4px solid #3B82F6",
-          }}
-        >
-          <svg
-            className="w-6 h-6 shrink-0 mt-0.5"
-            style={{ color: "#3B82F6" }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <div>
-            <p className="font-bold text-[#3B82F6]">Consejos</p>
-            <ul className="text-sm text-textSecondary mt-1 space-y-1">
-              <li>• Haz clic en una mesa para ver todos sus detalles</li>
-              <li>
-                • Usa el botón de estado para cambiar rápidamente entre estados
-              </li>
-              <li>
-                • Asigna meseros a las mesas para un mejor control de servicio
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
-
       <MesaModal
         isOpen={showModal}
         onClose={handleCloseModal}

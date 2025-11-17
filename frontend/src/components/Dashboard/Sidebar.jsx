@@ -17,6 +17,7 @@ import {
   ChevronsRight,
   ChevronsLeft,
 } from "lucide-react";
+import { hasPermission, PERMISSIONS } from "../../utils/permissions";
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
   const location = useLocation();
@@ -53,48 +54,72 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       name: "Inicio",
       path: "/dashboard",
       icon: <Home className="w-6 h-6" />,
+      permission: null, // Todos tienen acceso al home
     },
     {
       name: "Tomar Pedido",
       path: "/dashboard/pedidos",
       icon: <ClipboardList className="w-6 h-6" />,
+      permission: PERMISSIONS.ORDENES.VIEW,
     },
     {
       name: "Productos",
       path: "/dashboard/productos",
       icon: <Package className="w-6 h-6" />,
+      permission: PERMISSIONS.PRODUCTOS.VIEW,
     },
     {
       name: "Cocina",
       path: "/dashboard/cocina",
       icon: <ChefHat className="w-6 h-6" />,
+      permission: PERMISSIONS.ORDENES.VIEW, // Los cocineros ven las órdenes
     },
     {
       name: "Mesas",
       path: "/dashboard/mesas",
       icon: <Table className="w-6 h-6" />,
+      permission: PERMISSIONS.MESAS.VIEW,
     },
     {
       name: "Reservas",
       path: "/dashboard/reservas",
       icon: <Calendar className="w-6 h-6" />,
+      permission: PERMISSIONS.RESERVAS.VIEW,
     },
     {
       name: "Empleados",
       path: "/dashboard/empleados",
       icon: <Users className="w-6 h-6" />,
+      permission: PERMISSIONS.EMPLEADOS.VIEW,
     },
     {
       name: "Estadísticas",
       path: "/dashboard/estadisticas",
       icon: <BarChart3 className="w-6 h-6" />,
+      permission: PERMISSIONS.ESTADISTICAS?.VIEW, // Opcional ya que puede no estar en todos los roles
     },
     {
       name: "Configuración",
       path: "/dashboard/configuracion",
       icon: <Settings className="w-6 h-6" />,
+      permission: null, // Solo admin (se verificará por rol)
+      adminOnly: true,
     },
   ];
+
+  // Filtrar items del menú basándose en los permisos del usuario
+  const filteredMenuItems = menuItems.filter((item) => {
+    // Si es solo para admin, verificar el rol
+    if (item.adminOnly) {
+      return user?.rol === "admin";
+    }
+    // Si tiene permiso definido, verificar que el usuario lo tenga
+    if (item.permission) {
+      return hasPermission(user?.rol, item.permission);
+    }
+    // Si no tiene restricciones, mostrar
+    return true;
+  });
 
   return (
     <aside
@@ -126,7 +151,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       {/* Menu Items */}
       <nav className="flex-1 py-6">
         <ul className="space-y-2 px-3">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <li key={item.path}>

@@ -346,25 +346,29 @@ export const getUserStats = async (req, res) => {
         pedidosPreparados: pedidosPreparados,
         enPreparacion: enPreparacion,
       };
-    } else if (req.user.rol === ROLES.HOST) {
-      // Para hosts: reservas gestionadas
+    } else if (req.user.rol === ROLES.GERENTE) {
+      // Para gerentes: visión general de operaciones
+      const pedidos = await Pedido.find({
+        restauranteId,
+      });
+
       const reservas = await Reserva.find({
         restauranteId,
       });
 
-      const reservasConfirmadas = reservas.filter(
-        (r) => r.estado === "confirmada" || r.estado === "completada"
+      const ingresosTotales = pedidos
+        .filter((p) => p.estado === "completado" || p.estado === "pagado")
+        .reduce((total, p) => total + (p.total || 0), 0);
+
+      const reservasActivas = reservas.filter(
+        (r) => r.estado === "confirmada" || r.estado === "pendiente"
       ).length;
 
-      // Contar mesas únicas asignadas en reservas
-      const mesasAsignadas = [
-        ...new Set(reservas.map((r) => r.mesaId?.toString())),
-      ];
-
       stats = {
-        reservasGestionadas: reservas.length,
-        reservasConfirmadas: reservasConfirmadas,
-        mesasAsignadas: mesasAsignadas.filter((m) => m).length,
+        totalPedidos: pedidos.length,
+        ingresosTotales: ingresosTotales,
+        reservasActivas: reservasActivas,
+        topProductos: 0, // Podría calcularse posteriormente
       };
     } else if (req.user.rol === ROLES.CAJERO) {
       // Para cajeros: transacciones procesadas

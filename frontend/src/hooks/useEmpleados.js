@@ -189,14 +189,21 @@ export const useEmpleados = () => {
   };
 
   // Filtrar empleados
-  const filteredEmployees = employees.filter((emp) => {
-    const fullName = `${emp.nombre} ${emp.apellido}`.toLowerCase();
-    const matchesSearch =
-      fullName.includes(searchTerm.toLowerCase()) ||
-      emp.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = filterRole === "Todos" || emp.rol === filterRole;
-    return matchesSearch && matchesRole;
-  });
+  const filteredEmployees = employees
+    .filter((emp) => {
+      const fullName = `${emp.nombre} ${emp.apellido}`.toLowerCase();
+      const matchesSearch =
+        fullName.includes(searchTerm.toLowerCase()) ||
+        emp.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRole = filterRole === "Todos" || emp.rol === filterRole;
+      return matchesSearch && matchesRole;
+    })
+    .sort((a, b) => {
+      // Admin siempre primero
+      if (a.rol === "admin") return -1;
+      if (b.rol === "admin") return 1;
+      return 0;
+    });
 
   return {
     // Estados

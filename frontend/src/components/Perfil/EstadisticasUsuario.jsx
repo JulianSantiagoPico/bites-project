@@ -103,29 +103,36 @@ export const EstadisticasUsuario = ({ stats, rol }) => {
     </div>
   );
 
-  // Estadísticas para HOST
-  const renderHostStats = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  // Estadísticas para GERENTE
+  const renderGerenteStats = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="Reservas Gestionadas"
-        value={stats.reservasGestionadas || 0}
-        icon={Calendar}
+        title="Total Pedidos"
+        value={stats.totalPedidos || 0}
+        icon={ShoppingBag}
         color="from-[#581845] to-[#900c3f]"
         bgColor="bg-purple-50"
       />
       <StatCard
-        title="Reservas Confirmadas"
-        value={stats.reservasConfirmadas || 0}
-        icon={TrendingUp}
+        title="Ingresos"
+        value={formatCurrency(stats.ingresosTotales || 0)}
+        icon={DollarSign}
         color="from-[#6bbf59] to-[#5aa649]"
         bgColor="bg-green-50"
       />
       <StatCard
-        title="Mesas Asignadas"
-        value={stats.mesasAsignadas || 0}
-        icon={Users}
-        color="from-[#35524a] to-[#2d4a43]"
-        bgColor="bg-green-50"
+        title="Reservas Activas"
+        value={stats.reservasActivas || 0}
+        icon={Calendar}
+        color="from-[#e6af2e] to-[#d89a1a]"
+        bgColor="bg-yellow-50"
+      />
+      <StatCard
+        title="Productos Más Vendidos"
+        value={stats.topProductos || 0}
+        icon={TrendingUp}
+        color="from-[#ffd166] to-[#f0c04b]"
+        bgColor="bg-yellow-50"
       />
     </div>
   );
@@ -172,9 +179,9 @@ export const EstadisticasUsuario = ({ stats, rol }) => {
         {rolNormalizado === "ADMIN" && renderAdminStats()}
         {rolNormalizado === "MESERO" && renderMeseroStats()}
         {rolNormalizado === "COCINERO" && renderCocineroStats()}
-        {rolNormalizado === "HOST" && renderHostStats()}
+        {rolNormalizado === "GERENTE" && renderGerenteStats()}
         {rolNormalizado === "CAJERO" && renderCajeroStats()}
-        {!["ADMIN", "MESERO", "COCINERO", "HOST", "CAJERO"].includes(
+        {!["ADMIN", "MESERO", "COCINERO", "GERENTE", "CAJERO"].includes(
           rolNormalizado
         ) && (
           <div className="text-center py-8">

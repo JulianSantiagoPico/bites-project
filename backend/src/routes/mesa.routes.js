@@ -34,18 +34,18 @@ router
   .get(getMesas) // Cualquier usuario autenticado puede ver las mesas
   .post(authorize(ROLES.ADMIN), validateCreateMesa, createMesa); // Solo admin puede crear
 
-// Ruta para cambiar estado - Admin, Mesero y Host
+// Ruta para cambiar estado - Admin, Mesero y Gerente
 router.patch(
   "/:id/estado",
-  authorize(ROLES.ADMIN, ROLES.MESERO, ROLES.HOST),
+  authorize(ROLES.ADMIN, ROLES.MESERO, ROLES.GERENTE),
   validateChangeEstado,
   changeEstado
 );
 
-// Ruta para asignar mesero - Admin y Host
+// Ruta para asignar mesero - Admin y Gerente
 router.patch(
   "/:id/asignar",
-  authorize(ROLES.ADMIN, ROLES.HOST),
+  authorize(ROLES.ADMIN, ROLES.GERENTE),
   validateAsignarMesero,
   asignarMesero
 );

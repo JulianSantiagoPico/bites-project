@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { BarChart3, DollarSign, Package, Users } from "lucide-react";
+import { BarChart3, DollarSign, Package, Users, Download } from "lucide-react";
 import { useEstadisticas } from "../../hooks/useEstadisticas";
+import jsPDF from "jspdf";
 import Notification from "../../components/Notification";
 import EstadisticasStats from "../../components/Estadisticas/EstadisticasStats";
 import EstadisticasFilters from "../../components/Estadisticas/EstadisticasFilters";
@@ -26,6 +27,7 @@ const Estadisticas = () => {
   } = useEstadisticas();
 
   const [periodo, setPeriodo] = useState("mes");
+  const [exportando, setExportando] = useState(false);
 
   // Cargar datos iniciales
   useEffect(() => {
@@ -47,6 +49,297 @@ const Estadisticas = () => {
     setPeriodo(nuevoPeriodo);
     loadAllEstadisticas(nuevoPeriodo);
   };
+
+  // Exportar estadísticas a PDF
+  const handleExportar = async () => {
+    try {
+      setExportando(true);
+
+      // Crear el PDF
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      let yPos = 20;
+
+      // Colores del tema
+      const primaryColor = [88, 24, 69]; // #581845
+      const accentColor = [230, 175, 46]; // #e6af2e
+      const textColor = [31, 41, 55]; // #1f2937
+
+      // Fecha
+      const fecha = new Date().toLocaleString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // Header con fondo
+      doc.setFillColor(...primaryColor);
+      doc.rect(0, 0, pageWidth, 40, "F");
+
+      // Título
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.setFont(undefined, "bold");
+      doc.text("INFORME DE ESTADÍSTICAS", pageWidth / 2, 20, {
+        align: "center",
+      });
+
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text(`Fecha: ${fecha}`, pageWidth / 2, 30, { align: "center" });
+
+      yPos = 50;
+
+      // Período
+      doc.setTextColor(...textColor);
+      doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.text(`Período analizado: ${periodo.toUpperCase()}`, 15, yPos);
+      yPos += 15;
+
+      // Estadísticas Generales
+      if (estadisticasGenerales?.stats) {
+        const stats = estadisticasGenerales.stats;
+
+        // Título de sección
+        doc.setFillColor(...accentColor);
+        doc.rect(10, yPos - 5, pageWidth - 20, 10, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("ESTADÍSTICAS GENERALES", 15, yPos + 2);
+        yPos += 15;
+
+        doc.setTextColor(...textColor);
+        doc.setFontSize(10);
+        doc.setFont(undefined, "normal");
+
+        const statsData = [
+          [
+            "Ventas Total:",
+            `$${parseFloat(stats.ventasTotal || 0).toLocaleString("es-MX", {
+              minimumFractionDigits: 2,
+            })}`,
+          ],
+          [
+            "Cambio vs período anterior:",
+            `${stats.cambioVentas > 0 ? "+" : ""}${stats.cambioVentas}%`,
+          ],
+          ["Pedidos Completados:", `${stats.pedidosCompletados || 0}`],
+          ["Pedidos Activos:", `${stats.pedidosActivos || 0}`],
+          [
+            "Mesas Ocupadas:",
+            `${stats.mesasOcupadas || 0} de ${stats.mesasTotal || 0}`,
+          ],
+          ["Ocupación:", `${stats.porcentajeOcupacion || 0}%`],
+          ["Reservas de Hoy:", `${stats.reservasHoy || 0}`],
+          [
+            "Ticket Promedio:",
+            `$${parseFloat(stats.ticketPromedio || 0).toLocaleString("es-MX", {
+              minimumFractionDigits: 2,
+            })}`,
+          ],
+        ];
+
+        statsData.forEach(([label, value]) => {
+          doc.setFont(undefined, "bold");
+          doc.text(label, 15, yPos);
+          doc.setFont(undefined, "normal");
+          doc.text(value, 100, yPos);
+          yPos += 7;
+        });
+
+        yPos += 5;
+      }
+
+      // Resumen de Ventas
+      if (estadisticasVentas?.resumen && yPos < pageHeight - 60) {
+        const resumen = estadisticasVentas.resumen;
+
+        doc.setFillColor(...accentColor);
+        doc.rect(10, yPos - 5, pageWidth - 20, 10, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("RESUMEN DE VENTAS", 15, yPos + 2);
+        yPos += 15;
+
+        doc.setTextColor(...textColor);
+        doc.setFontSize(10);
+        doc.setFont(undefined, "normal");
+
+        const resumenData = [
+          [
+            "Total:",
+            `$${parseFloat(resumen.ventasTotal || 0).toLocaleString("es-MX", {
+              minimumFractionDigits: 2,
+            })}`,
+          ],
+          [
+            "Promedio por día:",
+            `$${parseFloat(resumen.ventasPromedio || 0).toLocaleString(
+              "es-MX",
+              { minimumFractionDigits: 2 }
+            )}`,
+          ],
+          [
+            "Mejor día:",
+            `$${parseFloat(resumen.mejorDia || 0).toLocaleString("es-MX", {
+              minimumFractionDigits: 2,
+            })}`,
+          ],
+          ["Total pedidos:", `${resumen.totalPedidos || 0}`],
+          [
+            "Ticket promedio:",
+            `$${parseFloat(resumen.ticketPromedio || 0).toLocaleString(
+              "es-MX",
+              { minimumFractionDigits: 2 }
+            )}`,
+          ],
+        ];
+
+        resumenData.forEach(([label, value]) => {
+          doc.setFont(undefined, "bold");
+          doc.text(label, 15, yPos);
+          doc.setFont(undefined, "normal");
+          doc.text(value, 100, yPos);
+          yPos += 7;
+        });
+
+        yPos += 5;
+      }
+
+      // Top Productos
+      if (estadisticasProductos?.topProductosPorIngresos?.length > 0) {
+        // Nueva página si es necesario
+        if (yPos > pageHeight - 80) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFillColor(...accentColor);
+        doc.rect(10, yPos - 5, pageWidth - 20, 10, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("TOP PRODUCTOS POR INGRESOS", 15, yPos + 2);
+        yPos += 15;
+
+        doc.setTextColor(...textColor);
+        doc.setFontSize(9);
+
+        estadisticasProductos.topProductosPorIngresos
+          .slice(0, 10)
+          .forEach((producto, index) => {
+            if (yPos > pageHeight - 20) {
+              doc.addPage();
+              yPos = 20;
+            }
+
+            doc.setFont(undefined, "bold");
+            doc.text(`${index + 1}.`, 15, yPos);
+            doc.setFont(undefined, "normal");
+
+            const nombre =
+              producto.nombre.length > 35
+                ? producto.nombre.substring(0, 32) + "..."
+                : producto.nombre;
+            doc.text(nombre, 25, yPos);
+
+            doc.setFont(undefined, "bold");
+            doc.text(
+              `$${parseFloat(producto.ingresos || 0).toLocaleString("es-MX", {
+                minimumFractionDigits: 2,
+              })}`,
+              120,
+              yPos
+            );
+            doc.setFont(undefined, "normal");
+            doc.text(`(${producto.cantidadVendida || 0} vendidos)`, 160, yPos);
+
+            yPos += 6;
+          });
+
+        yPos += 5;
+      }
+
+      // Performance de Meseros
+      if (estadisticasEmpleados?.performanceMeseros?.length > 0) {
+        // Nueva página si es necesario
+        if (yPos > pageHeight - 60) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFillColor(...accentColor);
+        doc.rect(10, yPos - 5, pageWidth - 20, 10, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(14);
+        doc.setFont(undefined, "bold");
+        doc.text("PERFORMANCE DE MESEROS", 15, yPos + 2);
+        yPos += 15;
+
+        doc.setTextColor(...textColor);
+        doc.setFontSize(9);
+
+        estadisticasEmpleados.performanceMeseros.forEach((mesero, index) => {
+          if (yPos > pageHeight - 20) {
+            doc.addPage();
+            yPos = 20;
+          }
+
+          doc.setFont(undefined, "bold");
+          doc.text(`${index + 1}.`, 15, yPos);
+          doc.setFont(undefined, "normal");
+          doc.text(mesero.nombre, 25, yPos);
+
+          doc.text(`Pedidos: ${mesero.pedidosCompletados || 0}`, 100, yPos);
+          doc.setFont(undefined, "bold");
+          doc.text(
+            `$${parseFloat(mesero.ventasTotal || 0).toLocaleString("es-MX", {
+              minimumFractionDigits: 2,
+            })}`,
+            140,
+            yPos
+          );
+
+          yPos += 6;
+        });
+      }
+
+      // Footer
+      const totalPages = doc.internal.pages.length - 1;
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(
+          `Página ${i} de ${totalPages} - Generado el ${new Date().toLocaleDateString(
+            "es-ES"
+          )}`,
+          pageWidth / 2,
+          pageHeight - 10,
+          { align: "center" }
+        );
+      }
+
+      // Descargar PDF
+      doc.save(
+        `informe-estadisticas-${periodo}-${
+          new Date().toISOString().split("T")[0]
+        }.pdf`
+      );
+    } catch (error) {
+      console.error("Error al exportar:", error);
+    } finally {
+      setExportando(false);
+    }
+  };
+
+  // Ya no necesitamos la función generarContenidoInforme
 
   return (
     <div className="space-y-6">
@@ -74,6 +367,16 @@ const Estadisticas = () => {
             </p>
           </div>
         </div>
+
+        {/* Botón de exportar */}
+        <button
+          onClick={handleExportar}
+          disabled={exportando || loading}
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+        >
+          <Download className="w-5 h-5" />
+          {exportando ? "Exportando..." : "Exportar Informe"}
+        </button>
       </div>
 
       {/* Filtros de período */}
