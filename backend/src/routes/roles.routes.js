@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getRoles,
+  getTodosRoles,
   updateRoles,
   getRolePermissions,
   getAllPermissions,
@@ -17,10 +18,17 @@ router.use(protect);
 
 /**
  * @route   GET /api/roles
- * @desc    Obtener roles del restaurante
+ * @desc    Obtener roles activos del restaurante
  * @access  Private (Admin)
  */
 router.get("/", authorize(ROLES.ADMIN), getRoles);
+
+/**
+ * @route   GET /api/roles/todos
+ * @desc    Obtener todos los roles (activos e inactivos)
+ * @access  Private (Admin)
+ */
+router.get("/todos", authorize(ROLES.ADMIN), getTodosRoles);
 
 /**
  * @route   PUT /api/roles

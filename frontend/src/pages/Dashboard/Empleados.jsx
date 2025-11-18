@@ -38,6 +38,7 @@ const Empleados = () => {
     saveEmpleado,
     deleteEmpleado,
     reactivateEmpleado,
+    showNotification,
     closeNotification,
     closeConfirmDialog,
   } = useEmpleados();
@@ -76,6 +77,8 @@ const Empleados = () => {
     setRolesSaving(false);
 
     if (result.success) {
+      // Cerrar el modal de roles
+      setShowRolesModal(false);
       // Recargar empleados para actualizar los filtros
       loadEmpleados();
     } else {
@@ -205,8 +208,10 @@ const Empleados = () => {
         isOpen={showRolesModal}
         onClose={() => setShowRolesModal(false)}
         currentRoles={getCurrentRoles().rolesDisplay}
+        currentIcons={getCurrentRoles().rolesIcons}
         onUpdateRoles={handleUpdateRoles}
         saving={rolesSaving}
+        showNotification={showNotification}
       />
       {/* Notificaciones Toast */}
       {notification && (

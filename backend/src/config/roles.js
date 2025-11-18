@@ -9,15 +9,24 @@ export const ROLES = {
 
 // Permisos por módulo
 export const PERMISSIONS = {
-  // Módulo de empleados
-  EMPLEADOS: {
-    VIEW: "empleados:view",
-    CREATE: "empleados:create",
-    UPDATE: "empleados:update",
-    DELETE: "empleados:delete",
+  // Dashboard - Todos tienen acceso por defecto
+  DASHBOARD: {
+    VIEW: "dashboard:view",
   },
 
-  // Módulo de productos
+  // Perfil - Todos tienen acceso por defecto
+  PERFIL: {
+    VIEW: "perfil:view",
+    UPDATE: "perfil:update",
+  },
+
+  // Módulo de Tomar Pedido
+  TOMAR_PEDIDO: {
+    VIEW: "tomar_pedido:view",
+    CREATE: "tomar_pedido:create",
+  },
+
+  // Módulo de Productos
   PRODUCTOS: {
     VIEW: "productos:view",
     CREATE: "productos:create",
@@ -25,34 +34,21 @@ export const PERMISSIONS = {
     DELETE: "productos:delete",
   },
 
-  // Módulo de inventario
-  INVENTARIO: {
-    VIEW: "inventario:view",
-    CREATE: "inventario:create",
-    UPDATE: "inventario:update",
-    DELETE: "inventario:delete",
+  // Módulo de Cocina
+  COCINA: {
+    VIEW: "cocina:view",
+    UPDATE: "cocina:update",
   },
 
-  // Módulo de órdenes
-  ORDENES: {
-    VIEW: "ordenes:view",
-    CREATE: "ordenes:create",
-    UPDATE: "ordenes:update",
-    DELETE: "ordenes:delete",
-    TAKE: "ordenes:take",
-  },
-
-  // Módulo de mesas
+  // Módulo de Mesas
   MESAS: {
     VIEW: "mesas:view",
     CREATE: "mesas:create",
     UPDATE: "mesas:update",
     DELETE: "mesas:delete",
-    CHANGE_STATUS: "mesas:change_status",
-    ASSIGN: "mesas:assign",
   },
 
-  // Módulo de reservas
+  // Módulo de Reservas
   RESERVAS: {
     VIEW: "reservas:view",
     CREATE: "reservas:create",
@@ -60,91 +56,106 @@ export const PERMISSIONS = {
     DELETE: "reservas:delete",
   },
 
-  // Perfil de usuario
-  PERFIL: {
-    VIEW: "perfil:view",
-    UPDATE: "perfil:update",
+  // Módulo de Empleados
+  EMPLEADOS: {
+    VIEW: "empleados:view",
+    CREATE: "empleados:create",
+    UPDATE: "empleados:update",
+    DELETE: "empleados:delete",
   },
 
-  // Dashboard
-  DASHBOARD: {
-    VIEW: "dashboard:view",
-  },
-
-  // Módulo de estadísticas
+  // Módulo de Estadísticas
   ESTADISTICAS: {
     VIEW: "estadisticas:view",
     EXPORT: "estadisticas:export",
+  },
+
+  // Módulo de Configuración
+  CONFIGURACION: {
+    VIEW: "configuracion:view",
+    UPDATE: "configuracion:update",
   },
 };
 
 // Definición de permisos por rol
 export const ROLE_PERMISSIONS = {
   [ROLES.ADMIN]: [
-    // Admin tiene acceso a todo
-    ...Object.values(PERMISSIONS.EMPLEADOS),
+    // Admin tiene acceso a todos los módulos
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
     ...Object.values(PERMISSIONS.PRODUCTOS),
-    ...Object.values(PERMISSIONS.INVENTARIO),
-    ...Object.values(PERMISSIONS.ORDENES),
+    ...Object.values(PERMISSIONS.COCINA),
     ...Object.values(PERMISSIONS.MESAS),
     ...Object.values(PERMISSIONS.RESERVAS),
-    ...Object.values(PERMISSIONS.PERFIL),
-    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.EMPLEADOS),
     ...Object.values(PERMISSIONS.ESTADISTICAS),
+    ...Object.values(PERMISSIONS.CONFIGURACION),
   ],
 
   [ROLES.MESERO]: [
-    // Mesero: Tomar pedidos, ver órdenes, ver mesas, actualizar órdenes
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.CREATE,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.ORDENES.TAKE,
-    PERMISSIONS.MESAS.VIEW,
-    PERMISSIONS.MESAS.CHANGE_STATUS,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Mesero: Inicio, Tomar Pedido, Mesas, Reservas
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
+    ...Object.values(PERMISSIONS.MESAS),
+    ...Object.values(PERMISSIONS.RESERVAS),
   ],
 
   [ROLES.COCINERO]: [
-    // Cocinero: Ver y actualizar órdenes, ver productos
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.INVENTARIO.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Cocinero (Personal de cocina): Inicio, Cocina
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.COCINA),
   ],
 
   [ROLES.CAJERO]: [
-    // Cajero: Ver y procesar órdenes, ver productos
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Cajero: Inicio, Tomar Pedido, Mesas, Estadísticas
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
+    ...Object.values(PERMISSIONS.MESAS),
+    PERMISSIONS.ESTADISTICAS.VIEW,
   ],
 
   [ROLES.GERENTE]: [
-    // Gerente: Acceso completo excepto gestión de empleados y configuración del sistema
-    ...Object.values(PERMISSIONS.PRODUCTOS),
-    ...Object.values(PERMISSIONS.INVENTARIO),
-    ...Object.values(PERMISSIONS.ORDENES),
-    ...Object.values(PERMISSIONS.MESAS),
-    ...Object.values(PERMISSIONS.RESERVAS),
+    // Gerente: Inicio, Estadísticas, Reservas (lectura), Mesas (lectura), Empleados (lectura), Productos (lectura)
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
     ...Object.values(PERMISSIONS.ESTADISTICAS),
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    PERMISSIONS.RESERVAS.VIEW,
+    PERMISSIONS.MESAS.VIEW,
+    PERMISSIONS.EMPLEADOS.VIEW,
+    PERMISSIONS.PRODUCTOS.VIEW,
   ],
 };
 
-// Verificar si un rol tiene un permiso específico
+// Verificar si un rol tiene un permiso específico (solo para roles predeterminados)
 export const hasPermission = (role, permission) => {
   return ROLE_PERMISSIONS[role]?.includes(permission) || false;
+};
+
+// Verificar permisos incluyendo roles personalizados (asíncrono)
+export const hasPermissionAsync = async (role, permission, restauranteId) => {
+  // Primero verificar si es un rol predeterminado
+  if (ROLE_PERMISSIONS[role]) {
+    return ROLE_PERMISSIONS[role].includes(permission);
+  }
+
+  // Si no, buscar en la base de datos
+  try {
+    const Rol = (await import("../models/Rol.js")).default;
+    const rolCustom = await Rol.findOne({
+      restauranteId,
+      key: role,
+      activo: true,
+    });
+
+    return rolCustom?.permisos?.includes(permission) || false;
+  } catch (error) {
+    console.error("Error al verificar permisos personalizados:", error);
+    return false;
+  }
 };
 
 // Obtener todos los permisos de un rol

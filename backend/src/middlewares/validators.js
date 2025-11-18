@@ -3,6 +3,7 @@ import Restaurante from "../models/Restaurante.js";
 import Ocasion from "../models/Ocasion.js";
 import Ubicacion from "../models/Ubicacion.js";
 import Categoria from "../models/Categoria.js";
+import Rol from "../models/Rol.js";
 
 // Middleware para manejar los resultados de validación
 export const handleValidationErrors = (req, res, next) => {
@@ -114,28 +115,18 @@ export const validateCreateEmployee = [
     .withMessage("El rol es requerido")
     .custom(async (value, { req }) => {
       try {
-        // Obtener roles del restaurante
-        const restaurante = await Restaurante.findById(req.user.restauranteId);
+        // Obtener roles activos del restaurante desde la colección Rol
+        const roles = await Rol.find({
+          restauranteId: req.user.restauranteId,
+          activo: true,
+        });
 
-        if (!restaurante) {
-          throw new Error("Restaurante no encontrado");
+        // Extraer las keys de los roles
+        const validRoles = roles.map((rol) => rol.key);
+
+        if (validRoles.length === 0) {
+          throw new Error("No hay roles disponibles en el restaurante");
         }
-
-        // Roles predeterminados
-        const defaultRoles = ["mesero", "cocinero", "cajero", "gerente"];
-
-        // Roles personalizados del restaurante (convertir Map a array de keys)
-        let customRoles = [];
-        if (restaurante.customRoles) {
-          if (restaurante.customRoles instanceof Map) {
-            customRoles = Array.from(restaurante.customRoles.keys());
-          } else if (typeof restaurante.customRoles === "object") {
-            customRoles = Object.keys(restaurante.customRoles);
-          }
-        }
-
-        // Combinar roles predeterminados y personalizados
-        const validRoles = [...defaultRoles, ...customRoles];
 
         if (!validRoles.includes(value)) {
           throw new Error(
@@ -191,34 +182,23 @@ export const validateUpdateUser = [
     .optional()
     .custom(async (value, { req }) => {
       try {
-        // Obtener roles del restaurante
-        const restaurante = await Restaurante.findById(req.user.restauranteId);
+        // Obtener roles activos del restaurante desde la colección Rol
+        const roles = await Rol.find({
+          restauranteId: req.user.restauranteId,
+          activo: true,
+        });
 
-        if (!restaurante) {
-          throw new Error("Restaurante no encontrado");
+        // Extraer las keys de los roles
+        const validRoles = roles.map((rol) => rol.key);
+
+        // Agregar admin si no está (admin no está en la colección Rol)
+        if (!validRoles.includes("admin")) {
+          validRoles.push("admin");
         }
 
-        // Roles predeterminados (incluir admin para validación)
-        const defaultRoles = [
-          "admin",
-          "mesero",
-          "cocinero",
-          "cajero",
-          "gerente",
-        ];
-
-        // Roles personalizados del restaurante (convertir Map a array de keys)
-        let customRoles = [];
-        if (restaurante.customRoles) {
-          if (restaurante.customRoles instanceof Map) {
-            customRoles = Array.from(restaurante.customRoles.keys());
-          } else if (typeof restaurante.customRoles === "object") {
-            customRoles = Object.keys(restaurante.customRoles);
-          }
+        if (validRoles.length === 0) {
+          throw new Error("No hay roles disponibles en el restaurante");
         }
-
-        // Combinar roles predeterminados y personalizados
-        const validRoles = [...defaultRoles, ...customRoles];
 
         if (!validRoles.includes(value)) {
           throw new Error(

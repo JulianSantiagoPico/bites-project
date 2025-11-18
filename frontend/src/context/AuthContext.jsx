@@ -33,11 +33,14 @@ export const AuthProvider = ({ children }) => {
         setUser(storedUser);
         setIsAuthenticated(true);
 
-        // Cargar permisos personalizados desde el backend
+        // Cargar permisos del rol del usuario desde el backend
         try {
-          await loadCustomPermissionsFromBackend();
+          const { loadUserPermissionsFromBackend } = await import(
+            "../utils/permissions"
+          );
+          await loadUserPermissionsFromBackend(storedUser.rol);
         } catch (error) {
-          console.error("Error al cargar permisos personalizados:", error);
+          console.error("Error al cargar permisos del usuario:", error);
         }
       }
 
@@ -53,6 +56,17 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.login(email, password);
       setUser(response.data.user);
       setIsAuthenticated(true);
+
+      // Cargar permisos del rol del usuario después del login
+      try {
+        const { loadUserPermissionsFromBackend } = await import(
+          "../utils/permissions"
+        );
+        await loadUserPermissionsFromBackend(response.data.user.rol);
+      } catch (error) {
+        console.error("Error al cargar permisos después del login:", error);
+      }
+
       return { success: true, data: response.data };
     } catch (error) {
       return {

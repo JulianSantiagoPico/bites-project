@@ -13,15 +13,24 @@ export const ROLES = {
 
 // Permisos por módulo
 export const PERMISSIONS = {
-  // Módulo de empleados
-  EMPLEADOS: {
-    VIEW: "empleados:view",
-    CREATE: "empleados:create",
-    UPDATE: "empleados:update",
-    DELETE: "empleados:delete",
+  // Dashboard - Todos tienen acceso por defecto
+  DASHBOARD: {
+    VIEW: "dashboard:view",
   },
 
-  // Módulo de productos
+  // Perfil - Todos tienen acceso por defecto
+  PERFIL: {
+    VIEW: "perfil:view",
+    UPDATE: "perfil:update",
+  },
+
+  // Módulo de Tomar Pedido
+  TOMAR_PEDIDO: {
+    VIEW: "tomar_pedido:view",
+    CREATE: "tomar_pedido:create",
+  },
+
+  // Módulo de Productos
   PRODUCTOS: {
     VIEW: "productos:view",
     CREATE: "productos:create",
@@ -29,34 +38,21 @@ export const PERMISSIONS = {
     DELETE: "productos:delete",
   },
 
-  // Módulo de inventario
-  INVENTARIO: {
-    VIEW: "inventario:view",
-    CREATE: "inventario:create",
-    UPDATE: "inventario:update",
-    DELETE: "inventario:delete",
+  // Módulo de Cocina
+  COCINA: {
+    VIEW: "cocina:view",
+    UPDATE: "cocina:update",
   },
 
-  // Módulo de órdenes
-  ORDENES: {
-    VIEW: "ordenes:view",
-    CREATE: "ordenes:create",
-    UPDATE: "ordenes:update",
-    DELETE: "ordenes:delete",
-    TAKE: "ordenes:take",
-  },
-
-  // Módulo de mesas
+  // Módulo de Mesas
   MESAS: {
     VIEW: "mesas:view",
     CREATE: "mesas:create",
     UPDATE: "mesas:update",
     DELETE: "mesas:delete",
-    CHANGE_STATUS: "mesas:change_status",
-    ASSIGN: "mesas:assign",
   },
 
-  // Módulo de reservas
+  // Módulo de Reservas
   RESERVAS: {
     VIEW: "reservas:view",
     CREATE: "reservas:create",
@@ -64,85 +60,77 @@ export const PERMISSIONS = {
     DELETE: "reservas:delete",
   },
 
-  // Perfil de usuario
-  PERFIL: {
-    VIEW: "perfil:view",
-    UPDATE: "perfil:update",
+  // Módulo de Empleados
+  EMPLEADOS: {
+    VIEW: "empleados:view",
+    CREATE: "empleados:create",
+    UPDATE: "empleados:update",
+    DELETE: "empleados:delete",
   },
 
-  // Dashboard
-  DASHBOARD: {
-    VIEW: "dashboard:view",
-  },
-
-  // Módulo de estadísticas
+  // Módulo de Estadísticas
   ESTADISTICAS: {
     VIEW: "estadisticas:view",
     EXPORT: "estadisticas:export",
+  },
+
+  // Módulo de Configuración
+  CONFIGURACION: {
+    VIEW: "configuracion:view",
+    UPDATE: "configuracion:update",
   },
 };
 
 // Definición de permisos por rol (debe estar sincronizado con el backend)
 export const ROLE_PERMISSIONS = {
   [ROLES.ADMIN]: [
-    // Admin tiene acceso a todo
-    ...Object.values(PERMISSIONS.EMPLEADOS),
+    // Admin tiene acceso a todos los módulos
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
     ...Object.values(PERMISSIONS.PRODUCTOS),
-    ...Object.values(PERMISSIONS.INVENTARIO),
-    ...Object.values(PERMISSIONS.ORDENES),
+    ...Object.values(PERMISSIONS.COCINA),
     ...Object.values(PERMISSIONS.MESAS),
     ...Object.values(PERMISSIONS.RESERVAS),
-    ...Object.values(PERMISSIONS.PERFIL),
-    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.EMPLEADOS),
     ...Object.values(PERMISSIONS.ESTADISTICAS),
+    ...Object.values(PERMISSIONS.CONFIGURACION),
   ],
 
   [ROLES.MESERO]: [
-    // Mesero: Tomar pedidos, ver órdenes, ver mesas, actualizar órdenes
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.CREATE,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.ORDENES.TAKE,
-    PERMISSIONS.MESAS.VIEW,
-    PERMISSIONS.MESAS.CHANGE_STATUS,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Mesero: Inicio, Tomar Pedido, Mesas, Reservas
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
+    ...Object.values(PERMISSIONS.MESAS),
+    ...Object.values(PERMISSIONS.RESERVAS),
   ],
 
   [ROLES.COCINERO]: [
-    // Cocinero: Ver y actualizar órdenes, ver productos
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.INVENTARIO.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Cocinero (Personal de cocina): Inicio, Cocina
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.COCINA),
   ],
 
   [ROLES.CAJERO]: [
-    // Cajero: Ver y procesar órdenes, ver productos
-    PERMISSIONS.ORDENES.VIEW,
-    PERMISSIONS.ORDENES.UPDATE,
-    PERMISSIONS.PRODUCTOS.VIEW,
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    // Cajero: Inicio, Tomar Pedido, Mesas, Estadísticas
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
+    ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
+    ...Object.values(PERMISSIONS.MESAS),
+    PERMISSIONS.ESTADISTICAS.VIEW,
   ],
 
   [ROLES.GERENTE]: [
-    // Gerente: Acceso completo excepto gestión de empleados y configuración del sistema
-    ...Object.values(PERMISSIONS.PRODUCTOS),
-    ...Object.values(PERMISSIONS.INVENTARIO),
-    ...Object.values(PERMISSIONS.ORDENES),
-    ...Object.values(PERMISSIONS.MESAS),
-    ...Object.values(PERMISSIONS.RESERVAS),
+    // Gerente: Inicio, Estadísticas, Reservas (lectura), Mesas (lectura), Empleados (lectura), Productos (lectura)
+    ...Object.values(PERMISSIONS.DASHBOARD),
+    ...Object.values(PERMISSIONS.PERFIL),
     ...Object.values(PERMISSIONS.ESTADISTICAS),
-    PERMISSIONS.PERFIL.VIEW,
-    PERMISSIONS.PERFIL.UPDATE,
-    PERMISSIONS.DASHBOARD.VIEW,
+    PERMISSIONS.RESERVAS.VIEW,
+    PERMISSIONS.MESAS.VIEW,
+    PERMISSIONS.EMPLEADOS.VIEW,
+    PERMISSIONS.PRODUCTOS.VIEW,
   ],
 };
 
@@ -234,7 +222,38 @@ export const getCustomRolePermissions = () => {
 };
 
 /**
- * Cargar permisos personalizados desde el backend
+ * Cargar permisos del rol del usuario desde el backend
+ */
+export const loadUserPermissionsFromBackend = async (userRole) => {
+  try {
+    if (!userRole) {
+      console.warn("No se proporcionó rol de usuario");
+      return {};
+    }
+
+    const { fetchAPI } = await import("../services/config");
+    const response = await fetchAPI(`/roles/${userRole}/permissions`, {
+      method: "GET",
+    });
+
+    if (response && response.success && response.data) {
+      // Guardar solo los permisos del rol actual
+      const customPermissions = getCustomRolePermissions();
+      customPermissions[userRole] = response.data.permissions || [];
+      localStorage.setItem(
+        "customRolePermissions",
+        JSON.stringify(customPermissions)
+      );
+      return response.data.permissions || [];
+    }
+  } catch (error) {
+    console.error(`Error al cargar permisos del rol ${userRole}:`, error);
+  }
+  return [];
+};
+
+/**
+ * Cargar permisos personalizados desde el backend (solo para admin)
  */
 export const loadCustomPermissionsFromBackend = async () => {
   try {
@@ -243,7 +262,14 @@ export const loadCustomPermissionsFromBackend = async () => {
       method: "GET",
     });
 
-    if (response) {
+    if (response && response.success && response.data) {
+      localStorage.setItem(
+        "customRolePermissions",
+        JSON.stringify(response.data)
+      );
+      return response.data;
+    } else if (response && !response.success) {
+      // Si el response no tiene success, asumimos que es el objeto directo
       localStorage.setItem("customRolePermissions", JSON.stringify(response));
       return response;
     }

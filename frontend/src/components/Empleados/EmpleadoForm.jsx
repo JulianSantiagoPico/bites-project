@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { getCurrentRoles } from "../../utils/empleadosUtils";
 
-const EmpleadoForm = ({ employee, onSubmit, onCancel }) => {
-  const { rolesDisplay, rolesIcons } = getCurrentRoles();
-
+const EmpleadoForm = ({
+  employee,
+  onSubmit,
+  onCancel,
+  rolesDisplay,
+  rolesIcons,
+}) => {
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -30,11 +33,11 @@ const EmpleadoForm = ({ employee, onSubmit, onCancel }) => {
     }
   }, [employee]);
 
-  // Construir roles dinámicamente desde rolesDisplay
-  const roles = Object.entries(rolesDisplay).map(([value, label]) => ({
+  // Construir roles dinámicamente desde rolesDisplay (props)
+  const roles = Object.entries(rolesDisplay || {}).map(([value, label]) => ({
     value,
     label,
-    icon: rolesIcons[value] || "👤",
+    icon: (rolesIcons && rolesIcons[value]) || "👤",
   }));
 
   const validateForm = () => {

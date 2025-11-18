@@ -14,6 +14,15 @@ export const getRoles = async () => {
 };
 
 /**
+ * Obtener todos los roles (activos e inactivos) del restaurante
+ */
+export const getTodosRoles = async () => {
+  return await fetchAPI("/roles/todos", {
+    method: "GET",
+  });
+};
+
+/**
  * Actualizar roles personalizados del restaurante
  */
 export const updateRoles = async (rolesData) => {
@@ -41,11 +50,23 @@ export const getAllPermissions = async () => {
   });
 };
 
+/**
+ * Actualizar permisos de un rol específico
+ */
+export const updateRolePermissions = async (roleName, permissions) => {
+  return await fetchAPI(`/roles/permissions/${roleName}`, {
+    method: "PUT",
+    body: JSON.stringify({ permissions }),
+  });
+};
+
 const rolesService = {
   getRoles,
+  getTodosRoles,
   updateRoles,
   getRolePermissions,
   getAllPermissions,
+  updateRolePermissions,
 };
 
 export default rolesService;

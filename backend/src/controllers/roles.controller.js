@@ -1,48 +1,30 @@
-import Restaurante from "../models/Restaurante.js";
-import { ROLES, ROLE_PERMISSIONS } from "../config/roles.js";
+import Rol from "../models/Rol.js";
+import { ROLE_PERMISSIONS } from "../config/roles.js";
 
 /**
- * @desc    Obtener roles disponibles del restaurante
+ * @desc    Obtener roles activos del restaurante
  * @route   GET /api/roles
  * @access  Private (Admin)
  */
 export const getRoles = async (req, res) => {
   try {
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    // Buscar todos los roles activos del restaurante, ordenados
+    const roles = await Rol.find({
+      restauranteId: req.user.restauranteId,
+      activo: true,
+    }).sort({ orden: 1 });
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
-      });
-    }
+    // Convertir a formato esperado por el frontend (compatibilidad)
+    const rolesDisplay = {};
+    const rolesIcons = {};
 
-    // Roles personalizados del restaurante o roles por defecto
-    const customRoles = restaurante.customRoles || {};
+    roles.forEach((rol) => {
+      rolesDisplay[rol.key] = rol.label;
+      rolesIcons[rol.key] = rol.icon;
+    });
 
-    // Roles por defecto del sistema (excluir admin)
-    const defaultRoles = {
-      mesero: "Mesero",
-      cocinero: "Cocinero",
-      cajero: "Cajero",
-      gerente: "Gerente",
-    };
-
-    // Iconos por defecto
-    const defaultIcons = {
-      mesero: "🍽️",
-      cocinero: "👨‍🍳",
-      cajero: "💰",
-      gerente: "👔",
-    };
-
-    const rolesDisplay =
-      Object.keys(customRoles).length > 0 ? customRoles : defaultRoles;
-
-    const rolesIcons = restaurante.rolesIcons || defaultIcons;
-
-    // Lista de roles
-    const rolesList = ["Todos", ...Object.keys(rolesDisplay)];
+    // Lista de roles (incluir "Todos" al inicio)
+    const rolesList = ["Todos", ...roles.map((r) => r.key)];
 
     res.json({
       success: true,
@@ -50,6 +32,16 @@ export const getRoles = async (req, res) => {
         rolesDisplay,
         rolesList,
         rolesIcons,
+        roles: roles.map((rol) => ({
+          id: rol._id,
+          key: rol.key,
+          label: rol.label,
+          icon: rol.icon,
+          permisos: rol.permisos,
+          orden: rol.orden,
+          predefinido: rol.predefinido,
+          activo: rol.activo,
+        })),
       },
     });
   } catch (error) {
@@ -63,7 +55,32 @@ export const getRoles = async (req, res) => {
 };
 
 /**
- * @desc    Actualizar roles personalizados del restaurante
+ * @desc    Obtener todos los roles (activos e inactivos) del restaurante
+ * @route   GET /api/roles/todos
+ * @access  Private (Admin)
+ */
+export const getTodosRoles = async (req, res) => {
+  try {
+    const roles = await Rol.find({
+      restauranteId: req.user.restauranteId,
+    }).sort({ orden: 1, createdAt: 1 });
+
+    res.json({
+      success: true,
+      data: roles,
+    });
+  } catch (error) {
+    console.error("Error en getTodosRoles:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener todos los roles",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Actualizar roles del restaurante
  * @route   PUT /api/roles
  * @access  Private (Admin)
  */
@@ -78,31 +95,100 @@ export const updateRoles = async (req, res) => {
       });
     }
 
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    const restauranteId = req.user.restauranteId;
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
-      });
+    // Obtener roles existentes
+    const rolesExistentes = await Rol.find({ restauranteId });
+    const existentesMap = new Map(rolesExistentes.map((rol) => [rol.key, rol]));
+
+    // Operaciones a realizar
+    const operaciones = [];
+    let orden = 1;
+
+    // Procesar cada rol del request
+    for (const [key, label] of Object.entries(rolesDisplay)) {
+      const icon = rolesIcons?.[key] || "👤";
+      const rolExistente = existentesMap.get(key);
+
+      if (rolExistente) {
+        // Actualizar rol existente
+        operaciones.push(
+          Rol.findByIdAndUpdate(
+            rolExistente._id,
+            {
+              label,
+              icon,
+              orden: orden++,
+              activo: true,
+            },
+            { new: true }
+          )
+        );
+        existentesMap.delete(key);
+      } else {
+        // Crear nuevo rol con permisos por defecto si existen
+        const permisosDefault = ROLE_PERMISSIONS[key] || [];
+        operaciones.push(
+          Rol.create({
+            restauranteId,
+            key,
+            label,
+            icon,
+            permisos: permisosDefault,
+            orden: orden++,
+            predefinido: false,
+            activo: true,
+          })
+        );
+      }
     }
 
-    // Actualizar roles personalizados
-    restaurante.customRoles = rolesDisplay;
-    restaurante.rolesIcons = rolesIcons || {};
+    // Desactivar roles que ya no están en la lista (solo los no predefinidos)
+    for (const [key, rol] of existentesMap) {
+      if (!rol.predefinido) {
+        operaciones.push(
+          Rol.findByIdAndUpdate(rol._id, { activo: false }, { new: true })
+        );
+      }
+    }
 
-    await restaurante.save();
+    // Ejecutar todas las operaciones
+    await Promise.all(operaciones);
 
-    // Lista de roles
-    const rolesList = ["Todos", ...Object.keys(rolesDisplay)];
+    // Obtener roles actualizados
+    const rolesActualizados = await Rol.find({
+      restauranteId,
+      activo: true,
+    }).sort({ orden: 1 });
+
+    // Formatear respuesta
+    const rolesDisplayResult = {};
+    const rolesIconsResult = {};
+
+    rolesActualizados.forEach((rol) => {
+      rolesDisplayResult[rol.key] = rol.label;
+      rolesIconsResult[rol.key] = rol.icon;
+    });
+
+    const rolesListResult = ["Todos", ...rolesActualizados.map((r) => r.key)];
 
     res.json({
       success: true,
       message: "Roles actualizados exitosamente",
       data: {
-        rolesDisplay: restaurante.customRoles,
-        rolesList,
-        rolesIcons: restaurante.rolesIcons,
+        rolesDisplay: rolesDisplayResult,
+        rolesList: rolesListResult,
+        rolesIcons: rolesIconsResult,
+        roles: rolesActualizados.map((rol) => ({
+          id: rol._id,
+          key: rol.key,
+          label: rol.label,
+          icon: rol.icon,
+          permisos: rol.permisos,
+          orden: rol.orden,
+          predefinido: rol.predefinido,
+          activo: rol.activo,
+        })),
       },
     });
   } catch (error) {
@@ -124,28 +210,21 @@ export const getRolePermissions = async (req, res) => {
   try {
     const { roleName } = req.params;
 
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    // Buscar el rol en la base de datos
+    const rol = await Rol.findOne({
+      restauranteId: req.user.restauranteId,
+      key: roleName,
+      activo: true,
+    });
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
-      });
-    }
+    let permissions = [];
 
-    // Primero intentar obtener permisos personalizados
-    let permissions = restaurante.customRolePermissions?.get(roleName);
-
-    // Si no hay permisos personalizados, usar los predeterminados
-    if (!permissions) {
+    if (rol) {
+      // Usar permisos del rol de la base de datos
+      permissions = rol.permisos || [];
+    } else {
+      // Si no existe en BD, usar permisos predeterminados
       permissions = ROLE_PERMISSIONS[roleName] || [];
-    }
-
-    if (permissions.length === 0 && roleName !== ROLES.ADMIN) {
-      return res.status(404).json({
-        success: false,
-        message: "Rol no encontrado",
-      });
     }
 
     res.json({
@@ -153,6 +232,7 @@ export const getRolePermissions = async (req, res) => {
       data: {
         role: roleName,
         permissions,
+        roleId: rol?._id,
       },
     });
   } catch (error) {
@@ -172,18 +252,26 @@ export const getRolePermissions = async (req, res) => {
  */
 export const getAllPermissions = async (req, res) => {
   try {
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    // Obtener todos los roles del restaurante
+    const roles = await Rol.find({
+      restauranteId: req.user.restauranteId,
+      activo: true,
+    });
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
-      });
-    }
+    // Construir mapa de permisos
+    const allPermissions = {};
 
-    // Combinar permisos predeterminados con permisos personalizados
-    const customPermissions = restaurante.customRolePermissions || {};
-    const allPermissions = { ...ROLE_PERMISSIONS, ...customPermissions };
+    // Agregar permisos de roles de la base de datos
+    roles.forEach((rol) => {
+      allPermissions[rol.key] = rol.permisos || [];
+    });
+
+    // Agregar permisos predeterminados para roles que no estén en BD
+    Object.keys(ROLE_PERMISSIONS).forEach((key) => {
+      if (!allPermissions[key]) {
+        allPermissions[key] = ROLE_PERMISSIONS[key];
+      }
+    });
 
     res.json({
       success: true,
@@ -216,31 +304,29 @@ export const updateRolePermissions = async (req, res) => {
       });
     }
 
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    // Buscar el rol en la base de datos
+    const rol = await Rol.findOne({
+      restauranteId: req.user.restauranteId,
+      key: roleName,
+    });
 
-    if (!restaurante) {
+    if (!rol) {
       return res.status(404).json({
         success: false,
-        message: "Restaurante no encontrado",
+        message: "Rol no encontrado",
       });
     }
 
-    // Inicializar customRolePermissions si no existe
-    if (!restaurante.customRolePermissions) {
-      restaurante.customRolePermissions = new Map();
-    }
-
     // Actualizar permisos del rol
-    restaurante.customRolePermissions.set(roleName, permissions);
-
-    await restaurante.save();
+    rol.permisos = permissions;
+    await rol.save();
 
     res.json({
       success: true,
       message: "Permisos actualizados exitosamente",
       data: {
         role: roleName,
-        permissions,
+        permissions: rol.permisos,
       },
     });
   } catch (error) {

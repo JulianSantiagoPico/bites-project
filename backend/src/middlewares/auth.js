@@ -91,9 +91,31 @@ export const checkPermission = (permission) => {
         });
       }
 
-      const { hasPermission } = await import("../config/roles.js");
+      const userRole = req.user.rol;
 
-      if (!hasPermission(req.user.rol, permission)) {
+      // Importar configuración de roles
+      const { ROLE_PERMISSIONS } = await import("../config/roles.js");
+      const Rol = (await import("../models/Rol.js")).default;
+
+      let hasPermission = false;
+
+      // Si el rol tiene permisos predeterminados (como admin, mesero, etc.)
+      if (ROLE_PERMISSIONS[userRole]) {
+        hasPermission = ROLE_PERMISSIONS[userRole].includes(permission);
+      } else {
+        // Si no es un rol predeterminado, buscar en la base de datos
+        const rolCustom = await Rol.findOne({
+          restauranteId: req.user.restauranteId,
+          key: userRole,
+          activo: true,
+        });
+
+        if (rolCustom && rolCustom.permisos) {
+          hasPermission = rolCustom.permisos.includes(permission);
+        }
+      }
+
+      if (!hasPermission) {
         return res.status(403).json({
           success: false,
           message: "No tienes permiso para realizar esta acción",
@@ -110,6 +132,40 @@ export const checkPermission = (permission) => {
       });
     }
   };
+};
+
+// Middleware para cargar permisos del usuario en el request
+export const loadUserPermissions = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return next();
+    }
+
+    const { ROLE_PERMISSIONS } = await import("../config/roles.js");
+    const Rol = (await import("../models/Rol.js")).default;
+
+    const userRole = req.user.rol;
+
+    // Si el rol tiene permisos predeterminados
+    if (ROLE_PERMISSIONS[userRole]) {
+      req.userPermissions = ROLE_PERMISSIONS[userRole];
+    } else {
+      // Si es un rol personalizado, buscar en la base de datos
+      const rolCustom = await Rol.findOne({
+        restauranteId: req.user.restauranteId,
+        key: userRole,
+        activo: true,
+      });
+
+      req.userPermissions = rolCustom?.permisos || [];
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error al cargar permisos del usuario:", error);
+    req.userPermissions = [];
+    next();
+  }
 };
 
 // Middleware para verificar que el usuario pertenece al mismo restaurante

@@ -6,9 +6,10 @@ import { getCurrentRoles } from "../../utils/empleadosUtils";
  * Muestra el formulario EmpleadoForm dentro de un modal centrado
  */
 const EmpleadoModal = ({ isOpen, employee, onSubmit, onClose }) => {
-  if (!isOpen) return null;
+  // Obtener roles actuales cada vez que el modal se renderiza
+  const { rolesDisplay, rolesIcons } = getCurrentRoles();
 
-  const { rolesDisplay, roles } = getCurrentRoles();
+  if (!isOpen) return null;
 
   return (
     <div
@@ -51,7 +52,7 @@ const EmpleadoModal = ({ isOpen, employee, onSubmit, onClose }) => {
           onSubmit={onSubmit}
           onCancel={onClose}
           rolesDisplay={rolesDisplay}
-          roles={roles}
+          rolesIcons={rolesIcons}
         />
       </div>
     </div>

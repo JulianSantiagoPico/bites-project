@@ -4,6 +4,7 @@ import Restaurante from "../models/Restaurante.js";
 import Pedido from "../models/Pedido.js";
 import Reserva from "../models/Reserva.js";
 import { ROLES } from "../config/roles.js";
+import { initializeDefaultRoles } from "../utils/initRoles.js";
 
 // Generar JWT
 const generateToken = (id) => {
@@ -53,6 +54,14 @@ export const register = async (req, res) => {
     // Actualizar el restaurante con el ID del admin
     nuevoRestaurante.adminId = user._id;
     await nuevoRestaurante.save();
+
+    // Inicializar roles predeterminados para el restaurante
+    try {
+      await initializeDefaultRoles(nuevoRestaurante._id);
+    } catch (roleError) {
+      console.error("Error al inicializar roles predeterminados:", roleError);
+      // No detener el registro si falla la inicialización de roles
+    }
 
     // Generar token
     const token = generateToken(user._id);

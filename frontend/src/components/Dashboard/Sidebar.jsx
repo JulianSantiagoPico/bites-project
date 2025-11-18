@@ -54,13 +54,13 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       name: "Inicio",
       path: "/dashboard",
       icon: <Home className="w-6 h-6" />,
-      permission: null, // Todos tienen acceso al home
+      permission: PERMISSIONS.DASHBOARD.VIEW, // Todos tienen acceso
     },
     {
       name: "Tomar Pedido",
       path: "/dashboard/pedidos",
       icon: <ClipboardList className="w-6 h-6" />,
-      permission: PERMISSIONS.ORDENES.VIEW,
+      permission: PERMISSIONS.TOMAR_PEDIDO.VIEW,
     },
     {
       name: "Productos",
@@ -72,7 +72,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       name: "Cocina",
       path: "/dashboard/cocina",
       icon: <ChefHat className="w-6 h-6" />,
-      permission: PERMISSIONS.ORDENES.VIEW, // Los cocineros ven las órdenes
+      permission: PERMISSIONS.COCINA.VIEW,
     },
     {
       name: "Mesas",
@@ -96,28 +96,23 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       name: "Estadísticas",
       path: "/dashboard/estadisticas",
       icon: <BarChart3 className="w-6 h-6" />,
-      permission: PERMISSIONS.ESTADISTICAS?.VIEW, // Opcional ya que puede no estar en todos los roles
+      permission: PERMISSIONS.ESTADISTICAS.VIEW,
     },
     {
       name: "Configuración",
       path: "/dashboard/configuracion",
       icon: <Settings className="w-6 h-6" />,
-      permission: null, // Solo admin (se verificará por rol)
-      adminOnly: true,
+      permission: PERMISSIONS.CONFIGURACION.VIEW,
     },
   ];
 
   // Filtrar items del menú basándose en los permisos del usuario
   const filteredMenuItems = menuItems.filter((item) => {
-    // Si es solo para admin, verificar el rol
-    if (item.adminOnly) {
-      return user?.rol === "admin";
-    }
     // Si tiene permiso definido, verificar que el usuario lo tenga
     if (item.permission) {
       return hasPermission(user?.rol, item.permission);
     }
-    // Si no tiene restricciones, mostrar
+    // Si no tiene restricciones, mostrar (aunque todos ahora deberían tener permiso definido)
     return true;
   });
 

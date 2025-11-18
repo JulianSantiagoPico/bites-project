@@ -32,7 +32,7 @@ const QuickActions = () => {
       textColor: "#ffffff",
       accentColor: "#e6af2e",
       onClick: () => navigate("/dashboard/pedidos"),
-      permission: PERMISSIONS.ORDENES.CREATE,
+      permission: PERMISSIONS.TOMAR_PEDIDO.CREATE,
     },
     {
       id: "nueva-reserva",
@@ -80,19 +80,7 @@ const QuickActions = () => {
       textColor: "#ffffff",
       accentColor: "#e6af2e",
       onClick: () => navigate("/dashboard/cocina"),
-      permission: PERMISSIONS.ORDENES.VIEW,
-    },
-    {
-      id: "inventario",
-      title: "Inventario",
-      description: "Control de stock",
-      icon: Archive,
-      iconColor: "#581845",
-      bgColor: "#581845",
-      textColor: "#ffffff",
-      accentColor: "#e6af2e",
-      onClick: () => navigate("/dashboard/inventario"),
-      permission: PERMISSIONS.INVENTARIO.VIEW,
+      permission: PERMISSIONS.COCINA.VIEW,
     },
     {
       id: "empleados",
@@ -117,6 +105,18 @@ const QuickActions = () => {
       accentColor: "#e6af2e",
       onClick: () => navigate("/dashboard/estadisticas"),
       permission: PERMISSIONS.ESTADISTICAS.VIEW,
+    },
+    {
+      id: "configuracion",
+      title: "Configuración",
+      description: "Ajustes del sistema",
+      icon: Archive,
+      iconColor: "#581845",
+      bgColor: "#581845",
+      textColor: "#ffffff",
+      accentColor: "#e6af2e",
+      onClick: () => navigate("/dashboard/configuracion"),
+      permission: PERMISSIONS.CONFIGURACION.VIEW,
     },
   ];
 

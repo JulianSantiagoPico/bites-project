@@ -19,7 +19,20 @@ const EditRoleModal = ({
   const [error, setError] = useState("");
 
   // Iconos disponibles para los roles
-  const availableIcons = ["👤", "🍽️", "👨‍🍳", "💰", "👔", "📋", "🔑", "⚙️", "📊"];
+  const availableIcons = [
+    "👤",
+    "🍽️",
+    "👨‍🍳",
+    "💰",
+    "👔",
+    "📋",
+    "🔑",
+    "⚙️",
+    "📊",
+    "🎯",
+    "🏆",
+    "⭐",
+  ];
 
   useEffect(() => {
     if (isOpen && role) {
@@ -157,15 +170,18 @@ const EditRoleModal = ({
             <label className="block text-sm font-medium text-textSecondary mb-2">
               Icono
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-6 gap-2">
               {availableIcons.map((icon) => (
                 <button
                   key={icon}
                   type="button"
-                  onClick={() => setEditedRole({ ...editedRole, icon })}
-                  className={`text-2xl p-2 rounded-lg border-2 transition-all ${
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEditedRole((prev) => ({ ...prev, icon }));
+                  }}
+                  className={`p-3 text-2xl rounded-lg border-2 transition-all hover:scale-105 ${
                     editedRole.icon === icon
-                      ? "border-primary bg-primary/10"
+                      ? "border-primary bg-primary/10 ring-2 ring-primary/30"
                       : "border-secondary/40 hover:border-primary/50"
                   }`}
                 >
