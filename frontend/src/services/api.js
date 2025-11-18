@@ -20,6 +20,7 @@ export {
   rolesService,
   estadisticasService,
   categoriasService,
+  ubicacionesService,
   fetchAPI,
   API_URL,
 } from "./index";

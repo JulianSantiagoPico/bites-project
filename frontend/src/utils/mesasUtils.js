@@ -82,6 +82,15 @@ export const getUbicacionLabel = (ubicacion) => {
 
 // Función helper para obtener todas las ubicaciones disponibles
 export const getCurrentUbicaciones = () => {
+  // Iconos predeterminados
+  const defaultIcons = {
+    interior: "🏠",
+    exterior: "🌳",
+    terraza: "☀️",
+    barra: "🍺",
+    privado: "🔒",
+  };
+
   // Ubicaciones predeterminadas
   const defaultUbicaciones = {
     interior: "Interior",
@@ -91,24 +100,64 @@ export const getCurrentUbicaciones = () => {
     privado: "Privado",
   };
 
-  // Obtener ubicaciones personalizadas del localStorage
-  const customUbicaciones = localStorage.getItem("customUbicaciones");
-  if (customUbicaciones) {
-    try {
-      const { ubicacionesDisplay } = JSON.parse(customUbicaciones);
-      if (ubicacionesDisplay && Object.keys(ubicacionesDisplay).length > 0) {
-        // Combinar ubicaciones predeterminadas con personalizadas
-        return {
+  // Intentar obtener ubicaciones personalizadas
+  try {
+    const customUbicaciones = localStorage.getItem("customUbicaciones");
+    if (customUbicaciones) {
+      const parsed = JSON.parse(customUbicaciones);
+
+      // Validar que parsed tenga la estructura correcta
+      if (
+        parsed &&
+        parsed.ubicacionesDisplay &&
+        typeof parsed.ubicacionesDisplay === "object"
+      ) {
+        // Filtrar solo las keys que NO son propiedades de Mongoose
+        const cleanDisplay = {};
+        Object.keys(parsed.ubicacionesDisplay).forEach((key) => {
+          // Ignorar propiedades que empiezan con $ o que son propiedades de Mongoose
+          if (
+            !key.startsWith("$") &&
+            !key.startsWith("_") &&
+            key !== "customUbicaciones" &&
+            key !== "si" &&
+            typeof parsed.ubicacionesDisplay[key] === "string"
+          ) {
+            cleanDisplay[key] = parsed.ubicacionesDisplay[key];
+          }
+        });
+
+        const ubicaciones = {
           ...defaultUbicaciones,
-          ...ubicacionesDisplay,
+          ...cleanDisplay,
         };
+
+        // Agregar iconos a las etiquetas
+        const icons = { ...defaultIcons, ...(parsed.ubicacionesIcons || {}) };
+        const ubicacionesConIconos = {};
+
+        Object.keys(ubicaciones).forEach((key) => {
+          const icon = icons[key] || "📍";
+          ubicacionesConIconos[key] = `${icon} ${ubicaciones[key]}`;
+        });
+
+        return ubicacionesConIconos;
       }
-    } catch (e) {
-      console.error("Error parsing customUbicaciones:", e);
     }
+  } catch (error) {
+    console.error("Error al leer ubicaciones personalizadas:", error);
+    // Limpiar localStorage corrupto
+    localStorage.removeItem("customUbicaciones");
   }
 
-  return defaultUbicaciones;
+  // Retornar ubicaciones predeterminadas con iconos
+  const ubicacionesConIconos = {};
+  Object.keys(defaultUbicaciones).forEach((key) => {
+    const icon = defaultIcons[key] || "📍";
+    ubicacionesConIconos[key] = `${icon} ${defaultUbicaciones[key]}`;
+  });
+
+  return ubicacionesConIconos;
 };
 
 // Formatear estado para display

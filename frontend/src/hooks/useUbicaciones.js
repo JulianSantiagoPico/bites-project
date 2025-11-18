@@ -24,6 +24,29 @@ export const useUbicaciones = () => {
     setError(null);
 
     try {
+      // Limpiar localStorage si tiene datos corruptos de Mongoose
+      const storedData = localStorage.getItem("customUbicaciones");
+      if (storedData) {
+        try {
+          const parsed = JSON.parse(storedData);
+          // Verificar si hay propiedades de Mongoose (comienzan con $ o son funciones)
+          if (parsed.ubicacionesDisplay) {
+            const keys = Object.keys(parsed.ubicacionesDisplay);
+            const hasMongooseProps = keys.some(
+              (key) => key.startsWith("$") || key === "customUbicaciones"
+            );
+            if (hasMongooseProps) {
+              console.log(
+                "Datos corruptos detectados en localStorage, limpiando..."
+              );
+              localStorage.removeItem("customUbicaciones");
+            }
+          }
+        } catch (e) {
+          localStorage.removeItem("customUbicaciones");
+        }
+      }
+
       const response = await ubicacionesService.getUbicaciones();
       setUbicaciones(
         response.data || {

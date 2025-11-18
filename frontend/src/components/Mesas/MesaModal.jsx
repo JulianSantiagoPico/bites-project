@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  getCurrentUbicaciones,
-  getUbicacionIcon,
-} from "../../utils/mesasUtils";
+import { getUbicacionIcon } from "../../utils/mesasUtils";
+import { ubicacionesService } from "../../services/api";
 
 const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [ubicacionesDisponibles, setUbicacionesDisponibles] = useState({});
+  const [ubicacionesIcons, setUbicacionesIcons] = useState({});
+  const [loadingUbicaciones, setLoadingUbicaciones] = useState(true);
   const [formData, setFormData] = useState({
     numero: "",
     capacidad: "",
@@ -17,17 +17,53 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Cargar ubicaciones disponibles
+  // Cargar ubicaciones disponibles desde la API
   useEffect(() => {
-    const ubicaciones = getCurrentUbicaciones();
-    setUbicacionesDisponibles(ubicaciones);
-    // Si no hay ubicación seleccionada, usar la primera disponible
-    if (!formData.ubicacion && Object.keys(ubicaciones).length > 0) {
-      setFormData((prev) => ({
-        ...prev,
-        ubicacion: Object.keys(ubicaciones)[0],
-      }));
-    }
+    const loadUbicaciones = async () => {
+      if (!isOpen) return;
+
+      try {
+        setLoadingUbicaciones(true);
+        const response = await ubicacionesService.getUbicaciones();
+
+        const ubicaciones = response.data.ubicacionesDisplay || {};
+        const icons = response.data.ubicacionesIcons || {};
+
+        setUbicacionesDisponibles(ubicaciones);
+        setUbicacionesIcons(icons);
+
+        // Si no hay ubicación seleccionada, usar la primera disponible
+        if (!formData.ubicacion && Object.keys(ubicaciones).length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            ubicacion: Object.keys(ubicaciones)[0],
+          }));
+        }
+      } catch (error) {
+        console.error("Error al cargar ubicaciones:", error);
+        // Fallback a ubicaciones por defecto
+        const defaultUbicaciones = {
+          interior: "Interior",
+          exterior: "Exterior",
+          terraza: "Terraza",
+          barra: "Barra",
+          privado: "Privado",
+        };
+        const defaultIcons = {
+          interior: "🏠",
+          exterior: "🌳",
+          terraza: "☀️",
+          barra: "🍺",
+          privado: "🔒",
+        };
+        setUbicacionesDisponibles(defaultUbicaciones);
+        setUbicacionesIcons(defaultIcons);
+      } finally {
+        setLoadingUbicaciones(false);
+      }
+    };
+
+    loadUbicaciones();
   }, [isOpen]);
 
   // Cargar datos iniciales cuando se edita
@@ -41,8 +77,8 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
         notas: initialData.notas || "",
       });
     } else {
-      const ubicaciones = getCurrentUbicaciones();
-      const primeraUbicacion = Object.keys(ubicaciones)[0] || "interior";
+      const primeraUbicacion =
+        Object.keys(ubicacionesDisponibles)[0] || "interior";
       setFormData({
         numero: "",
         capacidad: "",
@@ -52,7 +88,7 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
       });
     }
     setErrors({});
-  }, [initialData, isOpen]);
+  }, [initialData, isOpen, ubicacionesDisponibles]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -227,11 +263,14 @@ const MesaModal = ({ isOpen, onClose, onSubmit, initialData }) => {
                 errors.ubicacion ? "border-red-500" : "border-gray-300"
               }`}
             >
-              {Object.entries(ubicacionesDisponibles).map(([key, label]) => (
-                <option key={key} value={key}>
-                  {getUbicacionIcon(key)} {label}
-                </option>
-              ))}
+              {Object.entries(ubicacionesDisponibles).map(([key, label]) => {
+                const icon = ubicacionesIcons[key] || "📍";
+                return (
+                  <option key={key} value={key}>
+                    {icon} {label}
+                  </option>
+                );
+              })}
             </select>
             {errors.ubicacion && (
               <p className="mt-1 text-sm text-red-500">{errors.ubicacion}</p>

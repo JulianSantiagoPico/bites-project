@@ -224,7 +224,8 @@ const Mesas = () => {
       <UbicacionesModal
         isOpen={showUbicacionesModal}
         onClose={() => setShowUbicacionesModal(false)}
-        currentUbicaciones={getCurrentUbicaciones()}
+        currentUbicaciones={ubicaciones.ubicacionesDisplay}
+        currentIcons={ubicaciones.ubicacionesIcons}
         onUpdateUbicaciones={handleUpdateUbicaciones}
         saving={savingUbicaciones}
       />

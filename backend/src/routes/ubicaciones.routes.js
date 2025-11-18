@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUbicaciones,
+  getTodasUbicaciones,
   updateUbicaciones,
 } from "../controllers/ubicaciones.controller.js";
 import { protect, authorize } from "../middlewares/auth.js";
@@ -13,10 +14,17 @@ router.use(protect);
 
 /**
  * @route   GET /api/ubicaciones
- * @desc    Obtener ubicaciones del restaurante
+ * @desc    Obtener ubicaciones activas del restaurante
  * @access  Private
  */
 router.get("/", getUbicaciones);
+
+/**
+ * @route   GET /api/ubicaciones/todas
+ * @desc    Obtener todas las ubicaciones (activas e inactivas)
+ * @access  Private (Admin)
+ */
+router.get("/todas", authorize(ROLES.ADMIN), getTodasUbicaciones);
 
 /**
  * @route   PUT /api/ubicaciones

@@ -2,6 +2,7 @@ import Restaurante from "../models/Restaurante.js";
 import User from "../models/User.js";
 import Categoria from "../models/Categoria.js";
 import Ocasion from "../models/Ocasion.js";
+import Ubicacion from "../models/Ubicacion.js";
 
 /**
  * @desc    Obtener información del restaurante
@@ -209,6 +210,59 @@ export const completarConfiguracion = async (req, res) => {
         defaultOcasiones.map((oc) => ({
           restauranteId: restaurante._id,
           ...oc,
+          activo: true,
+        }))
+      );
+    }
+
+    // Inicializar ubicaciones predefinidas si no existen
+    const ubicacionesExistentes = await Ubicacion.countDocuments({
+      restauranteId: restaurante._id,
+    });
+
+    if (ubicacionesExistentes === 0) {
+      const defaultUbicaciones = [
+        {
+          key: "interior",
+          label: "Interior",
+          icon: "🏠",
+          orden: 1,
+          predefinida: true,
+        },
+        {
+          key: "exterior",
+          label: "Exterior",
+          icon: "🌳",
+          orden: 2,
+          predefinida: true,
+        },
+        {
+          key: "terraza",
+          label: "Terraza",
+          icon: "☀️",
+          orden: 3,
+          predefinida: true,
+        },
+        {
+          key: "barra",
+          label: "Barra",
+          icon: "🍺",
+          orden: 4,
+          predefinida: true,
+        },
+        {
+          key: "privado",
+          label: "Privado",
+          icon: "🔒",
+          orden: 5,
+          predefinida: true,
+        },
+      ];
+
+      await Ubicacion.insertMany(
+        defaultUbicaciones.map((ub) => ({
+          restauranteId: restaurante._id,
+          ...ub,
           activo: true,
         }))
       );

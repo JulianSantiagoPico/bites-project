@@ -1,6 +1,7 @@
 import { body, validationResult } from "express-validator";
 import Restaurante from "../models/Restaurante.js";
 import Ocasion from "../models/Ocasion.js";
+import Ubicacion from "../models/Ubicacion.js";
 
 // Middleware para manejar los resultados de validación
 export const handleValidationErrors = (req, res, next) => {
@@ -399,35 +400,15 @@ export const validateCreateMesa = [
     .notEmpty()
     .withMessage("La ubicación es requerida")
     .custom(async (value, { req }) => {
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar en la colección Ubicacion
+      const ubicacionExiste = await Ubicacion.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Ubicaciones por defecto
-      const defaultUbicaciones = [
-        "interior",
-        "exterior",
-        "terraza",
-        "barra",
-        "privado",
-      ];
-
-      // Obtener ubicaciones personalizadas
-      let customUbicaciones = [];
-      if (restaurante.customUbicaciones) {
-        if (restaurante.customUbicaciones instanceof Map) {
-          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
-        } else if (typeof restaurante.customUbicaciones === "object") {
-          customUbicaciones = Object.keys(restaurante.customUbicaciones);
-        }
-      }
-
-      // Combinar ubicaciones
-      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
-
-      if (!validUbicaciones.includes(value)) {
-        throw new Error("Ubicación no válida");
+      if (!ubicacionExiste) {
+        throw new Error("Ubicación no válida o inactiva");
       }
 
       return true;
@@ -464,35 +445,15 @@ export const validateUpdateMesa = [
     .custom(async (value, { req }) => {
       if (!value) return true;
 
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar en la colección Ubicacion
+      const ubicacionExiste = await Ubicacion.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Ubicaciones por defecto
-      const defaultUbicaciones = [
-        "interior",
-        "exterior",
-        "terraza",
-        "barra",
-        "privado",
-      ];
-
-      // Obtener ubicaciones personalizadas
-      let customUbicaciones = [];
-      if (restaurante.customUbicaciones) {
-        if (restaurante.customUbicaciones instanceof Map) {
-          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
-        } else if (typeof restaurante.customUbicaciones === "object") {
-          customUbicaciones = Object.keys(restaurante.customUbicaciones);
-        }
-      }
-
-      // Combinar ubicaciones
-      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
-
-      if (!validUbicaciones.includes(value)) {
-        throw new Error("Ubicación no válida");
+      if (!ubicacionExiste) {
+        throw new Error("Ubicación no válida o inactiva");
       }
 
       return true;

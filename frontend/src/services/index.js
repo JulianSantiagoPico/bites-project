@@ -9,5 +9,6 @@ export { reservasService } from "./reservas.service";
 export { productosService } from "./productos.service";
 export { pedidosService } from "./pedidos.service";
 export { estadisticasService } from "./estadisticas.service";
+export { ubicacionesService } from "./ubicaciones.service";
 export { default as rolesService } from "./roles.service";
 export { fetchAPI, API_URL } from "./config";
