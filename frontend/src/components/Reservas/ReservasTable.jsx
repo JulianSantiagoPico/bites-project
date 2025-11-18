@@ -5,6 +5,7 @@ import {
   getEstadoColor,
   getEstadoLabel,
   getOcasionIcon,
+  getOcasionLabel,
   esHoy,
   esMañana,
 } from "../../utils/reservasUtils";
@@ -170,7 +171,12 @@ const ReservasTable = ({
 
                   {/* Ocasión */}
                   <td className="px-6 py-4">
-                    <span className="text-2xl">{ocasionIcon}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{ocasionIcon}</span>
+                      <span className="text-sm text-textSecondary">
+                        {getOcasionLabel(reserva.ocasion)}
+                      </span>
+                    </div>
                   </td>
 
                   {/* Estado */}

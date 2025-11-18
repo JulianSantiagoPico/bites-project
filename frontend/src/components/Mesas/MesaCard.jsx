@@ -161,19 +161,17 @@ const MesaCard = ({
           </span>
         </div>
 
-        {/* Notas si existen */}
-        {mesa.notas && (
-          <>
-            <div className="border-t" style={{ borderColor: "#F3F4F6" }}></div>
-            <div
-              className="flex gap-2 p-2 rounded-lg text-xs"
-              style={{ backgroundColor: "#F9FAFB", color: "#6B7280" }}
-            >
-              <StickyNote className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              <span className="italic">{mesa.notas}</span>
-            </div>
-          </>
-        )}
+        {/* Notas */}
+        <div className="border-t" style={{ borderColor: "#F3F4F6" }}></div>
+        <div
+          className="flex gap-2 p-2 rounded-lg text-xs"
+          style={{ backgroundColor: "#F9FAFB", color: "#6B7280" }}
+        >
+          <StickyNote className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+          <span className={mesa.notas ? "italic" : "italic opacity-60"}>
+            {mesa.notas || "Sin notas adicionales"}
+          </span>
+        </div>
       </div>
 
       {/* Footer con botón de cambiar estado */}

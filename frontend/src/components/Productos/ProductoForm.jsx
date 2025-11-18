@@ -31,6 +31,19 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
         const categorias = response.data.categoriasDisplay || {};
         setCategoriasDisponibles(categorias);
 
+        // Si estamos editando y la categoría del producto no existe, usar la primera disponible
+        if (producto && producto.categoria && !categorias[producto.categoria]) {
+          const primeraCategoria =
+            Object.keys(categorias)[0] || "platos_fuertes";
+          console.warn(
+            `Categoría "${producto.categoria}" no encontrada, usando "${primeraCategoria}"`
+          );
+          setFormData((prev) => ({
+            ...prev,
+            categoria: primeraCategoria,
+          }));
+        }
+
         // Si no hay categoría seleccionada, usar la primera disponible
         if (!formData.categoria && Object.keys(categorias).length > 0) {
           setFormData((prev) => ({
@@ -55,7 +68,7 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
     };
 
     loadCategorias();
-  }, []);
+  }, [producto]); // Agregar producto como dependencia
 
   useEffect(() => {
     if (producto) {
