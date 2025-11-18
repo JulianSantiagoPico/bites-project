@@ -5,7 +5,7 @@
 
 // Iconos por categoría (dinámico)
 export const getCategoryIcon = (categoria) => {
-  // Obtener categorías personalizadas del localStorage
+  // Intentar obtener del localStorage primero (datos del servidor)
   const customCategorias = localStorage.getItem("customCategorias");
   if (customCategorias) {
     try {

@@ -182,6 +182,16 @@ export const puedeEditarReserva = (estado) => {
  * @returns {Object} Objeto con todas las ocasiones
  */
 export const getCurrentOcasiones = () => {
+  // Iconos predeterminados
+  const defaultIcons = {
+    ninguna: "📋",
+    cumpleaños: "🎂",
+    aniversario: "💐",
+    cita: "💑",
+    negocio: "💼",
+    otro: "🎉",
+  };
+
   // Ocasiones predeterminadas
   const defaultOcasiones = {
     ninguna: "Sin ocasión",
@@ -198,17 +208,35 @@ export const getCurrentOcasiones = () => {
     if (customOcasiones) {
       const parsed = JSON.parse(customOcasiones);
       if (parsed.ocasionesDisplay) {
-        return {
+        const ocasiones = {
           ...defaultOcasiones,
           ...parsed.ocasionesDisplay,
         };
+
+        // Agregar iconos a las etiquetas
+        const icons = { ...defaultIcons, ...(parsed.ocasionesIcons || {}) };
+        const ocasionesConIconos = {};
+
+        Object.keys(ocasiones).forEach((key) => {
+          const icon = icons[key] || "🎉";
+          ocasionesConIconos[key] = `${icon} ${ocasiones[key]}`;
+        });
+
+        return ocasionesConIconos;
       }
     }
   } catch (error) {
     console.error("Error al leer ocasiones personalizadas:", error);
   }
 
-  return defaultOcasiones;
+  // Agregar iconos a las ocasiones predeterminadas
+  const ocasionesConIconos = {};
+  Object.keys(defaultOcasiones).forEach((key) => {
+    const icon = defaultIcons[key] || "🎉";
+    ocasionesConIconos[key] = `${icon} ${defaultOcasiones[key]}`;
+  });
+
+  return ocasionesConIconos;
 };
 
 /**

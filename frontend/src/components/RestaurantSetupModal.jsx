@@ -207,8 +207,6 @@ const RestaurantSetupModal = ({ isOpen, onComplete, restaurantName }) => {
     return null;
   }
 
-  console.log(`Renderizando modal - Paso actual: ${step}, isOpen: ${isOpen}`);
-
   return (
     <div className="modal-overlay">
       <div className="modal-content">

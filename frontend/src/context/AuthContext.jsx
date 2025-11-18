@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { authService, restauranteService } from "../services/api";
 import { loadCustomPermissionsFromBackend } from "../utils/permissions";
 
@@ -89,10 +95,6 @@ export const AuthProvider = ({ children }) => {
 
       // Actualizar el usuario con el que devuelve el backend (incluye configuracionCompleta: true)
       const updatedUser = response.data.usuario;
-      console.log(
-        "AuthContext - Usuario actualizado del backend:",
-        updatedUser
-      );
 
       setUser(updatedUser);
       authService.updateCurrentUser(updatedUser);
@@ -108,10 +110,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Actualizar usuario en el contexto
-  const updateUser = (updatedUser) => {
+  const updateUser = useCallback((updatedUser) => {
     setUser(updatedUser);
     authService.updateCurrentUser(updatedUser);
-  };
+  }, []);
 
   const value = {
     user,

@@ -2,11 +2,10 @@ import mongoose from "mongoose";
 
 const pedidoSchema = new mongoose.Schema(
   {
-    // Número de pedido único (auto-generado)
+    // Número de pedido único por restaurante (auto-generado)
     numeroPedido: {
       type: String,
       required: true,
-      unique: true,
     },
 
     // Mesa asociada al pedido
@@ -180,7 +179,8 @@ const pedidoSchema = new mongoose.Schema(
 );
 
 // Índices compuestos para optimizar búsquedas
-pedidoSchema.index({ restauranteId: 1, numeroPedido: 1 });
+// Índice único compuesto: numeroPedido debe ser único por restaurante
+pedidoSchema.index({ restauranteId: 1, numeroPedido: 1 }, { unique: true });
 pedidoSchema.index({ restauranteId: 1, estado: 1 });
 pedidoSchema.index({ restauranteId: 1, mesaId: 1 });
 pedidoSchema.index({ restauranteId: 1, meseroId: 1 });

@@ -534,22 +534,7 @@ const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-              style={{
-                color: "#ffffff",
-                backgroundColor: loading ? "#9ca3af" : "#3b82f6",
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-              onMouseOver={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = "#2563eb";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.backgroundColor = "#3b82f6";
-                }
-              }}
+              className="px-6 py-2 bg-success hover:opacity-90 text-white rounded-lg font-medium transition-opacity flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save size={18} />
               {loading

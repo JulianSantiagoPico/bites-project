@@ -1,4 +1,4 @@
-import Restaurante from "../models/Restaurante.js";
+import Ubicacion from "../models/Ubicacion.js";
 
 /**
  * @desc    Obtener ubicaciones disponibles del restaurante
@@ -7,45 +7,22 @@ import Restaurante from "../models/Restaurante.js";
  */
 export const getUbicaciones = async (req, res) => {
   try {
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    // Buscar todas las ubicaciones del restaurante, ordenadas y solo las activas
+    const ubicaciones = await Ubicacion.find({
+      restauranteId: req.user.restauranteId,
+      activo: true,
+    }).sort({ orden: 1, createdAt: 1 });
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
-      });
-    }
+    // Transformar a formato Display, List e Icons
+    const ubicacionesDisplay = {};
+    const ubicacionesIcons = {};
+    const ubicacionesList = [];
 
-    // Ubicaciones personalizadas del restaurante o ubicaciones por defecto
-    const customUbicaciones = restaurante.customUbicaciones || {};
-
-    // Ubicaciones por defecto del sistema
-    const defaultUbicaciones = {
-      interior: "Interior",
-      exterior: "Exterior",
-      terraza: "Terraza",
-      barra: "Barra",
-      privado: "Privado",
-    };
-
-    // Iconos por defecto
-    const defaultIcons = {
-      interior: "🏠",
-      exterior: "🌳",
-      terraza: "☀️",
-      barra: "🍺",
-      privado: "🔒",
-    };
-
-    const ubicacionesDisplay =
-      Object.keys(customUbicaciones).length > 0
-        ? customUbicaciones
-        : defaultUbicaciones;
-
-    const ubicacionesIcons = restaurante.ubicacionesIcons || defaultIcons;
-
-    // Lista de ubicaciones
-    const ubicacionesList = Object.keys(ubicacionesDisplay);
+    ubicaciones.forEach((ubicacion) => {
+      ubicacionesDisplay[ubicacion.key] = ubicacion.label;
+      ubicacionesIcons[ubicacion.key] = ubicacion.icon;
+      ubicacionesList.push(ubicacion.key);
+    });
 
     res.json({
       success: true,
@@ -66,46 +43,122 @@ export const getUbicaciones = async (req, res) => {
 };
 
 /**
- * @desc    Actualizar ubicaciones personalizadas del restaurante
+ * @desc    Obtener todas las ubicaciones (activas e inactivas) del restaurante
+ * @route   GET /api/ubicaciones/todas
+ * @access  Private (Admin)
+ */
+export const getTodasUbicaciones = async (req, res) => {
+  try {
+    const ubicaciones = await Ubicacion.find({
+      restauranteId: req.user.restauranteId,
+    }).sort({ orden: 1, createdAt: 1 });
+
+    res.json({
+      success: true,
+      data: ubicaciones,
+    });
+  } catch (error) {
+    console.error("Error en getTodasUbicaciones:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener todas las ubicaciones",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * @desc    Actualizar ubicaciones del restaurante
  * @route   PUT /api/ubicaciones
  * @access  Private (Admin)
  */
 export const updateUbicaciones = async (req, res) => {
   try {
-    const { ubicacionesDisplay, ubicacionesIcons } = req.body;
+    const { ubicaciones } = req.body;
 
-    if (!ubicacionesDisplay || typeof ubicacionesDisplay !== "object") {
+    if (!Array.isArray(ubicaciones)) {
       return res.status(400).json({
         success: false,
-        message: "ubicacionesDisplay es requerido y debe ser un objeto",
+        message: "ubicaciones debe ser un array",
       });
     }
 
-    const restaurante = await Restaurante.findById(req.user.restauranteId);
+    const restauranteId = req.user.restauranteId;
 
-    if (!restaurante) {
-      return res.status(404).json({
-        success: false,
-        message: "Restaurante no encontrado",
+    // Obtener todas las ubicaciones personalizadas actuales (no predefinidas)
+    const ubicacionesActuales = await Ubicacion.find({
+      restauranteId,
+      predefinida: false,
+    });
+
+    // Array de keys que se están enviando
+    const keysEnviadas = ubicaciones.map((u) => u.key);
+
+    // Marcar como inactivas las ubicaciones que no están en el array enviado
+    const ubicacionesADesactivar = ubicacionesActuales.filter(
+      (ubi) => !keysEnviadas.includes(ubi.key)
+    );
+
+    for (const ubicacion of ubicacionesADesactivar) {
+      await Ubicacion.findByIdAndUpdate(ubicacion._id, {
+        activo: false,
       });
     }
 
-    // Actualizar ubicaciones personalizadas
-    restaurante.customUbicaciones = ubicacionesDisplay;
-    restaurante.ubicacionesIcons = ubicacionesIcons || {};
+    // Procesar cada ubicación recibida
+    for (const ubicacion of ubicaciones) {
+      const { key, label, icon, orden, activo, _id } = ubicacion;
 
-    await restaurante.save();
+      if (_id) {
+        // Actualizar ubicación existente
+        await Ubicacion.findByIdAndUpdate(_id, {
+          label,
+          icon,
+          orden,
+          activo,
+        });
+      } else {
+        // Crear nueva ubicación o actualizar si ya existe por key
+        await Ubicacion.findOneAndUpdate(
+          { restauranteId, key },
+          {
+            restauranteId,
+            key,
+            label,
+            icon,
+            orden,
+            activo: activo !== undefined ? activo : true,
+            predefinida: false,
+          },
+          { upsert: true, new: true }
+        );
+      }
+    }
 
-    // Lista de ubicaciones
-    const ubicacionesList = Object.keys(ubicacionesDisplay);
+    // Obtener ubicaciones actualizadas (solo activas)
+    const ubicacionesActualizadas = await Ubicacion.find({
+      restauranteId,
+      activo: true,
+    }).sort({ orden: 1, createdAt: 1 });
+
+    // Transformar a formato Display, List e Icons
+    const ubicacionesDisplay = {};
+    const ubicacionesIcons = {};
+    const ubicacionesList = [];
+
+    ubicacionesActualizadas.forEach((ubi) => {
+      ubicacionesDisplay[ubi.key] = ubi.label;
+      ubicacionesIcons[ubi.key] = ubi.icon;
+      ubicacionesList.push(ubi.key);
+    });
 
     res.json({
       success: true,
       message: "Ubicaciones actualizadas exitosamente",
       data: {
-        ubicacionesDisplay: restaurante.customUbicaciones,
+        ubicacionesDisplay,
         ubicacionesList,
-        ubicacionesIcons: restaurante.ubicacionesIcons,
+        ubicacionesIcons,
       },
     });
   } catch (error) {

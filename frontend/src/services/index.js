@@ -1,5 +1,6 @@
 // Archivo central para exportar todos los servicios
 export { authService } from "./auth.service";
+export { categoriasService } from "./categorias.service";
 export { restauranteService } from "./restaurante.service";
 export { empleadosService } from "./empleados.service";
 export { inventarioService } from "./inventario.service";
@@ -8,5 +9,6 @@ export { reservasService } from "./reservas.service";
 export { productosService } from "./productos.service";
 export { pedidosService } from "./pedidos.service";
 export { estadisticasService } from "./estadisticas.service";
+export { ubicacionesService } from "./ubicaciones.service";
 export { default as rolesService } from "./roles.service";
 export { fetchAPI, API_URL } from "./config";

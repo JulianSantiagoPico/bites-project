@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import {
-  TAGS_SUGERIDOS,
-  getCurrentCategorias,
-  getCategoryIcon,
-} from "../../utils/productosUtils";
+import { TAGS_SUGERIDOS, getCategoryIcon } from "../../utils/productosUtils";
+import { categoriasService } from "../../services/api";
 
 const ProductoForm = ({ producto, onSubmit, onCancel }) => {
   const [categoriasDisponibles, setCategoriasDisponibles] = useState({});
+  const [loadingCategorias, setLoadingCategorias] = useState(true);
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -24,18 +22,53 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
   const [serverError, setServerError] = useState("");
   const [tagInput, setTagInput] = useState("");
 
-  // Cargar categorías disponibles
+  // Cargar categorías disponibles desde la API
   useEffect(() => {
-    const categorias = getCurrentCategorias();
-    setCategoriasDisponibles(categorias);
-    // Si no hay categoría seleccionada, usar la primera disponible
-    if (!formData.categoria && Object.keys(categorias).length > 0) {
-      setFormData((prev) => ({
-        ...prev,
-        categoria: Object.keys(categorias)[0],
-      }));
-    }
-  }, []);
+    const loadCategorias = async () => {
+      try {
+        setLoadingCategorias(true);
+        const response = await categoriasService.getCategorias();
+        const categorias = response.data.categoriasDisplay || {};
+        setCategoriasDisponibles(categorias);
+
+        // Si estamos editando y la categoría del producto no existe, usar la primera disponible
+        if (producto && producto.categoria && !categorias[producto.categoria]) {
+          const primeraCategoria =
+            Object.keys(categorias)[0] || "platos_fuertes";
+          console.warn(
+            `Categoría "${producto.categoria}" no encontrada, usando "${primeraCategoria}"`
+          );
+          setFormData((prev) => ({
+            ...prev,
+            categoria: primeraCategoria,
+          }));
+        }
+
+        // Si no hay categoría seleccionada, usar la primera disponible
+        if (!formData.categoria && Object.keys(categorias).length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            categoria: Object.keys(categorias)[0],
+          }));
+        }
+      } catch (error) {
+        console.error("Error al cargar categorías:", error);
+        // Fallback a categorías por defecto
+        const defaultCategorias = {
+          entradas: "Entradas",
+          platos_fuertes: "Platos Fuertes",
+          postres: "Postres",
+          bebidas: "Bebidas",
+          extras: "Extras",
+        };
+        setCategoriasDisponibles(defaultCategorias);
+      } finally {
+        setLoadingCategorias(false);
+      }
+    };
+
+    loadCategorias();
+  }, [producto]); // Agregar producto como dependencia
 
   useEffect(() => {
     if (producto) {
@@ -261,21 +294,6 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
           {errors.precio && (
             <p className="text-sm text-error mt-1">{errors.precio}</p>
           )}
-        </div>
-
-        {/* Imagen (Emoji) */}
-        <div>
-          <label className="block text-sm font-medium mb-2 text-textMain">
-            Imagen (Emoji o URL)
-          </label>
-          <input
-            type="text"
-            name="imagen"
-            value={formData.imagen}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border-2 focus:outline-none focus:border-primary transition-colors border-secondary/30 text-textMain"
-            placeholder="🍕"
-          />
         </div>
 
         {/* Tiempo de Preparación */}

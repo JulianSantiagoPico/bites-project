@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Wifi, WifiOff, RefreshCw, ChefHat, AlertTriangle } from "lucide-react";
+import {
+  Wifi,
+  WifiOff,
+  RefreshCw,
+  ChefHat,
+  AlertTriangle,
+  XCircle,
+  UtensilsCrossed,
+} from "lucide-react";
 import CocinaStats from "../../components/Cocina/CocinaStats";
 import CocinaFilters from "../../components/Cocina/CocinaFilters";
 import OrdenCard from "../../components/Cocina/OrdenCard";
@@ -124,7 +132,7 @@ const Cocina = () => {
       ) : error ? (
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
+            <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
               onClick={loadOrdenes}
@@ -139,7 +147,7 @@ const Cocina = () => {
           className="text-center py-16 bg-white rounded-xl shadow-md border"
           style={{ borderColor: "#E5E7EB" }}
         >
-          <div className="text-6xl mb-4">🍽️</div>
+          <UtensilsCrossed className="w-16 h-16 mx-auto mb-4 text-gray-400" />
           <p className="text-xl font-medium text-textMain mb-2">
             No hay órdenes{" "}
             {filterEstado !== "Todos" ? `en estado "${filterEstado}"` : ""}

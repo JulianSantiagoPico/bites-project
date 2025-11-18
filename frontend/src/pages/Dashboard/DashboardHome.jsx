@@ -6,7 +6,7 @@ import RecentOrdersList from "../../components/DashboardHome/RecentOrdersList";
 import TopProductsWidget from "../../components/DashboardHome/TopProductsWidget";
 import QuickActions from "../../components/DashboardHome/QuickActions";
 import Notification from "../../components/Notification";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, AlertCircle } from "lucide-react";
 
 const DashboardHome = () => {
   const {
@@ -56,7 +56,7 @@ const DashboardHome = () => {
         )}
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="text-6xl mb-4">⚠️</div>
+            <AlertCircle className="w-16 h-16 mx-auto mb-4 text-error" />
             <p className="text-lg font-medium text-error mb-4">{error}</p>
             <button
               onClick={refreshDashboard}

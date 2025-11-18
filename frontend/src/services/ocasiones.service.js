@@ -4,17 +4,31 @@ import { fetchAPI } from "./config";
 export const ocasionesService = {
   // Obtener ocasiones del restaurante
   getOcasiones: async () => {
-    return await fetchAPI("/ocasiones", {
+    const response = await fetchAPI("/ocasiones", {
       method: "GET",
     });
+
+    // Guardar en localStorage para uso en componentes
+    if (response.data) {
+      localStorage.setItem("customOcasiones", JSON.stringify(response.data));
+    }
+
+    return response;
   },
 
   // Actualizar ocasiones personalizadas
   updateOcasiones: async (ocasionesData) => {
-    return await fetchAPI("/ocasiones", {
+    const response = await fetchAPI("/ocasiones", {
       method: "PUT",
       body: JSON.stringify(ocasionesData),
     });
+
+    // Actualizar localStorage con la respuesta del servidor
+    if (response.data) {
+      localStorage.setItem("customOcasiones", JSON.stringify(response.data));
+    }
+
+    return response;
   },
 };
 

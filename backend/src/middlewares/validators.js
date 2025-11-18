@@ -1,5 +1,8 @@
 import { body, validationResult } from "express-validator";
 import Restaurante from "../models/Restaurante.js";
+import Ocasion from "../models/Ocasion.js";
+import Ubicacion from "../models/Ubicacion.js";
+import Categoria from "../models/Categoria.js";
 
 // Middleware para manejar los resultados de validación
 export const handleValidationErrors = (req, res, next) => {
@@ -398,35 +401,15 @@ export const validateCreateMesa = [
     .notEmpty()
     .withMessage("La ubicación es requerida")
     .custom(async (value, { req }) => {
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar en la colección Ubicacion
+      const ubicacionExiste = await Ubicacion.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Ubicaciones por defecto
-      const defaultUbicaciones = [
-        "interior",
-        "exterior",
-        "terraza",
-        "barra",
-        "privado",
-      ];
-
-      // Obtener ubicaciones personalizadas
-      let customUbicaciones = [];
-      if (restaurante.customUbicaciones) {
-        if (restaurante.customUbicaciones instanceof Map) {
-          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
-        } else if (typeof restaurante.customUbicaciones === "object") {
-          customUbicaciones = Object.keys(restaurante.customUbicaciones);
-        }
-      }
-
-      // Combinar ubicaciones
-      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
-
-      if (!validUbicaciones.includes(value)) {
-        throw new Error("Ubicación no válida");
+      if (!ubicacionExiste) {
+        throw new Error("Ubicación no válida o inactiva");
       }
 
       return true;
@@ -463,35 +446,15 @@ export const validateUpdateMesa = [
     .custom(async (value, { req }) => {
       if (!value) return true;
 
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar en la colección Ubicacion
+      const ubicacionExiste = await Ubicacion.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Ubicaciones por defecto
-      const defaultUbicaciones = [
-        "interior",
-        "exterior",
-        "terraza",
-        "barra",
-        "privado",
-      ];
-
-      // Obtener ubicaciones personalizadas
-      let customUbicaciones = [];
-      if (restaurante.customUbicaciones) {
-        if (restaurante.customUbicaciones instanceof Map) {
-          customUbicaciones = Array.from(restaurante.customUbicaciones.keys());
-        } else if (typeof restaurante.customUbicaciones === "object") {
-          customUbicaciones = Object.keys(restaurante.customUbicaciones);
-        }
-      }
-
-      // Combinar ubicaciones
-      const validUbicaciones = [...defaultUbicaciones, ...customUbicaciones];
-
-      if (!validUbicaciones.includes(value)) {
-        throw new Error("Ubicación no válida");
+      if (!ubicacionExiste) {
+        throw new Error("Ubicación no válida o inactiva");
       }
 
       return true;
@@ -584,37 +547,33 @@ export const validateCreateReserva = [
     .optional()
     .custom(async (value, { req }) => {
       try {
-        // Obtener ocasiones del restaurante
-        const restaurante = await Restaurante.findById(req.user.restauranteId);
+        // Ocasiones predeterminadas del sistema
+        const defaultOcasiones = ["ninguna", "otro"];
 
-        if (!restaurante) {
-          throw new Error("Restaurante no encontrado");
+        // Si es una ocasión predeterminada, es válida
+        if (defaultOcasiones.includes(value)) {
+          return true;
         }
 
-        // Ocasiones predeterminadas
-        const defaultOcasiones = [
-          "ninguna",
-          "cumpleaños",
-          "aniversario",
-          "cita",
-          "negocio",
-          "otro",
-        ];
+        // Buscar la ocasión en la colección Ocasion
+        const ocasion = await Ocasion.findOne({
+          restauranteId: req.user.restauranteId,
+          key: value,
+          activo: true,
+        });
 
-        // Ocasiones personalizadas del restaurante (convertir Map a array de keys)
-        let customOcasiones = [];
-        if (restaurante.customOcasiones) {
-          if (restaurante.customOcasiones instanceof Map) {
-            customOcasiones = Array.from(restaurante.customOcasiones.keys());
-          } else if (typeof restaurante.customOcasiones === "object") {
-            customOcasiones = Object.keys(restaurante.customOcasiones);
-          }
-        }
+        if (!ocasion) {
+          // Obtener todas las ocasiones válidas para el mensaje de error
+          const ocasiones = await Ocasion.find({
+            restauranteId: req.user.restauranteId,
+            activo: true,
+          });
 
-        // Combinar ocasiones predeterminadas y personalizadas
-        const validOcasiones = [...defaultOcasiones, ...customOcasiones];
+          const validOcasiones = [
+            ...defaultOcasiones,
+            ...ocasiones.map((o) => o.key),
+          ];
 
-        if (!validOcasiones.includes(value)) {
           throw new Error(
             `Ocasión inválida. Ocasiones válidas: ${validOcasiones.join(", ")}`
           );
@@ -684,14 +643,7 @@ export const validateUpdateReserva = [
     .optional()
     .custom(async (value, { req }) => {
       try {
-        // Obtener ocasiones del restaurante
-        const restaurante = await Restaurante.findById(req.user.restauranteId);
-
-        if (!restaurante) {
-          throw new Error("Restaurante no encontrado");
-        }
-
-        // Ocasiones predeterminadas
+        // Si es "ninguna" u otra ocasión predeterminada, es válida
         const defaultOcasiones = [
           "ninguna",
           "cumpleaños",
@@ -701,23 +653,19 @@ export const validateUpdateReserva = [
           "otro",
         ];
 
-        // Ocasiones personalizadas del restaurante (convertir Map a array de keys)
-        let customOcasiones = [];
-        if (restaurante.customOcasiones) {
-          if (restaurante.customOcasiones instanceof Map) {
-            customOcasiones = Array.from(restaurante.customOcasiones.keys());
-          } else if (typeof restaurante.customOcasiones === "object") {
-            customOcasiones = Object.keys(restaurante.customOcasiones);
-          }
+        if (defaultOcasiones.includes(value)) {
+          return true;
         }
 
-        // Combinar ocasiones predeterminadas y personalizadas
-        const validOcasiones = [...defaultOcasiones, ...customOcasiones];
+        // Buscar en la colección Ocasion para ocasiones personalizadas
+        const ocasionExiste = await Ocasion.findOne({
+          restauranteId: req.user.restauranteId,
+          key: value,
+          activo: true,
+        });
 
-        if (!validOcasiones.includes(value)) {
-          throw new Error(
-            `Ocasión inválida. Ocasiones válidas: ${validOcasiones.join(", ")}`
-          );
+        if (!ocasionExiste) {
+          throw new Error("Ocasión no válida o inactiva");
         }
 
         return true;
@@ -783,35 +731,15 @@ export const validateCreateProducto = [
     .notEmpty()
     .withMessage("La categoría es requerida")
     .custom(async (value, { req }) => {
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar la categoría en la colección Categoria
+      const categoria = await Categoria.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Categorías por defecto
-      const defaultCategorias = [
-        "entradas",
-        "platos_fuertes",
-        "postres",
-        "bebidas",
-        "extras",
-      ];
-
-      // Obtener categorías personalizadas
-      let customCategorias = [];
-      if (restaurante.customCategorias) {
-        if (restaurante.customCategorias instanceof Map) {
-          customCategorias = Array.from(restaurante.customCategorias.keys());
-        } else if (typeof restaurante.customCategorias === "object") {
-          customCategorias = Object.keys(restaurante.customCategorias);
-        }
-      }
-
-      // Combinar categorías
-      const validCategorias = [...defaultCategorias, ...customCategorias];
-
-      if (!validCategorias.includes(value)) {
-        throw new Error("Categoría no válida");
+      if (!categoria) {
+        throw new Error("Categoría no válida o inactiva");
       }
 
       return true;
@@ -878,35 +806,15 @@ export const validateUpdateProducto = [
     .custom(async (value, { req }) => {
       if (!value) return true;
 
-      const restaurante = await Restaurante.findById(req.user.restauranteId);
-      if (!restaurante) {
-        throw new Error("Restaurante no encontrado");
-      }
+      // Buscar la categoría en la colección Categoria
+      const categoria = await Categoria.findOne({
+        restauranteId: req.user.restauranteId,
+        key: value,
+        activo: true,
+      });
 
-      // Categorías por defecto
-      const defaultCategorias = [
-        "entradas",
-        "platos_fuertes",
-        "postres",
-        "bebidas",
-        "extras",
-      ];
-
-      // Obtener categorías personalizadas
-      let customCategorias = [];
-      if (restaurante.customCategorias) {
-        if (restaurante.customCategorias instanceof Map) {
-          customCategorias = Array.from(restaurante.customCategorias.keys());
-        } else if (typeof restaurante.customCategorias === "object") {
-          customCategorias = Object.keys(restaurante.customCategorias);
-        }
-      }
-
-      // Combinar categorías
-      const validCategorias = [...defaultCategorias, ...customCategorias];
-
-      if (!validCategorias.includes(value)) {
-        throw new Error("Categoría no válida");
+      if (!categoria) {
+        throw new Error("Categoría no válida o inactiva");
       }
 
       return true;

@@ -167,12 +167,13 @@ const EditCategoriaModal = ({
                 <button
                   key={icon}
                   type="button"
-                  onClick={() =>
-                    setEditedCategoria({ ...editedCategoria, icon })
-                  }
-                  className={`p-3 text-2xl rounded-lg border-2 transition-all ${
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEditedCategoria((prev) => ({ ...prev, icon }));
+                  }}
+                  className={`p-3 text-2xl rounded-lg border-2 transition-all hover:scale-105 ${
                     editedCategoria.icon === icon
-                      ? "border-primary bg-primary/10"
+                      ? "border-primary bg-primary/10 ring-2 ring-primary/30"
                       : "border-secondary/40 hover:border-primary/50"
                   }`}
                 >

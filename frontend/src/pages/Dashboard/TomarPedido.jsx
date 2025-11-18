@@ -129,7 +129,7 @@ const TomarPedido = () => {
           className="text-center py-12 rounded-xl"
           style={{ backgroundColor: "white" }}
         >
-          <div className="text-6xl mb-4">📋</div>
+          <ClipboardList className="w-16 h-16 mx-auto mb-4 text-gray-400" />
           <p className="text-lg font-medium text-textMain">
             No se encontraron pedidos
           </p>

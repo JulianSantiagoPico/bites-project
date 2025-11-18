@@ -8,7 +8,7 @@ import StockAdjustmentModal from "../../components/Inventario/StockAdjustmentMod
 import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useInventario } from "../../hooks/useInventario";
-import { Package, Plus, AlertTriangle } from "lucide-react";
+import { Package, Plus, AlertTriangle, XCircle } from "lucide-react";
 
 const Inventario = () => {
   // Estados locales del componente (UI)
@@ -87,7 +87,7 @@ const Inventario = () => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="text-6xl mb-4">❌</div>
+          <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
           <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
           <button
             onClick={loadInventario}

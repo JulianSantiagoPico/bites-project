@@ -1,11 +1,14 @@
 import {
   getCategoryIcon,
+  getCategoryLabel,
   getDisponibilidadColor,
   getStatusColor,
   formatPrice,
   formatTiempoPreparacion,
   getTagColor,
 } from "../../utils/productosUtils";
+
+import { Package } from "lucide-react";
 
 /**
  * Componente de tabla para mostrar productos
@@ -22,7 +25,9 @@ const ProductosTable = ({
   if (productos.length === 0) {
     return (
       <div className="rounded-xl p-12 text-center shadow-md bg-white">
-        <div className="text-6xl mb-4">📋</div>
+        <div className="text-6xl mb-4">
+          <Package className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+        </div>
         <p className="text-lg font-medium text-textSecondary">
           No se encontraron productos
         </p>
@@ -124,7 +129,7 @@ const ProductosTable = ({
                         {getCategoryIcon(producto.categoria)}
                       </span>
                       <span className="text-sm font-medium text-textMain">
-                        {producto.categoria}
+                        {getCategoryLabel(producto.categoria)}
                       </span>
                     </div>
                   </td>

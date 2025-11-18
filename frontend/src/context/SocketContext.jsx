@@ -17,6 +17,7 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const socketRef = useRef(null);
+  const restauranteIdRef = useRef(null);
 
   useEffect(() => {
     // Solo conectar si el usuario está autenticado
@@ -27,60 +28,72 @@ export const SocketProvider = ({ children }) => {
         socketRef.current = null;
         setSocket(null);
         setConnected(false);
+        restauranteIdRef.current = null;
       }
       return;
     }
 
-    // Crear conexión si no existe
-    if (!socketRef.current) {
-      const SOCKET_URL =
-        import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
-
-      const newSocket = io(SOCKET_URL, {
-        transports: ["websocket", "polling"],
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-      });
-
-      // Eventos de conexión
-      newSocket.on("connect", () => {
-        setConnected(true);
-
-        // Unirse a la sala del restaurante
-        if (user?.restauranteId) {
-          newSocket.emit("join:restaurante", user.restauranteId);
-        }
-      });
-
-      newSocket.on("disconnect", (reason) => {
-        console.log("❌ WebSocket desconectado:", reason);
-        setConnected(false);
-      });
-
-      newSocket.on("connect_error", (error) => {
-        console.error("❌ Error de conexión WebSocket:", error.message);
-        setConnected(false);
-      });
-
-      newSocket.on("reconnect", (attemptNumber) => {
-        setConnected(true);
-
-        // Re-unirse a la sala del restaurante
-        if (user?.restauranteId) {
-          newSocket.emit("join:restaurante", user.restauranteId);
-        }
-      });
-
-      socketRef.current = newSocket;
-      setSocket(newSocket);
+    // Si ya existe una conexión y el restauranteId no ha cambiado, no hacer nada
+    if (socketRef.current && restauranteIdRef.current === user.restauranteId) {
+      return;
     }
+
+    // Si cambió el restauranteId, desconectar y limpiar
+    if (socketRef.current && restauranteIdRef.current !== user.restauranteId) {
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
+
+    // Crear nueva conexión
+    restauranteIdRef.current = user.restauranteId;
+    const SOCKET_URL =
+      import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+
+    const newSocket = io(SOCKET_URL, {
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    // Eventos de conexión
+    newSocket.on("connect", () => {
+      setConnected(true);
+
+      // Unirse a la sala del restaurante
+      if (restauranteIdRef.current) {
+        newSocket.emit("join:restaurante", restauranteIdRef.current);
+      }
+    });
+
+    newSocket.on("disconnect", (reason) => {
+      console.log("❌ WebSocket desconectado:", reason);
+      setConnected(false);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("❌ Error de conexión WebSocket:", error.message);
+      setConnected(false);
+    });
+
+    newSocket.on("reconnect", (attemptNumber) => {
+      setConnected(true);
+
+      // Re-unirse a la sala del restaurante
+      if (restauranteIdRef.current) {
+        newSocket.emit("join:restaurante", restauranteIdRef.current);
+      }
+    });
+
+    socketRef.current = newSocket;
+    setSocket(newSocket);
 
     // Cleanup al desmontar
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
+        restauranteIdRef.current = null;
       }
     };
   }, [isAuthenticated, user?.restauranteId]);
