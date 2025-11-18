@@ -19,6 +19,7 @@ export {
   pedidosService,
   rolesService,
   estadisticasService,
+  categoriasService,
   fetchAPI,
   API_URL,
 } from "./index";

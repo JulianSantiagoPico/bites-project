@@ -1,5 +1,6 @@
 import { body, validationResult } from "express-validator";
 import Restaurante from "../models/Restaurante.js";
+import Ocasion from "../models/Ocasion.js";
 
 // Middleware para manejar los resultados de validación
 export const handleValidationErrors = (req, res, next) => {
@@ -584,37 +585,33 @@ export const validateCreateReserva = [
     .optional()
     .custom(async (value, { req }) => {
       try {
-        // Obtener ocasiones del restaurante
-        const restaurante = await Restaurante.findById(req.user.restauranteId);
+        // Ocasiones predeterminadas del sistema
+        const defaultOcasiones = ["ninguna", "otro"];
 
-        if (!restaurante) {
-          throw new Error("Restaurante no encontrado");
+        // Si es una ocasión predeterminada, es válida
+        if (defaultOcasiones.includes(value)) {
+          return true;
         }
 
-        // Ocasiones predeterminadas
-        const defaultOcasiones = [
-          "ninguna",
-          "cumpleaños",
-          "aniversario",
-          "cita",
-          "negocio",
-          "otro",
-        ];
+        // Buscar la ocasión en la colección Ocasion
+        const ocasion = await Ocasion.findOne({
+          restauranteId: req.user.restauranteId,
+          key: value,
+          activo: true,
+        });
 
-        // Ocasiones personalizadas del restaurante (convertir Map a array de keys)
-        let customOcasiones = [];
-        if (restaurante.customOcasiones) {
-          if (restaurante.customOcasiones instanceof Map) {
-            customOcasiones = Array.from(restaurante.customOcasiones.keys());
-          } else if (typeof restaurante.customOcasiones === "object") {
-            customOcasiones = Object.keys(restaurante.customOcasiones);
-          }
-        }
+        if (!ocasion) {
+          // Obtener todas las ocasiones válidas para el mensaje de error
+          const ocasiones = await Ocasion.find({
+            restauranteId: req.user.restauranteId,
+            activo: true,
+          });
 
-        // Combinar ocasiones predeterminadas y personalizadas
-        const validOcasiones = [...defaultOcasiones, ...customOcasiones];
+          const validOcasiones = [
+            ...defaultOcasiones,
+            ...ocasiones.map((o) => o.key),
+          ];
 
-        if (!validOcasiones.includes(value)) {
           throw new Error(
             `Ocasión inválida. Ocasiones válidas: ${validOcasiones.join(", ")}`
           );

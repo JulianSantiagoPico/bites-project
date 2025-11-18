@@ -1,5 +1,6 @@
 import {
   getCategoryIcon,
+  getCategoryLabel,
   getDisponibilidadColor,
   getStatusColor,
   formatPrice,
@@ -39,7 +40,9 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
               <h2 className="text-2xl font-bold text-primary">
                 {producto.nombre}
               </h2>
-              <p className="text-sm text-textSecondary">{producto.categoria}</p>
+              <p className="text-sm text-textSecondary">
+                {getCategoryLabel(producto.categoria)}
+              </p>
             </div>
           </div>
           <button

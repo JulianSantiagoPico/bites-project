@@ -29,7 +29,6 @@ function Register() {
   // Redirigir al dashboard si ya está autenticado (pero no si está configurando el restaurante)
   useEffect(() => {
     if (isAuthenticated && !showSetupModal && !skipDashboardRedirect) {
-      console.log("Register - Redirigiendo al dashboard");
       navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, showSetupModal, skipDashboardRedirect, navigate]);
@@ -91,7 +90,6 @@ function Register() {
 
         if (result.success) {
           // Guardar el nombre del restaurante y mostrar modal de configuración
-          console.log("Register - Registro exitoso, mostrando modal");
           setSkipDashboardRedirect(true); // Prevenir redirección mientras el modal está activo
           setRegisteredRestaurantName(formData.restaurantName);
           setShowSetupModal(true);
@@ -122,26 +120,17 @@ function Register() {
 
   // Manejar la finalización de la configuración del restaurante
   const handleSetupComplete = async (restauranteData) => {
-    console.log("Register - Completando configuración:", restauranteData);
     const result = await completarConfiguracion(restauranteData);
 
     if (result.success) {
-      console.log(
-        "Register - Configuración exitosa, cerrando modal y redirigiendo"
-      );
       setShowSetupModal(false);
       setSkipDashboardRedirect(false); // Permitir redirección ahora
       // Redirigir al dashboard
       navigate("/dashboard", { replace: true });
     } else {
-      console.error("Register - Error en configuración:", result.error);
       throw new Error(result.error || "Error al configurar restaurante");
     }
   };
-
-  console.log(
-    `Register - showSetupModal: ${showSetupModal}, registeredRestaurantName: ${registeredRestaurantName}`
-  );
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center py-12 bg-background">

@@ -1,5 +1,6 @@
 import {
   getCategoryIcon,
+  getCategoryLabel,
   getDisponibilidadColor,
   getStatusColor,
   formatPrice,
@@ -128,7 +129,7 @@ const ProductosTable = ({
                         {getCategoryIcon(producto.categoria)}
                       </span>
                       <span className="text-sm font-medium text-textMain">
-                        {producto.categoria}
+                        {getCategoryLabel(producto.categoria)}
                       </span>
                     </div>
                   </td>

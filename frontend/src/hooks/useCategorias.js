@@ -25,13 +25,28 @@ export const useCategorias = () => {
 
     try {
       const response = await categoriasService.getCategorias();
-      setCategorias(
-        response.data || {
+
+      // Validar que response.data tenga la estructura correcta
+      if (response.data && typeof response.data === "object") {
+        // Si tiene categoriasDisplay, es la estructura correcta
+        if (response.data.categoriasDisplay) {
+          setCategorias(response.data);
+        } else {
+          // Si no tiene categoriasDisplay, usar valores por defecto
+          console.warn("Estructura de datos inesperada:", response.data);
+          setCategorias({
+            categoriasDisplay: {},
+            categoriasList: [],
+            categoriasIcons: {},
+          });
+        }
+      } else {
+        setCategorias({
           categoriasDisplay: {},
           categoriasList: [],
           categoriasIcons: {},
-        }
-      );
+        });
+      }
     } catch (err) {
       console.error("Error al cargar categorías:", err);
       setError(err.message);
@@ -48,8 +63,8 @@ export const useCategorias = () => {
       const response = await categoriasService.updateCategorias(newCategorias);
       setCategorias(response.data);
 
-      // Actualizar localStorage para que esté disponible inmediatamente
-      localStorage.setItem("customCategorias", JSON.stringify(newCategorias));
+      // Actualizar localStorage con la respuesta del servidor
+      localStorage.setItem("customCategorias", JSON.stringify(response.data));
 
       return { success: true };
     } catch (err) {
@@ -63,20 +78,22 @@ export const useCategorias = () => {
 
   // Función helper para obtener todas las categorías disponibles
   const getCurrentCategorias = () => {
-    // Categorías predeterminadas
-    const defaultCategorias = {
-      entradas: "Entradas",
-      platos_fuertes: "Platos Fuertes",
-      postres: "Postres",
-      bebidas: "Bebidas",
-      extras: "Extras",
-    };
+    const display = categorias?.categoriasDisplay;
+    // Validar que sea un objeto y no un array ni null
+    if (display && typeof display === "object" && !Array.isArray(display)) {
+      return display;
+    }
+    return {};
+  };
 
-    // Combinar con categorías personalizadas
-    return {
-      ...defaultCategorias,
-      ...categorias.categoriasDisplay,
-    };
+  // Función helper para obtener los iconos actuales
+  const getCurrentIcons = () => {
+    const icons = categorias?.categoriasIcons;
+    // Validar que sea un objeto y no un array ni null
+    if (icons && typeof icons === "object" && !Array.isArray(icons)) {
+      return icons;
+    }
+    return {};
   };
 
   return {
@@ -87,6 +104,7 @@ export const useCategorias = () => {
     loadCategorias,
     updateCategorias,
     getCurrentCategorias,
+    getCurrentIcons,
   };
 };
 

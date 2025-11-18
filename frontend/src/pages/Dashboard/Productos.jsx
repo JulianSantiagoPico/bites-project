@@ -46,6 +46,7 @@ const Productos = () => {
     saving: savingCategorias,
     updateCategorias,
     getCurrentCategorias,
+    getCurrentIcons,
   } = useCategorias();
 
   const handleOpenModal = (producto = null) => {
@@ -179,6 +180,7 @@ const Productos = () => {
         isOpen={showCategoriasModal}
         onClose={() => setShowCategoriasModal(false)}
         currentCategorias={getCurrentCategorias()}
+        currentIcons={getCurrentIcons()}
         onUpdateCategorias={handleUpdateCategorias}
         saving={savingCategorias}
       />

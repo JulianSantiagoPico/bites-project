@@ -95,10 +95,6 @@ export const AuthProvider = ({ children }) => {
 
       // Actualizar el usuario con el que devuelve el backend (incluye configuracionCompleta: true)
       const updatedUser = response.data.usuario;
-      console.log(
-        "AuthContext - Usuario actualizado del backend:",
-        updatedUser
-      );
 
       setUser(updatedUser);
       authService.updateCurrentUser(updatedUser);

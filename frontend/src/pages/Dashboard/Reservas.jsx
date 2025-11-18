@@ -232,7 +232,8 @@ const Reservas = () => {
       <OcasionesModal
         isOpen={showOcasionesModal}
         onClose={() => setShowOcasionesModal(false)}
-        currentOcasiones={getCurrentOcasiones()}
+        currentOcasiones={ocasiones.ocasionesDisplay}
+        currentIcons={ocasiones.ocasionesIcons}
         onUpdateOcasiones={async (newOcasiones) => {
           await updateOcasiones(newOcasiones);
           setShowOcasionesModal(false);
