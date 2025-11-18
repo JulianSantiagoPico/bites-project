@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarX2, PartyPopper, Calendar, Plus } from "lucide-react";
+import { CalendarX2, PartyPopper, Calendar, Plus, XCircle } from "lucide-react";
 import ReservasStats from "../../components/Reservas/ReservasStats";
 import ReservasFilters from "../../components/Reservas/ReservasFilters";
 import ReservasTable from "../../components/Reservas/ReservasTable";
@@ -157,7 +157,7 @@ const Reservas = () => {
       ) : error ? (
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
+            <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
               onClick={loadReservas}

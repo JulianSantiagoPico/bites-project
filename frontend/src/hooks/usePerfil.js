@@ -3,7 +3,6 @@ import { authService } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
 
 export const usePerfil = () => {
-  const { updateUser } = useAuth();
   const [perfil, setPerfil] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,8 +18,8 @@ export const usePerfil = () => {
 
       if (response.success) {
         setPerfil(response.data.user);
-        // Actualizar usuario en localStorage y contexto
-        updateUser(response.data.user);
+        // Actualizar usuario en localStorage
+        authService.updateCurrentUser(response.data.user);
       } else {
         setError(response.message || "Error al cargar el perfil");
       }
@@ -30,7 +29,7 @@ export const usePerfil = () => {
     } finally {
       setLoading(false);
     }
-  }, [updateUser]);
+  }, []);
 
   // Cargar estadísticas del usuario
   const cargarEstadisticas = useCallback(async () => {

@@ -10,7 +10,7 @@ import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useMesas } from "../../hooks/useMesas";
 import { useUbicaciones } from "../../hooks/useUbicaciones";
-import { Settings, Table, Plus } from "lucide-react";
+import { Settings, Table, Plus, XCircle, UtensilsCrossed } from "lucide-react";
 
 const Mesas = () => {
   const [showModal, setShowModal] = useState(false);
@@ -146,7 +146,7 @@ const Mesas = () => {
       ) : error ? (
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
+            <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
               onClick={loadMesas}
@@ -161,7 +161,7 @@ const Mesas = () => {
           className="text-center py-12 rounded-xl"
           style={{ backgroundColor: "white" }}
         >
-          <div className="text-6xl mb-4">🍽️</div>
+          <UtensilsCrossed className="w-16 h-16 mx-auto mb-4 text-gray-400" />
           <p className="text-lg font-medium text-textMain">
             No se encontraron mesas
           </p>

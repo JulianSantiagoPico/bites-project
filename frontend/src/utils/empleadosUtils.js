@@ -84,16 +84,31 @@ export const updateRoles = (newRolesDisplay, newRolesList, newRolesIcons) => {
 
 /**
  * Cargar roles desde el backend y actualizar el estado local
+ * Siempre preserva el rol de admin
  */
 export const loadRolesFromBackend = (backendRoles) => {
   if (backendRoles.rolesDisplay) {
-    rolesDisplay = { ...backendRoles.rolesDisplay };
+    rolesDisplay = {
+      admin: "Administrador", // Preservar siempre el rol admin
+      ...backendRoles.rolesDisplay,
+    };
   }
   if (backendRoles.rolesList) {
-    roles = [...backendRoles.rolesList];
+    // Asegurar que admin esté en la lista si no está
+    const hasAdmin = backendRoles.rolesList.includes("admin");
+    roles = hasAdmin
+      ? [...backendRoles.rolesList]
+      : [
+          "Todos",
+          "admin",
+          ...backendRoles.rolesList.filter((r) => r !== "Todos"),
+        ];
   }
   if (backendRoles.rolesIcons) {
-    rolesIcons = { ...backendRoles.rolesIcons };
+    rolesIcons = {
+      admin: "👑", // Preservar siempre el icono del admin
+      ...backendRoles.rolesIcons,
+    };
   }
 };
 

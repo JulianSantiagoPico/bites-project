@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Settings, Users, Plus } from "lucide-react";
+import { Settings, Users, Plus, XCircle, UsersRound } from "lucide-react";
 import EmpleadoForm from "../../components/Empleados/EmpleadoForm";
 import EmpleadosStats from "../../components/Empleados/EmpleadosStats";
 import EmpleadosFilters from "../../components/Empleados/EmpleadosFilters";
@@ -135,7 +135,7 @@ const Empleados = () => {
       ) : error ? (
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
+            <XCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
             <p className="text-lg font-medium text-red-500 mb-4">{error}</p>
             <button
               onClick={loadEmpleados}
@@ -165,7 +165,7 @@ const Empleados = () => {
               className="text-center py-12 rounded-xl"
               style={{ backgroundColor: "white" }}
             >
-              <div className="text-6xl mb-4">👥</div>
+              <UsersRound className="w-16 h-16 mx-auto mb-4 text-gray-400" />
               <p className="text-lg font-medium text-textMain">
                 No se encontraron empleados
               </p>
