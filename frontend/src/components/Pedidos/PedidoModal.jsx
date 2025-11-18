@@ -314,18 +314,34 @@ const PedidoModal = ({ isOpen, onClose, onSubmit }) => {
                     onChange={(e) =>
                       setFormData({ ...formData, mesaId: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-textMain"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-textMain disabled:bg-gray-100 disabled:cursor-not-allowed"
                     required
+                    disabled={
+                      mesas.filter(
+                        (mesa) => mesa.activo && mesa.estado === "disponible"
+                      ).length === 0
+                    }
                   >
-                    <option value="">Seleccionar mesa...</option>
-                    {mesas
-                      .filter((mesa) => mesa.activo)
-                      .map((mesa) => (
-                        <option key={mesa.id} value={mesa.id}>
-                          Mesa {mesa.numero} - {mesa.ubicacion} (Cap:{" "}
-                          {mesa.capacidad})
-                        </option>
-                      ))}
+                    {mesas.filter(
+                      (mesa) => mesa.activo && mesa.estado === "disponible"
+                    ).length === 0 ? (
+                      <option value="">No hay mesas disponibles</option>
+                    ) : (
+                      <>
+                        <option value="">Seleccionar mesa...</option>
+                        {mesas
+                          .filter(
+                            (mesa) =>
+                              mesa.activo && mesa.estado === "disponible"
+                          )
+                          .map((mesa) => (
+                            <option key={mesa.id} value={mesa.id}>
+                              Mesa {mesa.numero} - {mesa.ubicacion} (Cap:{" "}
+                              {mesa.capacidad})
+                            </option>
+                          ))}
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -342,7 +358,7 @@ const PedidoModal = ({ isOpen, onClose, onSubmit }) => {
                         nombreCliente: e.target.value,
                       })
                     }
-                    placeholder="Opcional"
+                    placeholder="Ej: Juan"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-textMain"
                   />
                 </div>
