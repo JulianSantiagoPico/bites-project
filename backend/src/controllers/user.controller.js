@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Rol from "../models/Rol.js";
 import { ROLES } from "../config/roles.js";
 
 /**
@@ -17,7 +18,21 @@ export const getUsers = async (req, res) => {
 
     // Filtrar por rol si se proporciona
     if (rol) {
-      filter.rol = rol;
+      // Buscar si existe un rol con esa key en la colección de Roles
+      const roleDoc = await Rol.findOne({
+        restauranteId: req.user.restauranteId,
+        key: rol,
+      });
+
+      if (roleDoc) {
+        // Si existe el rol en BD, buscar usuarios que tengan:
+        // 1. El key del rol (legacy o si se guarda el key)
+        // 2. El ID del rol (nueva implementación)
+        filter.$or = [{ rol: rol }, { rol: roleDoc._id.toString() }];
+      } else {
+        // Si no se encuentra el rol en BD, buscar solo por el string
+        filter.rol = rol;
+      }
     }
 
     // Filtrar por estado activo si se proporciona

@@ -469,7 +469,11 @@ const RolesModal = ({
                         })
                       }
                       placeholder="ej: supervisor, ayudante"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain font-mono"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain font-mono ${
+                        error && !newRole.key.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Solo letras minúsculas y guiones bajos (_). Se usará
@@ -488,7 +492,11 @@ const RolesModal = ({
                         setNewRole({ ...newRole, label: e.target.value })
                       }
                       placeholder="ej: Supervisor, Ayudante"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain ${
+                        error && !newRole.label.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Este es el nombre que verán los empleados.

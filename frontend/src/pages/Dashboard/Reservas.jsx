@@ -103,6 +103,13 @@ const Reservas = () => {
     const success = await asignarMesa(reserva, mesaId);
     if (success) {
       handleCloseAsignarModal();
+      // Si estamos editando una reserva, actualizar el estado
+      if (editingReserva && editingReserva._id === reserva._id) {
+        setEditingReserva((prev) => ({
+          ...prev,
+          mesaAsignada: mesaId ? { _id: mesaId } : null,
+        }));
+      }
     }
   };
 
@@ -218,6 +225,7 @@ const Reservas = () => {
         reserva={editingReserva}
         onSubmit={handleFormSubmit}
         onClose={handleCloseModal}
+        onAsignarMesa={handleOpenAsignarModal}
       />
       <ReservaDetailModal
         isOpen={showDetailModal}

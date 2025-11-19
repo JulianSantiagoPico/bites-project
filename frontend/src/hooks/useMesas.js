@@ -49,7 +49,7 @@ export const useMesas = () => {
   const loadMeseros = async () => {
     try {
       const response = await empleadosService.getEmpleados({ rol: "mesero" });
-      setMeseros(response.data.empleados || []);
+      setMeseros(response.data.users || []);
     } catch (err) {
       console.error("Error al cargar meseros:", err);
     }

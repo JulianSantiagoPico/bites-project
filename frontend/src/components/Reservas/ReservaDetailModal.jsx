@@ -51,7 +51,7 @@ const ReservaDetailModal = ({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header con título morado y línea divisora */}
@@ -204,18 +204,10 @@ const ReservaDetailModal = ({
                       </p>
                       <button
                         onClick={() => onAsignarMesa(reserva)}
-                        className="text-sm px-3 py-1 rounded-lg transition-colors"
+                        className="text-sm px-3 py-1.5 rounded-lg font-medium transition-all hover:opacity-80"
                         style={{
-                          color: "#3b82f6",
-                          backgroundColor: "rgba(59, 130, 246, 0.1)",
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(59, 130, 246, 0.2)";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(59, 130, 246, 0.1)";
+                          color: "#7c3aed",
+                          backgroundColor: "rgba(124, 58, 237, 0.1)",
                         }}
                       >
                         Cambiar
@@ -224,18 +216,10 @@ const ReservaDetailModal = ({
                   ) : (
                     <button
                       onClick={() => onAsignarMesa(reserva)}
-                      className="text-sm px-3 py-1 rounded-lg transition-colors mt-1"
+                      className="text-sm px-3 py-1.5 rounded-lg font-medium transition-all hover:opacity-80 mt-1"
                       style={{
-                        color: "#f59e0b",
-                        backgroundColor: "rgba(245, 158, 11, 0.1)",
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                          "rgba(245, 158, 11, 0.2)";
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor =
-                          "rgba(245, 158, 11, 0.1)";
+                        color: "#7c3aed",
+                        backgroundColor: "rgba(124, 58, 237, 0.1)",
                       }}
                     >
                       Asignar Mesa
@@ -274,28 +258,23 @@ const ReservaDetailModal = ({
                 Cambiar Estado
               </h3>
               <div className="flex flex-wrap gap-2">
-                {estadosDisponibles.map((estado) => (
-                  <button
-                    key={estado.value}
-                    onClick={() => onChangeEstado(reserva, estado.value)}
-                    className="px-4 py-2 rounded-lg font-medium transition-all"
-                    style={{
-                      color: "#ffffff",
-                      backgroundColor: getEstadoColor(estado.value),
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 12px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
-                  >
-                    {estado.label}
-                  </button>
-                ))}
+                {estadosDisponibles.map((estado) => {
+                  const estadoColor = getEstadoColor(estado.value);
+                  return (
+                    <button
+                      key={estado.value}
+                      onClick={() => onChangeEstado(reserva, estado.value)}
+                      className="px-4 py-2 rounded-lg font-medium transition-all hover:opacity-90 hover:shadow-md"
+                      style={{
+                        color: estadoColor,
+                        backgroundColor: `${estadoColor}15`,
+                        border: `1.5px solid ${estadoColor}40`,
+                      }}
+                    >
+                      {estado.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -311,16 +290,10 @@ const ReservaDetailModal = ({
         >
           <button
             onClick={onClose}
-            className="px-6 py-2 rounded-lg font-medium transition-colors"
+            className="px-6 py-2.5 rounded-lg font-medium transition-all hover:bg-gray-100 border border-gray-200"
             style={{
               color: textSecondary,
-              backgroundColor: "#f3f4f6",
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = "#e5e7eb";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = "#f3f4f6";
+              backgroundColor: "#ffffff",
             }}
           >
             Cerrar
@@ -330,16 +303,10 @@ const ReservaDetailModal = ({
             <div className="flex gap-3">
               <button
                 onClick={() => onEdit(reserva)}
-                className="px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                className="px-6 py-2.5 rounded-lg font-medium transition-all hover:opacity-90 flex items-center gap-2"
                 style={{
                   color: "#ffffff",
-                  backgroundColor: "#10b981",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#059669";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "#10b981";
+                  backgroundColor: "#7c3aed",
                 }}
               >
                 <Edit2 size={18} />
@@ -348,16 +315,10 @@ const ReservaDetailModal = ({
 
               <button
                 onClick={() => onDelete(reserva)}
-                className="px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                className="px-6 py-2.5 rounded-lg font-medium transition-all hover:opacity-90 flex items-center gap-2"
                 style={{
                   color: "#ffffff",
-                  backgroundColor: "#ef4444",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#dc2626";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "#ef4444";
+                  backgroundColor: "#f87171",
                 }}
               >
                 <Trash2 size={18} />

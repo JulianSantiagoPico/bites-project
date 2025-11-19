@@ -387,7 +387,11 @@ const CategoriasModal = ({
                         })
                       }
                       placeholder="ej: ensaladas, sopas, carnes"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain font-mono"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain font-mono ${
+                        error && !newCategoria.key.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Solo letras minúsculas y guiones bajos (_). Se usará
@@ -409,7 +413,11 @@ const CategoriasModal = ({
                         })
                       }
                       placeholder="ej: Ensaladas, Sopas, Carnes"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain ${
+                        error && !newCategoria.label.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Este es el nombre que verán los usuarios.

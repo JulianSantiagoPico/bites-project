@@ -74,8 +74,10 @@ const EmpleadoForm = ({
       }
     }
 
-    // Validar teléfono (opcional)
-    if (formData.telefono && formData.telefono.length < 10) {
+    // Validar teléfono (obligatorio)
+    if (!formData.telefono.trim()) {
+      newErrors.telefono = "El teléfono es requerido";
+    } else if (formData.telefono.length < 10) {
       newErrors.telefono = "El teléfono debe tener al menos 10 dígitos";
     }
 
@@ -222,12 +224,12 @@ const EmpleadoForm = ({
             value={formData.nombre}
             onChange={handleChange}
             className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-              errors.nombre ? "border-primary" : "border-gray-300"
+              errors.nombre ? "border-red-500" : "border-gray-300"
             }`}
             placeholder="Ej: Juan"
           />
           {errors.nombre && (
-            <span className="text-xs text-primary">{errors.nombre}</span>
+            <span className="text-xs text-red-500">{errors.nombre}</span>
           )}
         </div>
 
@@ -241,12 +243,12 @@ const EmpleadoForm = ({
             value={formData.apellido}
             onChange={handleChange}
             className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-              errors.apellido ? "border-primary" : "border-gray-300"
+              errors.apellido ? "border-red-500" : "border-gray-300"
             }`}
             placeholder="Ej: Pérez"
           />
           {errors.apellido && (
-            <span className="text-xs text-primary">{errors.apellido}</span>
+            <span className="text-xs text-red-500">{errors.apellido}</span>
           )}
         </div>
       </div>
@@ -263,7 +265,7 @@ const EmpleadoForm = ({
           onChange={handleChange}
           disabled={!!employee}
           className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-            errors.email ? "border-primary" : "border-gray-300"
+            errors.email ? "border-red-500" : "border-gray-300"
           } ${
             employee
               ? "bg-backgroundSecondary cursor-not-allowed text-textSecondary"
@@ -272,7 +274,7 @@ const EmpleadoForm = ({
           placeholder="empleado@email.com"
         />
         {errors.email && (
-          <span className="text-xs text-primary">{errors.email}</span>
+          <span className="text-xs text-red-500">{errors.email}</span>
         )}
         {employee && (
           <small className="text-xs text-textSecondary">
@@ -330,19 +332,21 @@ const EmpleadoForm = ({
 
       {/* Teléfono */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-textMain">Teléfono</label>
+        <label className="text-sm font-medium text-textMain">
+          Teléfono <span className="text-red-500">*</span>
+        </label>
         <input
           type="tel"
           name="telefono"
           value={formData.telefono}
           onChange={handleChange}
           className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-            errors.telefono ? "border-primary" : "border-gray-300"
+            errors.telefono ? "border-red-500" : "border-gray-300"
           }`}
           placeholder="Ej: 3001234567"
         />
         {errors.telefono && (
-          <span className="text-xs text-primary">{errors.telefono}</span>
+          <span className="text-xs text-red-500">{errors.telefono}</span>
         )}
       </div>
 

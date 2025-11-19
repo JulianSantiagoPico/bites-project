@@ -322,6 +322,11 @@ export const validarMesa = (mesaData) => {
 // Obtener nombre completo del mesero
 export const getMeseroNombre = (meseroAsignado) => {
   if (!meseroAsignado) return "Sin asignar";
+  // Si es un string (ID) y no un objeto poblado
+  if (typeof meseroAsignado === "string") return "Mesero asignado (ID)";
+  // Si es un objeto pero le faltan propiedades
+  if (!meseroAsignado.nombre) return "Mesero asignado";
+
   return `${meseroAsignado.nombre} ${meseroAsignado.apellido}`;
 };
 

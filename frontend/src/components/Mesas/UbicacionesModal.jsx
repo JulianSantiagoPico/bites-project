@@ -393,7 +393,11 @@ const UbicacionesModal = ({
                         })
                       }
                       placeholder="ej: ventana, esquina, jardin"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain font-mono"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain font-mono ${
+                        error && !newUbicacion.key.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Solo letras minúsculas, números y guiones bajos (_). Se
@@ -415,7 +419,11 @@ const UbicacionesModal = ({
                         })
                       }
                       placeholder="ej: Junto a Ventana, Esquina, Jardín"
-                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                      className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain ${
+                        error && !newUbicacion.label.trim()
+                          ? "border-red-500"
+                          : "border-secondary/40 focus:border-primary"
+                      }`}
                     />
                     <p className="text-xs text-textSecondary mt-1">
                       Este es el nombre que verán los usuarios.

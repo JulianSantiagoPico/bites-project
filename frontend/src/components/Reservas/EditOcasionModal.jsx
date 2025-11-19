@@ -131,7 +131,11 @@ const EditOcasionModal = ({
                   })
                 }
                 placeholder="ej: graduacion"
-                className="w-full px-3 py-2 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                className={`w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain ${
+                  error && !editedOcasion.key.trim()
+                    ? "border-red-500"
+                    : "border-secondary/40 focus:border-primary"
+                }`}
               />
               <p className="text-xs text-textSecondary mt-1">
                 Solo minúsculas y guiones bajos
@@ -149,7 +153,11 @@ const EditOcasionModal = ({
                   setEditedOcasion({ ...editedOcasion, label: e.target.value })
                 }
                 placeholder="ej: Graduación"
-                className="w-full px-3 py-2 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                className={`w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors text-textMain ${
+                  error && !editedOcasion.label.trim()
+                    ? "border-red-500"
+                    : "border-secondary/40 focus:border-primary"
+                }`}
               />
             </div>
 

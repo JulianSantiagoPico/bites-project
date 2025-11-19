@@ -210,25 +210,25 @@ const PedidoDetailModal = ({ isOpen, pedido, onClose, onChangeEstado }) => {
 
           {/* Acciones */}
           {availableEstados.length > 0 && (
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-wrap">
               {availableEstados.map((estado) => (
                 <button
                   key={estado.value}
                   onClick={() => {
-                    onChangeEstado(pedido.id, estado.value, pedido);
+                    onChangeEstado(pedido, estado.value);
                     onClose();
                   }}
-                  className={`flex-1 px-4 py-3 rounded-lg font-semibold text-white transition-colors ${
+                  className={`flex-1 px-4 py-3 rounded-lg font-semibold transition-colors border ${
                     estado.value === "cancelado"
-                      ? "bg-error hover:bg-red-700"
+                      ? "bg-white text-red-600 border-red-200 hover:bg-red-50"
                       : estado.value === "entregado"
-                      ? "bg-gray-600 hover:bg-gray-700"
+                      ? "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                       : estado.value === "listo"
-                      ? "bg-success hover:bg-green-600"
-                      : "bg-blue-500 hover:bg-blue-600"
+                      ? "bg-white text-green-600 border-green-200 hover:bg-green-50"
+                      : "bg-white text-primary border-primary/20 hover:bg-primary/5"
                   }`}
                 >
-                  {estado.label}
+                  Marcar como {estado.label}
                 </button>
               ))}
             </div>

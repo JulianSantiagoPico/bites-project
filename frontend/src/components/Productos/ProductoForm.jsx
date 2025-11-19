@@ -104,8 +104,10 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
       newErrors.precio = "El precio no puede ser negativo";
     }
 
-    // Validar tiempo de preparación
-    if (formData.tiempoPreparacion && formData.tiempoPreparacion < 0) {
+    // Validar tiempo de preparación (obligatorio)
+    if (!formData.tiempoPreparacion || formData.tiempoPreparacion === "") {
+      newErrors.tiempoPreparacion = "El tiempo de preparación es requerido";
+    } else if (formData.tiempoPreparacion < 0) {
       newErrors.tiempoPreparacion =
         "El tiempo de preparación no puede ser negativo";
     }
@@ -184,15 +186,18 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
 
       // Limpiar campos vacíos opcionales
       if (!dataToSend.descripcion) delete dataToSend.descripcion;
-      if (!dataToSend.imagen) dataToSend.imagen = "🍽️";
+      // Si no hay imagen, usar el icono de la categoría
+      if (!dataToSend.imagen) {
+        dataToSend.imagen = getCategoryIcon(dataToSend.categoria);
+      }
       if (!dataToSend.tiempoPreparacion) delete dataToSend.tiempoPreparacion;
 
       await onSubmit(dataToSend);
 
       // Resetear formulario si es creación exitosa
       if (!producto) {
-        const categorias = getCurrentCategorias();
-        const primeraCategoria = Object.keys(categorias)[0] || "platos_fuertes";
+        const primeraCategoria =
+          Object.keys(categoriasDisponibles)[0] || "platos_fuertes";
         setFormData({
           nombre: "",
           descripcion: "",
@@ -243,13 +248,13 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
             onChange={handleChange}
             className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors text-textMain ${
               errors.nombre
-                ? "border-error focus:border-error"
+                ? "border-red-500 focus:border-red-500"
                 : "border-secondary/30 focus:border-primary"
             }`}
             placeholder="Ej: Pizza Margherita"
           />
           {errors.nombre && (
-            <p className="text-sm text-error mt-1">{errors.nombre}</p>
+            <p className="text-sm text-red-500 mt-1">{errors.nombre}</p>
           )}
         </div>
 
@@ -286,20 +291,21 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
             min="0"
             className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors text-textMain ${
               errors.precio
-                ? "border-error focus:border-error"
+                ? "border-red-500 focus:border-red-500"
                 : "border-secondary/30 focus:border-primary"
             }`}
             placeholder="0.00"
           />
           {errors.precio && (
-            <p className="text-sm text-error mt-1">{errors.precio}</p>
+            <p className="text-sm text-red-500 mt-1">{errors.precio}</p>
           )}
         </div>
 
         {/* Tiempo de Preparación */}
         <div>
           <label className="block text-sm font-medium mb-2 text-textMain">
-            Tiempo de Preparación (minutos)
+            Tiempo de Preparación (minutos){" "}
+            <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
@@ -309,13 +315,13 @@ const ProductoForm = ({ producto, onSubmit, onCancel }) => {
             min="0"
             className={`w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors text-textMain ${
               errors.tiempoPreparacion
-                ? "border-error focus:border-error"
+                ? "border-red-500 focus:border-red-500"
                 : "border-secondary/30 focus:border-primary"
             }`}
             placeholder="15"
           />
           {errors.tiempoPreparacion && (
-            <p className="text-sm text-error mt-1">
+            <p className="text-sm text-red-500 mt-1">
               {errors.tiempoPreparacion}
             </p>
           )}
