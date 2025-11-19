@@ -168,7 +168,7 @@ const EmpleadoForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
       {/* Error del servidor */}
       {serverError && (
         <div className="p-4 rounded-lg bg-red-50 border border-red-200 flex items-start gap-3">
