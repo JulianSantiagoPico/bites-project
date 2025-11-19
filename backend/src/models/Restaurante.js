@@ -42,11 +42,6 @@ const restauranteSchema = new mongoose.Schema(
       default: null,
     },
 
-    moneda: {
-      type: String,
-      default: "COP",
-    },
-
     // Horarios
     horarios: {
       lunes: {

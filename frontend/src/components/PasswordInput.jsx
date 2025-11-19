@@ -65,12 +65,7 @@ const PasswordInput = ({
       </div>
 
       {/* Mensaje de error */}
-      {error && (
-        <p className="text-red-500 text-sm flex items-center gap-1">
-          <AlertCircle className="w-4 h-4" />
-          {error}
-        </p>
-      )}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       {/* Requisitos de contraseña */}
       {showRequirements && value && (

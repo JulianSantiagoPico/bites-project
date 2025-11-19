@@ -222,7 +222,7 @@ const EmpleadoForm = ({
             value={formData.nombre}
             onChange={handleChange}
             className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-              errors.nombre ? "border-primary" : "border-secondary"
+              errors.nombre ? "border-primary" : "border-gray-300"
             }`}
             placeholder="Ej: Juan"
           />
@@ -241,7 +241,7 @@ const EmpleadoForm = ({
             value={formData.apellido}
             onChange={handleChange}
             className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-              errors.apellido ? "border-primary" : "border-secondary"
+              errors.apellido ? "border-primary" : "border-gray-300"
             }`}
             placeholder="Ej: Pérez"
           />
@@ -263,7 +263,7 @@ const EmpleadoForm = ({
           onChange={handleChange}
           disabled={!!employee}
           className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-            errors.email ? "border-primary" : "border-secondary"
+            errors.email ? "border-primary" : "border-gray-300"
           } ${
             employee
               ? "bg-backgroundSecondary cursor-not-allowed text-textSecondary"
@@ -307,8 +307,8 @@ const EmpleadoForm = ({
               key={role.value}
               className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all text-textMain ${
                 formData.rol === role.value
-                  ? "border-accent bg-backgroundSecondary shadow-[0_0_0_3px_rgba(230,175,46,0.2)]"
-                  : "border-secondary bg-gray-50"
+                  ? "border-gray-300 bg-gray-200 shadow-[0_0_0_3px_rgba(#d1d5dc)]"
+                  : "border-gray-300 bg-gray-40"
               }`}
             >
               <input
@@ -337,7 +337,7 @@ const EmpleadoForm = ({
           value={formData.telefono}
           onChange={handleChange}
           className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-            errors.telefono ? "border-primary" : "border-secondary"
+            errors.telefono ? "border-primary" : "border-gray-300"
           }`}
           placeholder="Ej: 3001234567"
         />
@@ -352,7 +352,7 @@ const EmpleadoForm = ({
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-5 py-2.5 rounded-lg border border-secondary bg-white text-textMain text-sm font-medium cursor-pointer transition-all hover:opacity-80"
+          className="px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-textMain text-sm font-medium cursor-pointer transition-all hover:opacity-80"
         >
           Cancelar
         </button>

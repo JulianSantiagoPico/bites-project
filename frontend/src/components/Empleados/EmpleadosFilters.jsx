@@ -11,7 +11,7 @@ const EmpleadosFilters = ({
   onSearchChange,
   onRoleChange,
 }) => {
-  const { rolesDisplay, roles } = getCurrentRoles();
+  const { rolesDisplay, roles, rolesIcons } = getCurrentRoles();
 
   const handleClearSearch = () => {
     onSearchChange("");
@@ -75,7 +75,7 @@ const EmpleadosFilters = ({
                 <option key={role} value={role}>
                   {role === "Todos"
                     ? "Todos los roles"
-                    : rolesDisplay[role] || role}
+                    : `${rolesIcons[role] || ""} ${rolesDisplay[role] || role}`}
                 </option>
               ))}
             </select>

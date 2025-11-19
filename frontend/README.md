@@ -1,226 +1,100 @@
-# 🍽️ Bites Project - Sistema ERP para Restaurantes
+# Bites Frontend
 
-Sistema completo de gestión para restaurantes con arquitectura cliente-servidor.
+Aplicación web moderna para la gestión de restaurantes, construida con **React 19** y **Vite**.
 
-## 📋 Descripción
+## 🛠️ Stack Tecnológico
 
-Bites es un sistema ERP (Enterprise Resource Planning) diseñado específicamente para restaurantes. Permite gestionar todos los aspectos del negocio desde un solo lugar, incluyendo empleados, productos, inventario, órdenes, mesas y reservas.
+- **Core**: React 19, ReactDOM 19
+- **Build Tool**: Vite 7
+- **Estilos**: Tailwind CSS 4 (con `@tailwindcss/vite`)
+- **Routing**: React Router DOM 7
+- **Iconos**: Lucide React
+- **Gráficos**: Recharts
+- **Utilidades**: date-fns, socket.io-client, jspdf
 
-## 🏗️ Arquitectura
-
-El proyecto está dividido en dos partes principales:
-
-### Frontend (React + Vite)
-
-- **Framework**: React 19 con Vite
-- **Routing**: React Router DOM
-- **Estilos**: Tailwind CSS 4
-- **UI**: Componentes personalizados
-
-### Backend (Node.js + Express)
-
-- **Framework**: Express.js
-- **Base de datos**: MongoDB con Mongoose
-- **Autenticación**: JWT (JSON Web Tokens)
-- **Arquitectura**: MVC (Model-View-Controller)
-- **Seguridad**: RBAC (Role-Based Access Control)
-
-## 🚀 Características Principales
-
-- ✅ **Sistema de autenticación seguro** con JWT
-- ✅ **Control de acceso basado en roles** (RBAC)
-- ✅ **Gestión de empleados** con diferentes roles
-- ✅ **Multi-restaurante** - Cada admin gestiona su propio restaurante
-- ✅ **Gestión de productos** - Menú y categorías
-- ✅ **Control de inventario** - Stock e ingredientes
-- ✅ **Sistema de órdenes** - Flujo de cocina y pedidos
-- ✅ **Gestión de mesas** - Ubicaciones y estado
-- ✅ **Sistema de reservas** - Gestión de clientes
-
-## 👥 Roles del Sistema
-
-1. **Admin** - Administrador del restaurante (acceso completo)
-2. **Mesero** - Tomar pedidos y gestionar mesas
-3. **Cocinero** - Ver y procesar órdenes de cocina
-4. **Cajero** - Procesar pagos
-5. **Host** - Gestionar reservas y asignación de mesas
-
-## 📁 Estructura del Proyecto
+## 📂 Estructura del Proyecto
 
 ```
-bites-project/
-├── backend/              # API REST del servidor
-│   ├── src/
-│   │   ├── config/      # Configuraciones (DB, roles)
-│   │   ├── controllers/ # Lógica de negocio
-│   │   ├── middlewares/ # Middlewares (auth, validación)
-│   │   ├── models/      # Modelos de MongoDB
-│   │   ├── routes/      # Rutas de la API
-│   │   └── utils/       # Utilidades
-│   ├── .env             # Variables de entorno
-│   ├── package.json
-│   ├── server.js        # Punto de entrada
-│   └── README.md        # Documentación del backend
-├── src/                 # Frontend React
-│   ├── components/      # Componentes reutilizables
-│   ├── pages/          # Páginas/Vistas
-│   └── styles/         # Estilos globales
-├── public/             # Archivos estáticos
-└── package.json        # Dependencias del frontend
+src/
+├── components/      # Componentes reutilizables
+│   ├── Cocina/      # Vistas específicas de cocina
+│   ├── Empleados/   # Gestión de personal
+│   ├── Mesas/       # Mapa y gestión de mesas
+│   ├── Pedidos/     # Toma de órdenes
+│   └── ...
+├── context/         # Estados globales (AuthContext, etc.)
+├── hooks/           # Custom Hooks (useAuth, useMesas, etc.)
+├── pages/           # Vistas principales (Login, Dashboard, etc.)
+├── services/        # Comunicación con API (axios)
+├── styles/          # Archivos CSS globales
+└── utils/           # Funciones auxiliares y constantes
 ```
 
-## 🔧 Instalación
+## 🚀 Configuración y Scripts
 
-### Requisitos Previos
-
-- Node.js v18 o superior
-- MongoDB v6 o superior
-- npm o yarn
-
-### 1. Clonar el repositorio
+### Instalación
 
 ```bash
-git clone https://github.com/JulianSantiagoPico/bites-project.git
-cd bites-project
-```
-
-### 2. Configurar e Iniciar el Backend
-
-```bash
-# Navegar al directorio del backend
-cd backend
-
-# Instalar dependencias
 npm install
+```
 
-# Configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus configuraciones
+### Desarrollo
 
-# Iniciar MongoDB (Windows)
-net start MongoDB
+Inicia el servidor de desarrollo en `http://localhost:5173`:
 
-# Probar conexión a la base de datos
-npm run test:db
-
-# Iniciar servidor en modo desarrollo
+```bash
 npm run dev
 ```
 
-El backend estará corriendo en `http://localhost:5000`
+### Producción
 
-### 3. Configurar e Iniciar el Frontend
-
-```bash
-# En otra terminal, desde la raíz del proyecto
-npm install
-
-# Iniciar servidor de desarrollo
-npm run dev
-```
-
-El frontend estará corriendo en `http://localhost:5173`
-
-## 📚 Documentación de la API
-
-### Endpoints Disponibles
-
-#### Autenticación
-
-- `POST /api/auth/register` - Registrar restaurante y admin
-- `POST /api/auth/login` - Iniciar sesión
-- `GET /api/auth/me` - Obtener perfil actual
-- `PUT /api/auth/me` - Actualizar perfil
-
-#### Usuarios/Empleados
-
-- `GET /api/users` - Listar empleados
-- `POST /api/users` - Crear empleado (admin)
-- `GET /api/users/:id` - Obtener empleado
-- `PUT /api/users/:id` - Actualizar empleado (admin)
-- `DELETE /api/users/:id` - Desactivar empleado (admin)
-
-Ver `backend/api-tests.http` para ejemplos detallados.
-
-## 🔐 Seguridad
-
-- Contraseñas encriptadas con bcrypt
-- Autenticación con JWT
-- Tokens con expiración configurable
-- Validación de datos con express-validator
-- Headers de seguridad con Helmet
-- CORS configurado
-- Soft delete para integridad de datos
-
-## 🧪 Testing
-
-El proyecto incluye un archivo `backend/api-tests.http` con pruebas de todos los endpoints. Puedes usar extensiones como REST Client en VS Code para ejecutarlas.
-
-## 🛠️ Scripts Disponibles
-
-### Frontend
+Genera los archivos estáticos optimizados en `dist/`:
 
 ```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Build de producción
-npm run preview  # Preview del build
-npm run lint     # Ejecutar ESLint
+npm run build
 ```
 
-### Backend
+Previsualiza el build de producción localmente:
 
 ```bash
-npm run dev      # Servidor con nodemon
-npm start        # Servidor en producción
-npm run test:db  # Probar conexión a MongoDB
+npm run preview
 ```
 
-## 🌐 Variables de Entorno
+### Linting
 
-### Backend (.env)
+Ejecuta ESLint para verificar la calidad del código:
 
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/bites-erp
-JWT_SECRET=tu-clave-secreta
-JWT_EXPIRE=7d
-CORS_ORIGIN=http://localhost:5173
-NODE_ENV=development
+```bash
+npm run lint
 ```
 
-## 🤝 Contribuir
+## 🧩 Características Clave del Frontend
 
-Las contribuciones son bienvenidas. Por favor:
+### Autenticación y Seguridad
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+- **AuthContext**: Manejo global del estado de sesión y usuario.
+- **Protected Routes**: Componentes que protegen rutas según autenticación y roles.
+- **Interceptors**: Configuración de Axios para manejar tokens JWT automáticamente.
 
-## 📝 Próximas Características
+### Gestión de Estado
 
-- [x] Módulo de Productos
-- [x] Módulo de Inventario con alertas de stock bajo
-- [x] Sistema de órdenes con estado en tiempo real
-- [x] Gestión de mesas con vista gráfica
-- [x] Sistema de reservas con confirmaciones
-- [ ] Dashboard con métricas y reportes
-- [ ] Notificaciones push
-- [ ] Exportación de reportes (PDF, Excel)
-- [ ] Modo offline con sincronización
-- [ ] Aplicación móvil
+- Uso de **Hooks** personalizados (`useCategorias`, `useProductos`, etc.) para separar la lógica de la vista.
+- Actualizaciones en tiempo real para módulos críticos como Cocina y Pedidos.
 
-## 👨‍💻 Autor
+### UI/UX
 
-**Julian Santiago Pico**
+- **Diseño Responsivo**: Adaptable a tablets y móviles para uso en servicio.
+- **Modales Estandarizados**: Sistema consistente de ventanas emergentes para formularios y detalles.
+- **Feedback Visual**: Alertas, loaders y estados de error claros (ej: validación de formularios).
 
-- GitHub: [@JulianSantiagoPico](https://github.com/JulianSantiagoPico)
+## 🎨 Estilos
 
-## 📄 Licencia
+El proyecto utiliza **Tailwind CSS v4**. La configuración principal se encuentra en el archivo CSS de entrada, aprovechando las nuevas directivas de la versión 4 para una integración más limpia con Vite.
 
-Este proyecto está bajo la Licencia ISC.
+## 🔌 Integración con Backend
+
+La comunicación con el backend se realiza a través de servicios modulares en `src/services/`. La URL base de la API se configura mediante variables de entorno (Vite env vars).
 
 ---
 
-⭐ Si este proyecto te ha sido útil, considera darle una estrella en GitHub
+**Nota**: Para información sobre la API y el Backend, consulta la documentación en el directorio `../backend`.

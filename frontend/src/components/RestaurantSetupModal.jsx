@@ -22,7 +22,6 @@ const RestaurantSetupModal = ({ isOpen, onComplete, restaurantName }) => {
     pais: "Colombia",
 
     // Configuración del negocio
-    moneda: "COP",
 
     // Horarios (día de ejemplo)
     horarioDefault: {
@@ -163,7 +162,6 @@ const RestaurantSetupModal = ({ isOpen, onComplete, restaurantName }) => {
           codigoPostal: formData.codigoPostal,
           pais: formData.pais,
         },
-        moneda: formData.moneda,
         horarios: horarios,
       };
 
@@ -326,21 +324,6 @@ const RestaurantSetupModal = ({ isOpen, onComplete, restaurantName }) => {
                     </span>
                   )}
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="moneda">Moneda</label>
-                <select
-                  id="moneda"
-                  name="moneda"
-                  value={formData.moneda}
-                  onChange={handleChange}
-                >
-                  <option value="COP">COP - Peso Colombiano</option>
-                  <option value="USD">USD - Dólar</option>
-                  <option value="EUR">EUR - Euro</option>
-                  <option value="MXN">MXN - Peso Mexicano</option>
-                </select>
               </div>
             </div>
           )}

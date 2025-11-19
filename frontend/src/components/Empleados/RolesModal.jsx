@@ -156,16 +156,50 @@ const RolesModal = ({
     return true;
   };
 
-  const handleAddRole = () => {
+  const saveRolesToBackend = async (updatedRoles) => {
+    // Convertir array a objeto rolesDisplay
+    const rolesDisplay = updatedRoles.reduce((acc, role) => {
+      acc[role.key] = role.label;
+      return acc;
+    }, {});
+
+    // Convertir array a lista de roles
+    const rolesList = ["Todos", ...updatedRoles.map((r) => r.key)];
+
+    // Convertir array a iconos
+    const rolesIcons = updatedRoles.reduce((acc, role) => {
+      acc[role.key] = role.icon;
+      return acc;
+    }, {});
+
+    return await onUpdateRoles({
+      rolesDisplay,
+      rolesList,
+      rolesIcons,
+    });
+  };
+
+  const handleAddRole = async () => {
     if (!validateRole(newRole)) return;
 
     const updatedRoles = [...roles, { ...newRole }];
-    setRoles(updatedRoles);
-    setNewRole({ key: "", label: "", icon: "👤" });
-    setError("");
-    setHasUnsavedChanges(true);
-    // Cambiar a la pestaña de lista para ver el rol agregado
-    setActiveTab("list");
+
+    // Guardar inmediatamente
+    const success = await saveRolesToBackend(updatedRoles);
+
+    if (success) {
+      setRoles(updatedRoles);
+      const newRoleKey = newRole.key;
+      setNewRole({ key: "", label: "", icon: "👤" });
+      setError("");
+      setHasUnsavedChanges(false);
+
+      // Abrir modal de permisos automáticamente
+      handleOpenPermissions(newRoleKey);
+
+      // Cambiar a la pestaña de lista
+      setActiveTab("list");
+    }
   };
 
   const handleEditRole = (index) => {
@@ -192,27 +226,7 @@ const RolesModal = ({
   };
 
   const handleSave = async () => {
-    // Convertir array a objeto rolesDisplay
-    const rolesDisplay = roles.reduce((acc, role) => {
-      acc[role.key] = role.label;
-      return acc;
-    }, {});
-
-    // Convertir array a lista de roles
-    const rolesList = ["Todos", ...roles.map((r) => r.key)];
-
-    // Convertir array a iconos
-    const rolesIcons = roles.reduce((acc, role) => {
-      acc[role.key] = role.icon;
-      return acc;
-    }, {});
-
-    await onUpdateRoles({
-      rolesDisplay,
-      rolesList,
-      rolesIcons,
-    });
-
+    await saveRolesToBackend(roles);
     setHasUnsavedChanges(false);
     // No cerramos aquí, el padre se encargará de cerrar después de actualizar
   };

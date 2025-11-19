@@ -38,10 +38,35 @@ function Register() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    // Limpiar error del campo al escribir
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+
+    // Casos especiales para campos mapeados del backend
+    if (name === "name" && errors.nombre) {
+      setErrors((prev) => ({ ...prev, nombre: "" }));
+    }
+    if (name === "restaurantName" && errors["restaurante.nombre"]) {
+      setErrors((prev) => ({ ...prev, "restaurante.nombre": "" }));
+    }
+    if (name === "phone" && errors["restaurante.telefono"]) {
+      setErrors((prev) => ({ ...prev, "restaurante.telefono": "" }));
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Validar campos requeridos
+    if (!formData.name.trim()) newErrors.nombre = "El nombre es requerido";
+    if (!formData.email.trim()) newErrors.email = "El email es requerido";
+    if (!formData.restaurantName.trim())
+      newErrors["restaurante.nombre"] =
+        "El nombre del restaurante es requerido";
+    if (!formData.phone.trim())
+      newErrors["restaurante.telefono"] = "El teléfono es requerido";
 
     // Validar contraseña con nuevos requisitos
     const passwordValidation = validatePassword(formData.password);
@@ -49,7 +74,9 @@ function Register() {
       newErrors.password = passwordValidation.mensaje;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "La confirmación de contraseña es requerida";
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Las contraseñas no coinciden";
     }
 
@@ -153,7 +180,11 @@ function Register() {
           </div>
 
           {/* Register Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5"
+            noValidate
+          >
             {/* Mensaje de error general */}
             {errors.general && (
               <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 flex items-center gap-2">
@@ -319,7 +350,7 @@ function Register() {
                 </span>
               </label>
               {errors.acceptTerms && (
-                <span className="text-xs text-accent">
+                <span className="text-xs text-red-600">
                   {errors.acceptTerms}
                 </span>
               )}

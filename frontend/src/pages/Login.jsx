@@ -66,7 +66,11 @@ function Login() {
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5"
+            noValidate
+          >
             {/* Mensaje de error general */}
             {errors.general && (
               <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 flex items-center gap-2">
@@ -86,7 +90,11 @@ function Login() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email)
+                    setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 placeholder="tu@email.com"
                 required
                 className={`text-textMain px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
@@ -110,7 +118,11 @@ function Login() {
                   type={mostrarPassword ? "text" : "password"}
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password)
+                      setErrors((prev) => ({ ...prev, password: "" }));
+                  }}
                   placeholder="••••••••"
                   required
                   className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${

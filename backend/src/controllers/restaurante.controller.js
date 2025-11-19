@@ -41,7 +41,7 @@ export const getRestaurante = async (req, res) => {
  */
 export const updateRestaurante = async (req, res) => {
   try {
-    const { descripcion, telefono, email, direccion, logo, moneda, horarios } =
+    const { descripcion, telefono, email, direccion, logo, horarios } =
       req.body;
 
     const restaurante = await Restaurante.findById(req.user.restauranteId);
@@ -59,7 +59,6 @@ export const updateRestaurante = async (req, res) => {
     if (email !== undefined) restaurante.email = email;
     if (direccion !== undefined) restaurante.direccion = direccion;
     if (logo !== undefined) restaurante.logo = logo;
-    if (moneda !== undefined) restaurante.moneda = moneda;
     if (horarios !== undefined) restaurante.horarios = horarios;
 
     await restaurante.save();
@@ -93,8 +92,7 @@ export const updateRestaurante = async (req, res) => {
  */
 export const completarConfiguracion = async (req, res) => {
   try {
-    const { descripcion, telefono, email, direccion, moneda, horarios } =
-      req.body;
+    const { descripcion, telefono, email, direccion, horarios } = req.body;
 
     // Validar que el usuario sea admin
     if (req.user.rol !== "admin") {
@@ -119,7 +117,6 @@ export const completarConfiguracion = async (req, res) => {
     restaurante.telefono = telefono;
     if (email) restaurante.email = email;
     restaurante.direccion = direccion;
-    restaurante.moneda = moneda;
     restaurante.horarios = horarios;
 
     // Inicializar categorías predefinidas si no existen
@@ -304,9 +301,7 @@ export const getConfiguracion = async (req, res) => {
   try {
     const restaurante = await Restaurante.findById(
       req.user.restauranteId
-    ).select(
-      "nombre descripcion telefono email direccion horarios moneda logo"
-    );
+    ).select("nombre descripcion telefono email direccion horarios logo");
 
     if (!restaurante) {
       return res.status(404).json({

@@ -57,10 +57,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       permission: PERMISSIONS.DASHBOARD.VIEW, // Todos tienen acceso
     },
     {
-      name: "Tomar Pedido",
-      path: "/dashboard/pedidos",
-      icon: <ClipboardList className="w-6 h-6" />,
-      permission: PERMISSIONS.TOMAR_PEDIDO.VIEW,
+      name: "Empleados",
+      path: "/dashboard/empleados",
+      icon: <Users className="w-6 h-6" />,
+      permission: PERMISSIONS.EMPLEADOS.VIEW,
     },
     {
       name: "Productos",
@@ -69,28 +69,28 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
       permission: PERMISSIONS.PRODUCTOS.VIEW,
     },
     {
-      name: "Cocina",
-      path: "/dashboard/cocina",
-      icon: <ChefHat className="w-6 h-6" />,
-      permission: PERMISSIONS.COCINA.VIEW,
-    },
-    {
       name: "Mesas",
       path: "/dashboard/mesas",
       icon: <Table className="w-6 h-6" />,
       permission: PERMISSIONS.MESAS.VIEW,
     },
     {
+      name: "Tomar Pedido",
+      path: "/dashboard/pedidos",
+      icon: <ClipboardList className="w-6 h-6" />,
+      permission: PERMISSIONS.TOMAR_PEDIDO.VIEW,
+    },
+    {
+      name: "Cocina",
+      path: "/dashboard/cocina",
+      icon: <ChefHat className="w-6 h-6" />,
+      permission: PERMISSIONS.COCINA.VIEW,
+    },
+    {
       name: "Reservas",
       path: "/dashboard/reservas",
       icon: <Calendar className="w-6 h-6" />,
       permission: PERMISSIONS.RESERVAS.VIEW,
-    },
-    {
-      name: "Empleados",
-      path: "/dashboard/empleados",
-      icon: <Users className="w-6 h-6" />,
-      permission: PERMISSIONS.EMPLEADOS.VIEW,
     },
     {
       name: "Estadísticas",
