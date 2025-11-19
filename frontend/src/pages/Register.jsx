@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import RestaurantSetupModal from "../components/RestaurantSetupModal";
+import PasswordInput, { validatePassword } from "../components/PasswordInput";
 import "../styles/Register.css";
 
 function Register() {
@@ -23,8 +23,6 @@ function Register() {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [registeredRestaurantName, setRegisteredRestaurantName] = useState("");
   const [skipDashboardRedirect, setSkipDashboardRedirect] = useState(false);
-  const [mostrarPassword, setMostrarPassword] = useState(false);
-  const [mostrarConfirmPassword, setMostrarConfirmPassword] = useState(false);
 
   // Redirigir al dashboard si ya está autenticado (pero no si está configurando el restaurante)
   useEffect(() => {
@@ -44,8 +42,10 @@ function Register() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (formData.password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+    // Validar contraseña con nuevos requisitos
+    const passwordValidation = validatePassword(formData.password);
+    if (!passwordValidation.cumpleTodos) {
+      newErrors.password = passwordValidation.mensaje;
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -272,85 +272,27 @@ function Register() {
 
             {/* Contraseñas */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-medium text-textMain"
-                >
-                  Contraseña <span className="text-accent">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={mostrarPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    required
-                    className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
-                      errors.password ? "border-red-500" : "border-gray-300"
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setMostrarPassword(!mostrarPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {mostrarPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <span className="text-xs text-accent">{errors.password}</span>
-                )}
-              </div>
+              <PasswordInput
+                value={formData.password}
+                onChange={handleChange}
+                name="password"
+                label="Contraseña"
+                error={errors.password}
+                showRequirements={true}
+                disabled={loading}
+                required={true}
+              />
 
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium text-textMain"
-                >
-                  Confirmar contraseña <span className="text-accent">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={mostrarConfirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    required
-                    className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
-                      errors.confirmPassword
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setMostrarConfirmPassword(!mostrarConfirmPassword)
-                    }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                  >
-                    {mostrarConfirmPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <span className="text-xs text-accent">
-                    {errors.confirmPassword}
-                  </span>
-                )}
-              </div>
+              <PasswordInput
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                name="confirmPassword"
+                label="Confirmar contraseña"
+                error={errors.confirmPassword}
+                showRequirements={false}
+                disabled={loading}
+                required={true}
+              />
             </div>
 
             {/* Términos y condiciones */}

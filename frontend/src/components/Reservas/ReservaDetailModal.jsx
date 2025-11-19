@@ -54,36 +54,24 @@ const ReservaDetailModal = ({
         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div
-          className="sticky top-0 px-6 py-4 border-b flex items-center justify-between"
-          style={{
-            backgroundColor: "#ffffff",
-            borderColor: "#e5e7eb",
-            zIndex: 10,
-          }}
-        >
+        {/* Header con título morado y línea divisora */}
+        <div className="sticky top-0 z-10 bg-primary px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: `${estadoColor}20` }}
-            >
-              <Calendar size={20} style={{ color: estadoColor }} />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20">
+              <Calendar size={20} className="text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold" style={{ color: textMain }}>
+              <h2 className="text-xl font-bold text-white">
                 Detalle de Reserva
               </h2>
-              <p className="text-sm" style={{ color: textSecondary }}>
-                {reserva.nombreCliente}
-              </p>
+              <p className="text-sm text-white/80">{reserva.nombreCliente}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
           >
-            <X size={24} style={{ color: textSecondary }} />
+            <X size={20} />
           </button>
         </div>
 

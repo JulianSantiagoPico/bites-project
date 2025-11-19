@@ -283,282 +283,281 @@ const RolesModal = ({
       onClick={handleClose}
     >
       <div
-        className="rounded-xl p-6 max-w-3xl w-full max-h-[90vh] overflow-hidden bg-background flex flex-col"
+        className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Header con título morado y línea divisora */}
+        <div className="bg-primary px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Shield className="w-6 h-6 text-primary" />
-            </div>
+            <Shield className="w-5 h-5 text-white" />
             <div>
-              <h3 className="text-2xl font-bold text-primary">
-                Gestionar Roles
-              </h3>
-              <p className="text-sm text-textSecondary">
+              <h2 className="text-xl font-bold text-white">Gestionar Roles</h2>
+              <p className="text-sm text-white/80">
                 Configura los roles disponibles para los empleados
               </p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-2 rounded-lg hover:bg-gray-100 text-textMain transition-colors"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b-2 border-secondary/20">
-          <button
-            onClick={() => setActiveTab("list")}
-            className={`flex items-center gap-2 px-4 py-3 font-medium transition-all relative ${
-              activeTab === "list"
-                ? "text-primary"
-                : "text-textSecondary hover:text-textMain"
-            }`}
-          >
-            <List className="w-5 h-5" />
-            Roles
-            {roles.length > 0 && (
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                  activeTab === "list"
-                    ? "bg-primary/20 text-primary"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {roles.length}
-              </span>
-            )}
+        {/* Content */}
+        <div className="p-6 flex-1 overflow-hidden flex flex-col">
+          {/* Tabs */}
+          <div className="flex gap-2 mb-6 border-b-2 border-secondary/20">
+            <button
+              onClick={() => setActiveTab("list")}
+              className={`flex items-center gap-2 px-4 py-3 font-medium transition-all relative ${
+                activeTab === "list"
+                  ? "text-primary"
+                  : "text-textSecondary hover:text-textMain"
+              }`}
+            >
+              <List className="w-5 h-5" />
+              Roles
+              {roles.length > 0 && (
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                    activeTab === "list"
+                      ? "bg-primary/20 text-primary"
+                      : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  {roles.length}
+                </span>
+              )}
+              {activeTab === "list" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("add");
+                setError("");
+              }}
+              className={`flex items-center gap-2 px-4 py-3 font-medium transition-all relative ${
+                activeTab === "add"
+                  ? "text-primary"
+                  : "text-textSecondary hover:text-textMain"
+              }`}
+            >
+              <FolderPlus className="w-5 h-5" />
+              Agregar Rol
+              {activeTab === "add" && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
+              )}
+            </button>
+          </div>
+
+          {/* Contenido con scroll */}
+          <div className="flex-1 overflow-y-auto mb-6">
+            {/* Tab: Lista de Roles */}
             {activeTab === "list" && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("add");
-              setError("");
-            }}
-            className={`flex items-center gap-2 px-4 py-3 font-medium transition-all relative ${
-              activeTab === "add"
-                ? "text-primary"
-                : "text-textSecondary hover:text-textMain"
-            }`}
-          >
-            <FolderPlus className="w-5 h-5" />
-            Agregar Rol
-            {activeTab === "add" && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
-            )}
-          </button>
-        </div>
-
-        {/* Contenido con scroll */}
-        <div className="flex-1 overflow-y-auto mb-6">
-          {/* Tab: Lista de Roles */}
-          {activeTab === "list" && (
-            <div className="space-y-2">
-              {roles.length === 0 ? (
-                <div className="text-center py-12 text-textSecondary bg-white rounded-lg border-2 border-dashed border-secondary/40">
-                  <Shield className="w-16 h-16 mx-auto mb-3 opacity-30" />
-                  <p className="text-lg font-medium mb-1">No hay roles</p>
-                  <p className="text-sm mb-4">
-                    Comienza agregando tu primer rol personalizado
-                  </p>
-                  <button
-                    onClick={() => setActiveTab("add")}
-                    className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Agregar Rol
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {roles.map((role, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-secondary/40 hover:border-primary/40 transition-colors group"
+              <div className="space-y-2">
+                {roles.length === 0 ? (
+                  <div className="text-center py-12 text-textSecondary bg-white rounded-lg border-2 border-dashed border-secondary/40">
+                    <Shield className="w-16 h-16 mx-auto mb-3 opacity-30" />
+                    <p className="text-lg font-medium mb-1">No hay roles</p>
+                    <p className="text-sm mb-4">
+                      Comienza agregando tu primer rol personalizado
+                    </p>
+                    <button
+                      onClick={() => setActiveTab("add")}
+                      className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity inline-flex items-center gap-2"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="text-3xl bg-background rounded-lg p-2">
-                          {role.icon}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-textMain text-lg">
-                            {role.label}
-                          </p>
-                          <p className="text-sm text-textSecondary font-mono">
-                            {role.key}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handleOpenPermissions(role.key)}
-                          className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
-                          title="Configurar permisos"
-                        >
-                          <Shield className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => handleEditRole(index)}
-                          className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
-                          title="Editar rol"
-                        >
-                          <Edit2 className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteRole(index)}
-                          className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
-                          title="Eliminar rol"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Tab: Agregar Rol */}
-          {activeTab === "add" && (
-            <div className="bg-white rounded-lg p-6 border-2 border-secondary/40">
-              <h4 className="text-lg font-semibold text-textMain mb-4 flex items-center gap-2">
-                <FolderPlus className="w-5 h-5 text-primary" />
-                Nuevo Rol
-              </h4>
-
-              {error && (
-                <div className="mb-4 p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-600 text-sm flex items-start gap-2">
-                  <X className="w-5 h-5 shrink-0 mt-0.5" />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-textMain mb-2">
-                    Clave del Rol *
-                  </label>
-                  <input
-                    type="text"
-                    value={newRole.key}
-                    onChange={(e) =>
-                      setNewRole({
-                        ...newRole,
-                        key: e.target.value
-                          .toLowerCase()
-                          .replace(/[^a-z_]/g, ""),
-                      })
-                    }
-                    placeholder="ej: supervisor, ayudante"
-                    className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain font-mono"
-                  />
-                  <p className="text-xs text-textSecondary mt-1">
-                    Solo letras minúsculas y guiones bajos (_). Se usará
-                    internamente.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-textMain mb-2">
-                    Nombre del Rol *
-                  </label>
-                  <input
-                    type="text"
-                    value={newRole.label}
-                    onChange={(e) =>
-                      setNewRole({ ...newRole, label: e.target.value })
-                    }
-                    placeholder="ej: Supervisor, Ayudante"
-                    className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
-                  />
-                  <p className="text-xs text-textSecondary mt-1">
-                    Este es el nombre que verán los empleados.
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-textMain mb-2">
-                    Icono
-                  </label>
-                  <div className="grid grid-cols-8 gap-2">
-                    {availableIcons.map((icon) => (
-                      <button
-                        key={icon}
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setNewRole((prev) => ({ ...prev, icon }));
-                        }}
-                        className={`p-3 text-2xl rounded-lg border-2 transition-all hover:scale-110 ${
-                          newRole.icon === icon
-                            ? "border-primary bg-primary/10 ring-2 ring-primary/30 scale-105"
-                            : "border-secondary/40 hover:border-primary/50 bg-white"
-                        }`}
+                      <Plus className="w-4 h-4" />
+                      Agregar Rol
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {roles.map((role, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-secondary/40 hover:border-primary/40 transition-colors group"
                       >
-                        {icon}
-                      </button>
+                        <div className="flex items-center gap-4">
+                          <div className="text-3xl bg-background rounded-lg p-2">
+                            {role.icon}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-textMain text-lg">
+                              {role.label}
+                            </p>
+                            <p className="text-sm text-textSecondary font-mono">
+                              {role.key}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleOpenPermissions(role.key)}
+                            className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
+                            title="Configurar permisos"
+                          >
+                            <Shield className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleEditRole(index)}
+                            className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                            title="Editar rol"
+                          >
+                            <Edit2 className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteRole(index)}
+                            className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+                            title="Eliminar rol"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
                     ))}
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Tab: Agregar Rol */}
+            {activeTab === "add" && (
+              <div className="bg-white rounded-lg p-6 border-2 border-secondary/40">
+                <h4 className="text-lg font-semibold text-textMain mb-4 flex items-center gap-2">
+                  <FolderPlus className="w-5 h-5 text-primary" />
+                  Nuevo Rol
+                </h4>
+
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border-2 border-red-200 rounded-lg text-red-600 text-sm flex items-start gap-2">
+                    <X className="w-5 h-5 shrink-0 mt-0.5" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-textMain mb-2">
+                      Clave del Rol *
+                    </label>
+                    <input
+                      type="text"
+                      value={newRole.key}
+                      onChange={(e) =>
+                        setNewRole({
+                          ...newRole,
+                          key: e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z_]/g, ""),
+                        })
+                      }
+                      placeholder="ej: supervisor, ayudante"
+                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain font-mono"
+                    />
+                    <p className="text-xs text-textSecondary mt-1">
+                      Solo letras minúsculas y guiones bajos (_). Se usará
+                      internamente.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-textMain mb-2">
+                      Nombre del Rol *
+                    </label>
+                    <input
+                      type="text"
+                      value={newRole.label}
+                      onChange={(e) =>
+                        setNewRole({ ...newRole, label: e.target.value })
+                      }
+                      placeholder="ej: Supervisor, Ayudante"
+                      className="w-full px-4 py-3 border-2 border-secondary/40 rounded-lg focus:outline-none focus:border-primary transition-colors text-textMain"
+                    />
+                    <p className="text-xs text-textSecondary mt-1">
+                      Este es el nombre que verán los empleados.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-textMain mb-2">
+                      Icono
+                    </label>
+                    <div className="grid grid-cols-8 gap-2">
+                      {availableIcons.map((icon) => (
+                        <button
+                          key={icon}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setNewRole((prev) => ({ ...prev, icon }));
+                          }}
+                          className={`p-3 text-2xl rounded-lg border-2 transition-all hover:scale-110 ${
+                            newRole.icon === icon
+                              ? "border-primary bg-primary/10 ring-2 ring-primary/30 scale-105"
+                              : "border-secondary/40 hover:border-primary/50 bg-white"
+                          }`}
+                        >
+                          {icon}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex gap-3">
+                    <button
+                      onClick={handleAddRole}
+                      className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-semibold flex items-center justify-center gap-2"
+                    >
+                      <Plus className="w-5 h-5" />
+                      Agregar Rol
+                    </button>
+                    <button
+                      onClick={handleClearForm}
+                      className="px-6 py-3 border-2 border-secondary/40 text-textMain rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                    >
+                      Limpiar
+                    </button>
                   </div>
                 </div>
-
-                <div className="pt-4 flex gap-3">
-                  <button
-                    onClick={handleAddRole}
-                    className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-semibold flex items-center justify-center gap-2"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Agregar Rol
-                  </button>
-                  <button
-                    onClick={handleClearForm}
-                    className="px-6 py-3 border-2 border-secondary/40 text-textMain rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                  >
-                    Limpiar
-                  </button>
-                </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Botones de acción fijos en el footer */}
-        <div className="flex gap-3 pt-4 border-t-2 border-secondary/20">
-          <button
-            onClick={handleSave}
-            disabled={saving || !hasUnsavedChanges}
-            className="flex-1 px-6 py-3 bg-success text-white rounded-lg hover:opacity-90 transition-opacity font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {saving ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                Guardando...
-              </>
-            ) : (
-              <>
-                <Shield className="w-5 h-5" />
-                Guardar Cambios
-                {hasUnsavedChanges && (
-                  <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
-                    Sin guardar
-                  </span>
-                )}
-              </>
             )}
-          </button>
-          <button
-            onClick={handleClose}
-            disabled={saving}
-            className="px-6 py-3 border-2 border-secondary/40 text-textMain rounded-lg hover:bg-gray-50 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {hasUnsavedChanges ? "Cancelar" : "Cerrar"}
-          </button>
+          </div>
+
+          {/* Botones de acción fijos en el footer */}
+          <div className="flex gap-3 pt-4 border-t-2 border-secondary/20">
+            <button
+              onClick={handleSave}
+              disabled={saving || !hasUnsavedChanges}
+              className="flex-1 px-6 py-3 bg-success text-white rounded-lg hover:opacity-90 transition-opacity font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {saving ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Guardando...
+                </>
+              ) : (
+                <>
+                  <Shield className="w-5 h-5" />
+                  Guardar Cambios
+                  {hasUnsavedChanges && (
+                    <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                      Sin guardar
+                    </span>
+                  )}
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleClose}
+              disabled={saving}
+              className="px-6 py-3 border-2 border-secondary/40 text-textMain rounded-lg hover:bg-gray-50 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {hasUnsavedChanges ? "Cancelar" : "Cerrar"}
+            </button>
+          </div>
         </div>
       </div>
 
