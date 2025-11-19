@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import RestaurantSetupModal from "../components/RestaurantSetupModal";
 import PasswordInput, { validatePassword } from "../components/PasswordInput";
@@ -155,7 +156,8 @@ function Register() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {/* Mensaje de error general */}
             {errors.general && (
-              <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200">
+              <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-200 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
                 <p className="text-sm text-red-600">{errors.general}</p>
               </div>
             )}

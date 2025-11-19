@@ -25,6 +25,7 @@ const PasswordInput = ({
       mayuscula: /[A-Z]/.test(password),
       minuscula: /[a-z]/.test(password),
       numero: /[0-9]/.test(password),
+      simbolo: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     };
   };
 
@@ -46,7 +47,7 @@ const PasswordInput = ({
           required={required}
           disabled={disabled}
           className={`text-textMain w-full px-4 py-3 pr-10 rounded-lg border focus:outline-none focus:ring-2 focus:ring-primary transition ${
-            error ? "border-red-500" : "border-gray"
+            error ? "border-red-500" : "border-gray-300"
           }`}
         />
         <button
@@ -87,6 +88,10 @@ const PasswordInput = ({
             texto="Una letra minúscula"
           />
           <RequisitoPassword cumple={requisitos.numero} texto="Un número" />
+          <RequisitoPassword
+            cumple={requisitos.simbolo}
+            texto="Un símbolo (!@#$...)"
+          />
         </div>
       )}
     </div>
@@ -118,6 +123,7 @@ export const validatePassword = (password) => {
     mayuscula: /[A-Z]/.test(password),
     minuscula: /[a-z]/.test(password),
     numero: /[0-9]/.test(password),
+    simbolo: /[!@#$%^&*(),.?":{}|<>]/.test(password),
   };
 
   const cumpleTodos = Object.values(requisitos).every(Boolean);
@@ -127,7 +133,7 @@ export const validatePassword = (password) => {
     cumpleTodos,
     mensaje: cumpleTodos
       ? ""
-      : "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número",
+      : "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo",
   };
 };
 

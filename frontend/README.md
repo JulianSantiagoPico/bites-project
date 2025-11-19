@@ -31,11 +31,11 @@ El proyecto está dividido en dos partes principales:
 - ✅ **Control de acceso basado en roles** (RBAC)
 - ✅ **Gestión de empleados** con diferentes roles
 - ✅ **Multi-restaurante** - Cada admin gestiona su propio restaurante
-- 🔄 **Gestión de productos** (próximamente)
-- 🔄 **Control de inventario** (próximamente)
-- 🔄 **Sistema de órdenes** (próximamente)
-- 🔄 **Gestión de mesas** (próximamente)
-- 🔄 **Sistema de reservas** (próximamente)
+- ✅ **Gestión de productos** - Menú y categorías
+- ✅ **Control de inventario** - Stock e ingredientes
+- ✅ **Sistema de órdenes** - Flujo de cocina y pedidos
+- ✅ **Gestión de mesas** - Ubicaciones y estado
+- ✅ **Sistema de reservas** - Gestión de clientes
 
 ## 👥 Roles del Sistema
 
@@ -200,11 +200,11 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📝 Próximas Características
 
-- [ ] Módulo de Productos
-- [ ] Módulo de Inventario con alertas de stock bajo
-- [ ] Sistema de órdenes con estado en tiempo real
-- [ ] Gestión de mesas con vista gráfica
-- [ ] Sistema de reservas con confirmaciones
+- [x] Módulo de Productos
+- [x] Módulo de Inventario con alertas de stock bajo
+- [x] Sistema de órdenes con estado en tiempo real
+- [x] Gestión de mesas con vista gráfica
+- [x] Sistema de reservas con confirmaciones
 - [ ] Dashboard con métricas y reportes
 - [ ] Notificaciones push
 - [ ] Exportación de reportes (PDF, Excel)

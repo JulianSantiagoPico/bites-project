@@ -21,6 +21,33 @@ const generateToken = (id) => {
 export const register = async (req, res) => {
   try {
     const { nombre, apellido, email, password, restaurante } = req.body;
+    const errors = [];
+
+    // Validaciones
+    if (!nombre)
+      errors.push({ field: "nombre", message: "El nombre es requerido" });
+    if (!email)
+      errors.push({ field: "email", message: "El email es requerido" });
+    if (!password)
+      errors.push({ field: "password", message: "La contraseña es requerida" });
+    if (!restaurante?.nombre)
+      errors.push({
+        field: "restaurante.nombre",
+        message: "El nombre del restaurante es requerido",
+      });
+    if (!restaurante?.telefono)
+      errors.push({
+        field: "restaurante.telefono",
+        message: "El teléfono del restaurante es requerido",
+      });
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Error de validación",
+        errors,
+      });
+    }
 
     // Verificar si el usuario ya existe
     const userExists = await User.findOne({ email });
@@ -29,6 +56,12 @@ export const register = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "El email ya está registrado",
+        errors: [
+          {
+            field: "email",
+            message: "Este correo electrónico ya está registrado",
+          },
+        ],
       });
     }
 
@@ -96,6 +129,20 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const errors = [];
+
+    if (!email)
+      errors.push({ field: "email", message: "El email es requerido" });
+    if (!password)
+      errors.push({ field: "password", message: "La contraseña es requerida" });
+
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Error de validación",
+        errors,
+      });
+    }
 
     // Buscar usuario por email (incluir password)
     const user = await User.findOne({ email })
