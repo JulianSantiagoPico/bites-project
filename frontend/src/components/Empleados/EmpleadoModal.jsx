@@ -1,13 +1,13 @@
 import EmpleadoForm from "./EmpleadoForm";
-import { getCurrentRoles } from "../../utils/empleadosUtils";
+import { getAvailableRolesForEmployees } from "../../utils/empleadosUtils";
 
 /**
  * Modal para crear o editar un empleado
  * Muestra el formulario EmpleadoForm dentro de un modal centrado
  */
 const EmpleadoModal = ({ isOpen, employee, onSubmit, onClose }) => {
-  // Obtener roles actuales cada vez que el modal se renderiza
-  const { rolesDisplay, rolesIcons } = getCurrentRoles();
+  // Obtener roles disponibles (excluye admin)
+  const { rolesDisplay, rolesIcons } = getAvailableRolesForEmployees();
 
   if (!isOpen) return null;
 

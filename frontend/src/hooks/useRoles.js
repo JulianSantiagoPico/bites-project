@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import rolesService from "../services/roles.service";
 import { loadRolesFromBackend } from "../utils/empleadosUtils";
+import { useAuth } from "../context/AuthContext";
 
 /**
  * Hook para gestionar roles del restaurante con sincronización al backend
@@ -8,6 +9,7 @@ import { loadRolesFromBackend } from "../utils/empleadosUtils";
 export const useRoles = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   /**
    * Cargar roles desde el backend
@@ -138,21 +140,24 @@ export const useRoles = () => {
       return {};
     } catch (err) {
       console.error("Error cargando permisos:", err);
-      // Si falla (porque no es admin), intentar cargar solo los permisos del usuario actual
+      // Si falla (porque no es admin), no hacer nada
       return {};
     }
   };
 
-  // Cargar roles y permisos al montar el hook
+  // Cargar roles y permisos al montar el hook SOLO si es admin
   useEffect(() => {
     const loadData = async () => {
-      await loadRoles();
-      // Intentar cargar todos los permisos (funciona solo para admin)
-      await loadAllPermissions();
+      // Solo cargar si el usuario es admin
+      if (user && user.rol === "admin") {
+        await loadRoles();
+        // Cargar todos los permisos (funciona solo para admin)
+        await loadAllPermissions();
+      }
     };
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.rol]);
 
   return {
     loading,

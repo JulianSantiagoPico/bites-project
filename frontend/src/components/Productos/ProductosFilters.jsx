@@ -10,6 +10,7 @@ const ProductosFilters = ({
   onSearchChange,
   filterCategory,
   onCategoryChange,
+  categorias = [],
 }) => {
   const handleClearSearch = () => {
     onSearchChange("");
@@ -69,9 +70,10 @@ const ProductosFilters = ({
               onChange={(e) => onCategoryChange(e.target.value)}
               className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
             >
-              {CATEGORIAS.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
+              <option value="Todo">📦 Todas las Categorías</option>
+              {categorias.map((cat) => (
+                <option key={cat.key} value={cat.key}>
+                  {cat.icon} {cat.label}
                 </option>
               ))}
             </select>

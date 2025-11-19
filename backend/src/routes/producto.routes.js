@@ -9,8 +9,8 @@ import {
   getEstadisticas,
   getProductosDestacados,
 } from "../controllers/producto.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreateProducto,
   validateUpdateProducto,
@@ -30,12 +30,16 @@ router.get("/destacados", getProductosDestacados);
 router
   .route("/")
   .get(getProductos) // Cualquier usuario autenticado puede ver productos
-  .post(authorize(ROLES.ADMIN), validateCreateProducto, createProducto); // Solo admin puede crear
+  .post(
+    checkPermission(PERMISSIONS.PRODUCTOS.CREATE),
+    validateCreateProducto,
+    createProducto
+  );
 
-// Ruta para cambiar disponibilidad - Admin y Cocinero
+// Ruta para cambiar disponibilidad - Requiere permiso de actualizar productos
 router.patch(
   "/:id/disponibilidad",
-  authorize(ROLES.ADMIN, ROLES.COCINERO),
+  checkPermission(PERMISSIONS.PRODUCTOS.UPDATE),
   validateToggleDisponibilidad,
   toggleDisponibilidad
 );
@@ -44,7 +48,11 @@ router.patch(
 router
   .route("/:id")
   .get(getProductoById) // Cualquier usuario autenticado puede ver un producto
-  .put(authorize(ROLES.ADMIN), validateUpdateProducto, updateProducto) // Solo admin puede actualizar
-  .delete(authorize(ROLES.ADMIN), deleteProducto); // Solo admin puede eliminar
+  .put(
+    checkPermission(PERMISSIONS.PRODUCTOS.UPDATE),
+    validateUpdateProducto,
+    updateProducto
+  )
+  .delete(checkPermission(PERMISSIONS.PRODUCTOS.DELETE), deleteProducto);
 
 export default router;

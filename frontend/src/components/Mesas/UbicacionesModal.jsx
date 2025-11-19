@@ -76,14 +76,6 @@ const UbicacionesModal = ({
       // Convertir el objeto ubicacionesDisplay a array
       const ubicacionesArray = Object.entries(currentUbicaciones)
         .filter(([key, label]) => {
-          // Excluir ubicaciones predeterminadas
-          if (
-            ["interior", "exterior", "terraza", "barra", "privado"].includes(
-              key
-            )
-          ) {
-            return false;
-          }
           // Filtrar propiedades de Mongoose (empiezan con $ o _)
           if (key.startsWith("$") || key.startsWith("_")) {
             return false;

@@ -81,6 +81,10 @@ const PermissionsModal = ({
       update: "Actualizar",
       delete: "Eliminar",
       export: "Exportar",
+      manage_roles: "Gestionar Roles",
+      manage_categories: "Gestionar Categorías",
+      manage_locations: "Gestionar Ubicaciones",
+      manage_occasions: "Gestionar Ocasiones",
     };
     return labels[action] || action;
   };

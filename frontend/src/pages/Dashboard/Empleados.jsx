@@ -12,6 +12,8 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { useEmpleados } from "../../hooks/useEmpleados";
 import { useRoles } from "../../hooks/useRoles";
 import { getCurrentRoles } from "../../utils/empleadosUtils";
+import PermissionButton from "../../components/PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 const Empleados = () => {
   // Estados locales del componente (UI)
@@ -103,21 +105,23 @@ const Empleados = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button
+          <PermissionButton
+            permission={PERMISSIONS.EMPLEADOS.MANAGE_ROLES}
             onClick={() => setShowRolesModal(true)}
-            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2"
-            title="Gestionar roles"
+            variant="secondary"
+            title="Gestionar Roles"
           >
             <Settings className="w-5 h-5" />
-            <span className="hidden md:inline">Roles</span>
-          </button>
-          <button
+            <span className="hidden sm:inline">Roles</span>
+          </PermissionButton>
+          <PermissionButton
+            permission={PERMISSIONS.EMPLEADOS.CREATE}
             onClick={() => handleOpenModal()}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
+            variant="primary"
           >
             <Plus className="w-5 h-5" />
             Nuevo Empleado
-          </button>
+          </PermissionButton>
         </div>
       </div>
       {/* Stats */}
@@ -178,12 +182,13 @@ const Empleados = () => {
                   : "Comienza agregando tu primer empleado"}
               </p>
               {!searchTerm && filterRole === "Todos" && (
-                <button
+                <PermissionButton
+                  permission={PERMISSIONS.EMPLEADOS.CREATE}
                   onClick={() => handleOpenModal()}
-                  className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                  variant="primary"
                 >
                   Agregar Empleado
-                </button>
+                </PermissionButton>
               )}
             </div>
           )}

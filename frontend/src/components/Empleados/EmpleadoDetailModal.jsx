@@ -4,6 +4,8 @@ import {
   formatDate,
   getCurrentRoles,
 } from "../../utils/empleadosUtils";
+import PermissionButton from "../PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 /**
  * Modal para mostrar el detalle completo de un empleado
@@ -123,35 +125,41 @@ const EmpleadoDetailModal = ({
           <div className="flex gap-3 pt-4">
             {employee.rol !== "admin" ? (
               <>
-                <button
+                <PermissionButton
+                  permission={PERMISSIONS.EMPLEADOS.UPDATE}
                   onClick={() => {
                     onClose();
                     onEdit(employee);
                   }}
-                  className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                  variant="primary"
+                  className="flex-1"
                 >
                   Editar
-                </button>
+                </PermissionButton>
                 {employee.activo ? (
-                  <button
+                  <PermissionButton
+                    permission={PERMISSIONS.EMPLEADOS.DELETE}
                     onClick={() => {
                       onClose();
                       onDelete(employee);
                     }}
-                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-red-500"
+                    variant="danger"
+                    className="flex-1"
                   >
                     Desactivar
-                  </button>
+                  </PermissionButton>
                 ) : (
-                  <button
+                  <PermissionButton
+                    permission={PERMISSIONS.EMPLEADOS.UPDATE}
                     onClick={() => {
                       onClose();
                       onReactivate(employee);
                     }}
-                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-green-500"
+                    variant="success"
+                    className="flex-1"
                   >
                     Reactivar
-                  </button>
+                  </PermissionButton>
                 )}
               </>
             ) : (

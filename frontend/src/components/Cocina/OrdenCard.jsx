@@ -9,6 +9,8 @@ import {
   Eye,
   AlertTriangle,
 } from "lucide-react";
+import PermissionGuard from "../PermissionGuard";
+import { PERMISSIONS } from "../../utils/permissions";
 
 /**
  * Obtener color según prioridad
@@ -210,27 +212,29 @@ const OrdenCard = ({ orden, onComenzar, onTerminar, onViewDetail }) => {
           <span className="hidden sm:inline">Ver Detalle</span>
         </button>
 
-        {orden.estado === "pendiente" && (
-          <button
-            onClick={() => onComenzar(orden)}
-            className="flex-1 px-4 py-2 rounded-lg font-medium text-white transition-opacity hover:opacity-90 flex items-center justify-center gap-2"
-            style={{ backgroundColor: "#581845" }}
-          >
-            <Play className="w-4 h-4" />
-            Comenzar
-          </button>
-        )}
+        <PermissionGuard permission={PERMISSIONS.COCINA.UPDATE}>
+          {orden.estado === "pendiente" && (
+            <button
+              onClick={() => onComenzar(orden)}
+              className="flex-1 px-4 py-2 rounded-lg font-medium text-white transition-opacity hover:opacity-90 flex items-center justify-center gap-2"
+              style={{ backgroundColor: "#581845" }}
+            >
+              <Play className="w-4 h-4" />
+              Comenzar
+            </button>
+          )}
 
-        {orden.estado === "en_preparacion" && (
-          <button
-            onClick={() => onTerminar(orden)}
-            className="flex-1 px-4 py-2 rounded-lg font-medium text-white transition-opacity hover:opacity-90 flex items-center justify-center gap-2"
-            style={{ backgroundColor: "#6bbf59" }}
-          >
-            <CheckCircle className="w-4 h-4" />
-            Listo
-          </button>
-        )}
+          {orden.estado === "en_preparacion" && (
+            <button
+              onClick={() => onTerminar(orden)}
+              className="flex-1 px-4 py-2 rounded-lg font-medium text-white transition-opacity hover:opacity-90 flex items-center justify-center gap-2"
+              style={{ backgroundColor: "#6bbf59" }}
+            >
+              <CheckCircle className="w-4 h-4" />
+              Listo
+            </button>
+          )}
+        </PermissionGuard>
       </div>
     </div>
   );

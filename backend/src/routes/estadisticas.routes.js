@@ -8,8 +8,8 @@ import {
   getEstadisticasInventario,
   getEstadisticasReservas,
 } from "../controllers/estadisticas.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 
 const router = express.Router();
 
@@ -33,48 +33,65 @@ router.get("/generales", getEstadisticasGenerales);
  */
 router.get("/productos", getEstadisticasProductos);
 
-// Las rutas detalladas solo para Admin y Gerente
-router.use(authorize(ROLES.ADMIN, ROLES.GERENTE));
-
 /**
  * @route   GET /api/estadisticas/ventas
  * @desc    Obtener estadísticas detalladas de ventas
- * @access  Private (Admin, Gerente)
+ * @access  Private (Requiere permiso de estadísticas)
  * @query   periodo: hoy, ayer, semana, mes, trimestre, año
  * @query   fechaInicio: fecha personalizada (YYYY-MM-DD)
  * @query   fechaFin: fecha personalizada (YYYY-MM-DD)
  */
-router.get("/ventas", getEstadisticasVentas);
+router.get(
+  "/ventas",
+  checkPermission(PERMISSIONS.ESTADISTICAS.VIEW),
+  getEstadisticasVentas
+);
 
 /**
  * @route   GET /api/estadisticas/mesas
  * @desc    Obtener estadísticas de ocupación de mesas
- * @access  Private (Admin, Gerente)
+ * @access  Private (Requiere permiso de estadísticas)
  * @query   fecha: fecha específica (YYYY-MM-DD) - default: hoy
  */
-router.get("/mesas", getEstadisticasMesas);
+router.get(
+  "/mesas",
+  checkPermission(PERMISSIONS.ESTADISTICAS.VIEW),
+  getEstadisticasMesas
+);
 
 /**
  * @route   GET /api/estadisticas/empleados
  * @desc    Obtener estadísticas de performance de meseros
- * @access  Private (Admin, Gerente)
+ * @access  Private (Requiere permiso de estadísticas)
  * @query   periodo: hoy, ayer, semana, mes, trimestre, año
  */
-router.get("/empleados", getEstadisticasEmpleados);
+router.get(
+  "/empleados",
+  checkPermission(PERMISSIONS.ESTADISTICAS.VIEW),
+  getEstadisticasEmpleados
+);
 
 /**
  * @route   GET /api/estadisticas/inventario
  * @desc    Obtener estadísticas de inventario y alertas de stock
- * @access  Private (Admin, Gerente)
+ * @access  Private (Requiere permiso de estadísticas)
  */
-router.get("/inventario", getEstadisticasInventario);
+router.get(
+  "/inventario",
+  checkPermission(PERMISSIONS.ESTADISTICAS.VIEW),
+  getEstadisticasInventario
+);
 
 /**
  * @route   GET /api/estadisticas/reservas
  * @desc    Obtener estadísticas de reservas
- * @access  Private (Admin, Gerente)
+ * @access  Private (Requiere permiso de estadísticas)
  * @query   periodo: hoy, ayer, semana, mes, trimestre, año
  */
-router.get("/reservas", getEstadisticasReservas);
+router.get(
+  "/reservas",
+  checkPermission(PERMISSIONS.ESTADISTICAS.VIEW),
+  getEstadisticasReservas
+);
 
 export default router;
