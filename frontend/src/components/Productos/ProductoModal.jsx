@@ -1,3 +1,4 @@
+import { X, UtensilsCrossed } from "lucide-react";
 import ProductoForm from "./ProductoForm";
 
 /**
@@ -23,29 +24,18 @@ const ProductoModal = ({ isOpen, onClose, producto, onSubmit }) => {
 
       {/* Modal */}
       <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl animate-scale-in bg-white">
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b bg-white border-secondary/20">
-          <h2 className="text-2xl font-bold text-primary">
+        {/* Header con título morado y línea divisora */}
+        <div className="bg-primary px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <UtensilsCrossed className="w-5 h-5" />
             {producto ? "Editar Producto" : "Nuevo Producto"}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-textSecondary"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
             aria-label="Cerrar modal"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-5 h-5" />
           </button>
         </div>
 

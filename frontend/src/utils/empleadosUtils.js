@@ -122,6 +122,37 @@ export const getCurrentRoles = () => ({
 });
 
 /**
+ * Obtener roles disponibles para asignar a empleados (excluye admin)
+ * El rol admin solo puede ser asignado directamente en la base de datos
+ */
+export const getAvailableRolesForEmployees = () => {
+  // Filtrar el rol admin de rolesDisplay
+  const filteredRolesDisplay = Object.entries(rolesDisplay)
+    .filter(([key]) => key !== "admin")
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  // Filtrar el rol admin de roles
+  const filteredRoles = roles.filter((role) => role !== "admin");
+
+  // Filtrar el rol admin de rolesIcons
+  const filteredRolesIcons = Object.entries(rolesIcons)
+    .filter(([key]) => key !== "admin")
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  return {
+    rolesDisplay: filteredRolesDisplay,
+    roles: filteredRoles,
+    rolesIcons: filteredRolesIcons,
+  };
+};
+
+/**
  * Retorna las clases de estilo para los tipos de notificación
  * Usa los colores del tema CSS
  */

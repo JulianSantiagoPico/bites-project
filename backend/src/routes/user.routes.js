@@ -6,8 +6,8 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/user.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreateEmployee,
   validateUpdateUser,
@@ -18,16 +18,24 @@ const router = express.Router();
 // Todas las rutas requieren autenticación
 router.use(protect);
 
-// Rutas para empleados - Solo admin puede crear, actualizar y eliminar
+// Rutas para empleados - Verificar permisos específicos
 router
   .route("/")
   .get(getUsers) // Cualquier usuario autenticado puede ver la lista
-  .post(authorize(ROLES.ADMIN), validateCreateEmployee, createUser);
+  .post(
+    checkPermission(PERMISSIONS.EMPLEADOS.CREATE),
+    validateCreateEmployee,
+    createUser
+  );
 
 router
   .route("/:id")
   .get(getUserById)
-  .put(authorize(ROLES.ADMIN), validateUpdateUser, updateUser)
-  .delete(authorize(ROLES.ADMIN), deleteUser);
+  .put(
+    checkPermission(PERMISSIONS.EMPLEADOS.UPDATE),
+    validateUpdateUser,
+    updateUser
+  )
+  .delete(checkPermission(PERMISSIONS.EMPLEADOS.DELETE), deleteUser);
 
 export default router;

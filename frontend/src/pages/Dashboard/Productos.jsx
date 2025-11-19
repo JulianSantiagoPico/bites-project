@@ -10,6 +10,8 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { useProductos } from "../../hooks/useProductos";
 import { useCategorias } from "../../hooks/useCategorias";
 import { Settings, Package, Plus } from "lucide-react";
+import PermissionButton from "../../components/PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 const Productos = () => {
   // Estados locales del componente (UI)
@@ -101,21 +103,23 @@ const Productos = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button
+          <PermissionButton
+            permission={PERMISSIONS.PRODUCTOS.MANAGE_CATEGORIES}
             onClick={() => setShowCategoriasModal(true)}
-            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-colors flex items-center gap-2 justify-center"
+            variant="secondary"
             title="Gestionar Categorías"
           >
             <Settings className="w-5 h-5" />
             <span className="hidden sm:inline">Gestionar Categorías</span>
-          </button>
-          <button
+          </PermissionButton>
+          <PermissionButton
+            permission={PERMISSIONS.PRODUCTOS.CREATE}
             onClick={() => handleOpenModal()}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
+            variant="primary"
           >
             <Plus className="w-5 h-5" />
             Nuevo Producto
-          </button>
+          </PermissionButton>
         </div>
       </div>
 
@@ -128,6 +132,13 @@ const Productos = () => {
         onSearchChange={setSearchTerm}
         filterCategory={filterCategory}
         onCategoryChange={setFilterCategory}
+        categorias={Object.entries(categorias.categoriasDisplay || {}).map(
+          ([key, label]) => ({
+            key,
+            label,
+            icon: categorias.categoriasIcons?.[key] || "🍽️",
+          })
+        )}
       />
 
       {/* Tabla de productos */}
@@ -157,6 +168,10 @@ const Productos = () => {
           onDelete={deleteProducto}
           onReactivate={reactivateProducto}
           onToggleDisponibilidad={toggleDisponibilidad}
+          searchTerm={searchTerm}
+          filterCategoria={filterCategory}
+          filterDisponibilidad="Todos"
+          onCreate={() => handleOpenModal()}
         />
       )}
 

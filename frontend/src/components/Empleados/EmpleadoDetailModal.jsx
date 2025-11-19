@@ -4,6 +4,9 @@ import {
   formatDate,
   getCurrentRoles,
 } from "../../utils/empleadosUtils";
+import { User, X } from "lucide-react";
+import PermissionButton from "../PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 /**
  * Modal para mostrar el detalle completo de un empleado
@@ -28,35 +31,25 @@ const EmpleadoDetailModal = ({
       onClick={onClose}
     >
       <div
-        className="rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-white"
+        className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-bold text-primary">
+        {/* Header con título morado y línea divisora */}
+        <div className="sticky top-0 z-10 bg-primary px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <User className="w-5 h-5" />
             Perfil del Empleado
-          </h3>
+          </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="space-y-6">
+        {/* Content */}
+        <div className="p-6 space-y-6">
           {/* Avatar y nombre */}
           <div className="flex items-center gap-4 pb-6 border-b border-secondary/20">
             <div className="text-6xl w-20 h-20 rounded-full flex items-center justify-center bg-background">
@@ -73,13 +66,13 @@ const EmpleadoDetailModal = ({
           {/* Grid de información */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Email */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm text-textSecondary mb-1">Email</p>
               <p className="font-medium text-textMain">{employee.email}</p>
             </div>
 
             {/* Teléfono */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm text-textSecondary mb-1">Teléfono</p>
               <p className="font-medium text-textMain">
                 {employee.telefono || "No especificado"}
@@ -87,7 +80,7 @@ const EmpleadoDetailModal = ({
             </div>
 
             {/* Fecha de Ingreso */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm text-textSecondary mb-1">
                 Fecha de Ingreso
               </p>
@@ -97,7 +90,7 @@ const EmpleadoDetailModal = ({
             </div>
 
             {/* Estado */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm text-textSecondary mb-1">Estado</p>
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium inline-block ${
@@ -110,7 +103,7 @@ const EmpleadoDetailModal = ({
 
             {/* Último Acceso (opcional) */}
             {employee.ultimoAcceso && (
-              <div className="p-4 rounded-lg bg-background md:col-span-2">
+              <div className="p-4 rounded-lg bg-gray-50 md:col-span-2">
                 <p className="text-sm text-textSecondary mb-1">Último Acceso</p>
                 <p className="font-medium text-textMain">
                   {formatDate(employee.ultimoAcceso)}
@@ -123,35 +116,41 @@ const EmpleadoDetailModal = ({
           <div className="flex gap-3 pt-4">
             {employee.rol !== "admin" ? (
               <>
-                <button
+                <PermissionButton
+                  permission={PERMISSIONS.EMPLEADOS.UPDATE}
                   onClick={() => {
                     onClose();
                     onEdit(employee);
                   }}
-                  className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                  variant="primary"
+                  className="flex-1"
                 >
                   Editar
-                </button>
+                </PermissionButton>
                 {employee.activo ? (
-                  <button
+                  <PermissionButton
+                    permission={PERMISSIONS.EMPLEADOS.DELETE}
                     onClick={() => {
                       onClose();
                       onDelete(employee);
                     }}
-                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-red-500"
+                    variant="danger"
+                    className="flex-1"
                   >
                     Desactivar
-                  </button>
+                  </PermissionButton>
                 ) : (
-                  <button
+                  <PermissionButton
+                    permission={PERMISSIONS.EMPLEADOS.UPDATE}
                     onClick={() => {
                       onClose();
                       onReactivate(employee);
                     }}
-                    className="flex-1 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-green-500"
+                    variant="success"
+                    className="flex-1"
                   >
                     Reactivar
-                  </button>
+                  </PermissionButton>
                 )}
               </>
             ) : (

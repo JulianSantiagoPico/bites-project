@@ -32,6 +32,15 @@ export const PERMISSIONS = {
     CREATE: "productos:create",
     UPDATE: "productos:update",
     DELETE: "productos:delete",
+    MANAGE_CATEGORIES: "productos:manage_categories", // Gestionar categorías
+  },
+
+  // Módulo de Inventario
+  INVENTARIO: {
+    VIEW: "inventario:view",
+    CREATE: "inventario:create",
+    UPDATE: "inventario:update",
+    DELETE: "inventario:delete",
   },
 
   // Módulo de Cocina
@@ -46,6 +55,7 @@ export const PERMISSIONS = {
     CREATE: "mesas:create",
     UPDATE: "mesas:update",
     DELETE: "mesas:delete",
+    MANAGE_LOCATIONS: "mesas:manage_locations", // Gestionar ubicaciones
   },
 
   // Módulo de Reservas
@@ -54,6 +64,7 @@ export const PERMISSIONS = {
     CREATE: "reservas:create",
     UPDATE: "reservas:update",
     DELETE: "reservas:delete",
+    MANAGE_OCCASIONS: "reservas:manage_occasions", // Gestionar ocasiones
   },
 
   // Módulo de Empleados
@@ -62,6 +73,7 @@ export const PERMISSIONS = {
     CREATE: "empleados:create",
     UPDATE: "empleados:update",
     DELETE: "empleados:delete",
+    MANAGE_ROLES: "empleados:manage_roles", // Gestionar roles
   },
 
   // Módulo de Estadísticas
@@ -85,6 +97,7 @@ export const ROLE_PERMISSIONS = {
     ...Object.values(PERMISSIONS.PERFIL),
     ...Object.values(PERMISSIONS.TOMAR_PEDIDO),
     ...Object.values(PERMISSIONS.PRODUCTOS),
+    ...Object.values(PERMISSIONS.INVENTARIO),
     ...Object.values(PERMISSIONS.COCINA),
     ...Object.values(PERMISSIONS.MESAS),
     ...Object.values(PERMISSIONS.RESERVAS),

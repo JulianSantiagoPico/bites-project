@@ -98,69 +98,6 @@ const restauranteSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-
-    // Roles personalizados del restaurante
-    customRoles: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Iconos para los roles personalizados
-    rolesIcons: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Permisos personalizados por rol
-    customRolePermissions: {
-      type: Map,
-      of: [String],
-      default: {},
-    },
-
-    // Ocasiones personalizadas del restaurante
-    customOcasiones: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Iconos para las ocasiones personalizadas
-    ocasionesIcons: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Ubicaciones personalizadas del restaurante
-    customUbicaciones: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Iconos para las ubicaciones personalizadas
-    ubicacionesIcons: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Categorías personalizadas del restaurante
-    customCategorias: {
-      type: Map,
-      of: String,
-      default: {},
-    },
-
-    // Iconos para las categorías personalizadas
-    categoriasIcons: {
-      type: Map,
-      of: String,
-      default: {},
-    },
   },
   {
     timestamps: true,

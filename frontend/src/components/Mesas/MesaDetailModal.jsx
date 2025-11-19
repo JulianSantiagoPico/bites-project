@@ -5,6 +5,7 @@ import {
   getMeseroNombre,
   formatCapacidad,
 } from "../../utils/mesasUtils";
+import { Table, X, Info, User, FileText, Calendar } from "lucide-react";
 
 const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
   if (!isOpen || !mesa) return null;
@@ -30,25 +31,21 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
       onClick={onClose}
     >
       <div
-        className="rounded-xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
-        style={{ backgroundColor: "white" }}
+        className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div
-              className="text-5xl w-20 h-20 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "#F3F4F6" }}
-            >
+        {/* Header con título morado y línea divisora */}
+        <div className="sticky top-0 z-10 bg-primary px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="text-4xl w-16 h-16 rounded-full flex items-center justify-center bg-white/20">
               {ubicacionIcon}
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-primary">
+              <h2 className="text-xl font-bold text-white">
                 Mesa #{mesa.numero}
-              </h3>
+              </h2>
               <span
-                className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+                className="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold"
                 style={{
                   backgroundColor: estadoColor.bgColor,
                   color: estadoColor.color,
@@ -60,37 +57,22 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 text-textMain"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="space-y-6">
+        {/* Content */}
+        <div className="p-6 space-y-6">
           {/* Información Básica */}
           <div>
             <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-              <span>ℹ️</span>
+              <Info className="w-5 h-5" />
               Información Básica
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div
-                className="p-4 rounded-lg"
-                style={{ backgroundColor: "#F9FAFB" }}
-              >
+              <div className="p-4 rounded-lg bg-gray-50">
                 <p className="text-sm text-textSecondary mb-1">Capacidad</p>
                 <p className="text-lg font-semibold text-textMain flex items-center gap-2">
                   <span>👥</span>
@@ -98,10 +80,7 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
                 </p>
               </div>
 
-              <div
-                className="p-4 rounded-lg"
-                style={{ backgroundColor: "#F9FAFB" }}
-              >
+              <div className="p-4 rounded-lg bg-gray-50">
                 <p className="text-sm text-textSecondary mb-1">Ubicación</p>
                 <p className="text-lg font-semibold text-textMain flex items-center gap-2">
                   <span>{ubicacionIcon}</span>
@@ -114,13 +93,10 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
           {/* Mesero Asignado */}
           <div>
             <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-              <span>👤</span>
+              <User className="w-5 h-5" />
               Mesero Asignado
             </h3>
-            <div
-              className="p-4 rounded-lg"
-              style={{ backgroundColor: "#F9FAFB" }}
-            >
+            <div className="p-4 rounded-lg bg-gray-50">
               {mesa.meseroAsignado ? (
                 <div>
                   <p className="text-lg font-semibold text-textMain">
@@ -147,13 +123,10 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
           {mesa.notas && (
             <div>
               <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-                <span>📝</span>
+                <FileText className="w-5 h-5" />
                 Notas
               </h3>
-              <div
-                className="p-4 rounded-lg"
-                style={{ backgroundColor: "#F9FAFB" }}
-              >
+              <div className="p-4 rounded-lg bg-gray-50">
                 <p className="text-textMain">{mesa.notas}</p>
               </div>
             </div>
@@ -162,13 +135,10 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
           {/* Información de Auditoría */}
           <div>
             <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-              <span>📅</span>
+              <Calendar className="w-5 h-5" />
               Información del Sistema
             </h3>
-            <div
-              className="p-4 rounded-lg space-y-2"
-              style={{ backgroundColor: "#F9FAFB" }}
-            >
+            <div className="p-4 rounded-lg space-y-2 bg-gray-50">
               <div className="flex justify-between">
                 <span className="text-sm text-textSecondary">
                   Fecha de creación:
@@ -219,10 +189,7 @@ const MesaDetailModal = ({ mesa, isOpen, onClose, onEdit }) => {
         </div>
 
         {/* Footer */}
-        <div
-          className="flex gap-3 pt-6 border-t"
-          style={{ borderColor: "#E5E7EB" }}
-        >
+        <div className="sticky bottom-0 bg-white px-6 py-4 border-t flex gap-3 z-10">
           <button
             onClick={onClose}
             className="flex-1 px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity bg-gray-100 text-textMain"

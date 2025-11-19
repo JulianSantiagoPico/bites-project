@@ -1,5 +1,13 @@
 import Ubicacion from "../models/Ubicacion.js";
 
+// Ubicaciones predeterminadas
+const DEFAULT_UBICACIONES = [
+  { key: "terraza", label: "Terraza", icon: "🌳", orden: 1 },
+  { key: "interior", label: "Interior", icon: "🏠", orden: 2 },
+  { key: "barra", label: "Barra", icon: "🍺", orden: 3 },
+  { key: "vip", label: "VIP", icon: "⭐", orden: 4 },
+];
+
 /**
  * @desc    Obtener ubicaciones disponibles del restaurante
  * @route   GET /api/ubicaciones
@@ -12,6 +20,28 @@ export const getUbicaciones = async (req, res) => {
       restauranteId: req.user.restauranteId,
       activo: true,
     }).sort({ orden: 1, createdAt: 1 });
+
+    // Si no hay ubicaciones, devolver las predeterminadas
+    if (ubicaciones.length === 0) {
+      const ubicacionesDisplay = {};
+      const ubicacionesIcons = {};
+      const ubicacionesList = [];
+
+      DEFAULT_UBICACIONES.forEach((ubicacion) => {
+        ubicacionesDisplay[ubicacion.key] = ubicacion.label;
+        ubicacionesIcons[ubicacion.key] = ubicacion.icon;
+        ubicacionesList.push(ubicacion.key);
+      });
+
+      return res.json({
+        success: true,
+        data: {
+          ubicacionesDisplay,
+          ubicacionesList,
+          ubicacionesIcons,
+        },
+      });
+    }
 
     // Transformar a formato Display, List e Icons
     const ubicacionesDisplay = {};

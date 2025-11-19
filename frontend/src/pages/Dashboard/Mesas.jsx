@@ -11,6 +11,8 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { useMesas } from "../../hooks/useMesas";
 import { useUbicaciones } from "../../hooks/useUbicaciones";
 import { Settings, Table, Plus, XCircle, UtensilsCrossed } from "lucide-react";
+import PermissionButton from "../../components/PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 const Mesas = () => {
   const [showModal, setShowModal] = useState(false);
@@ -109,21 +111,23 @@ const Mesas = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button
+          <PermissionButton
+            permission={PERMISSIONS.MESAS.MANAGE_LOCATIONS}
             onClick={() => setShowUbicacionesModal(true)}
-            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-colors flex items-center gap-2 justify-center"
+            variant="secondary"
             title="Gestionar Ubicaciones"
           >
             <Settings className="w-5 h-5" />
             <span className="hidden sm:inline">Gestionar Ubicaciones</span>
-          </button>
-          <button
+          </PermissionButton>
+          <PermissionButton
+            permission={PERMISSIONS.MESAS.CREATE}
             onClick={() => handleOpenModal()}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary flex items-center gap-2 justify-center md:justify-start"
+            variant="primary"
           >
             <Plus className="w-5 h-5" />
             Nueva Mesa
-          </button>
+          </PermissionButton>
         </div>
       </div>
 
@@ -136,6 +140,13 @@ const Mesas = () => {
         setFilterUbicacion={setFilterUbicacion}
         filterEstado={filterEstado}
         setFilterEstado={setFilterEstado}
+        ubicaciones={Object.entries(ubicaciones.ubicacionesDisplay || {}).map(
+          ([key, label]) => ({
+            key,
+            label,
+            icon: ubicaciones.ubicacionesIcons?.[key] || "📍",
+          })
+        )}
       />
 
       {loading ? (
@@ -175,12 +186,14 @@ const Mesas = () => {
           {!searchTerm &&
             filterUbicacion === "Todas" &&
             filterEstado === "Todos" && (
-              <button
+              <PermissionButton
+                permission={PERMISSIONS.MESAS.CREATE}
                 onClick={() => handleOpenModal()}
-                className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                variant="primary"
+                className="mx-auto"
               >
                 Agregar Mesa
-              </button>
+              </PermissionButton>
             )}
         </div>
       ) : (

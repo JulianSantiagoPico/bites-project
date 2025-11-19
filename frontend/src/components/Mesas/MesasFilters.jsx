@@ -7,6 +7,7 @@ const MesasFilters = ({
   setFilterUbicacion,
   filterEstado,
   setFilterEstado,
+  ubicaciones = [],
 }) => {
   const handleClearSearch = () => {
     setSearchTerm("");
@@ -67,10 +68,11 @@ const MesasFilters = ({
               className="w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none transition-colors border-secondary/40 text-textMain appearance-none bg-white cursor-pointer"
             >
               <option value="Todas">Todas las ubicaciones</option>
-              <option value="Interior">🏠 Interior</option>
-              <option value="Terraza">🌳 Terraza</option>
-              <option value="Bar">🍷 Bar</option>
-              <option value="VIP">⭐ VIP</option>
+              {ubicaciones.map((ubi) => (
+                <option key={ubi.key} value={ubi.key}>
+                  {ubi.icon} {ubi.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>

@@ -9,8 +9,8 @@ import {
   asignarMesa,
   getEstadisticas,
 } from "../controllers/reserva.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreateReserva,
   validateUpdateReserva,
@@ -26,32 +26,32 @@ router.use(protect);
 // Rutas de estadísticas (deben ir antes de /:id)
 router.get(
   "/estadisticas",
-  authorize(ROLES.ADMIN, ROLES.GERENTE),
+  checkPermission(PERMISSIONS.RESERVAS.VIEW),
   getEstadisticas
 );
 
-// Rutas principales de reservas - Solo Admin y Gerente
+// Rutas principales de reservas
 router
   .route("/")
-  .get(authorize(ROLES.ADMIN, ROLES.GERENTE), getReservas)
+  .get(checkPermission(PERMISSIONS.RESERVAS.VIEW), getReservas)
   .post(
-    authorize(ROLES.ADMIN, ROLES.GERENTE),
+    checkPermission(PERMISSIONS.RESERVAS.CREATE),
     validateCreateReserva,
     createReserva
   );
 
-// Ruta para cambiar estado - Admin y Gerente
+// Ruta para cambiar estado
 router.patch(
   "/:id/estado",
-  authorize(ROLES.ADMIN, ROLES.GERENTE),
+  checkPermission(PERMISSIONS.RESERVAS.UPDATE),
   validateChangeEstadoReserva,
   changeEstado
 );
 
-// Ruta para asignar mesa - Admin y Gerente
+// Ruta para asignar mesa
 router.patch(
   "/:id/asignar-mesa",
-  authorize(ROLES.ADMIN, ROLES.GERENTE),
+  checkPermission(PERMISSIONS.RESERVAS.UPDATE),
   validateAsignarMesaReserva,
   asignarMesa
 );
@@ -59,12 +59,12 @@ router.patch(
 // Rutas por ID
 router
   .route("/:id")
-  .get(authorize(ROLES.ADMIN, ROLES.GERENTE), getReservaById)
+  .get(checkPermission(PERMISSIONS.RESERVAS.VIEW), getReservaById)
   .put(
-    authorize(ROLES.ADMIN, ROLES.GERENTE),
+    checkPermission(PERMISSIONS.RESERVAS.UPDATE),
     validateUpdateReserva,
     updateReserva
   )
-  .delete(authorize(ROLES.ADMIN, ROLES.GERENTE), deleteReserva);
+  .delete(checkPermission(PERMISSIONS.RESERVAS.DELETE), deleteReserva);
 
 export default router;

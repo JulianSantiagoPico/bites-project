@@ -9,6 +9,9 @@ import {
 } from "../../utils/productosUtils";
 
 import { Package } from "lucide-react";
+import PermissionButton from "../PermissionButton";
+import PermissionGuard from "../PermissionGuard";
+import { PERMISSIONS } from "../../utils/permissions";
 
 /**
  * Componente de tabla para mostrar productos
@@ -21,6 +24,10 @@ const ProductosTable = ({
   onDelete,
   onReactivate,
   onToggleDisponibilidad,
+  searchTerm = "",
+  filterCategoria = "Todo",
+  filterDisponibilidad = "Todos",
+  onCreate,
 }) => {
   if (productos.length === 0) {
     return (
@@ -28,12 +35,29 @@ const ProductosTable = ({
         <div className="text-6xl mb-4">
           <Package className="w-16 h-16 mx-auto mb-4 text-gray-400" />
         </div>
-        <p className="text-lg font-medium text-textSecondary">
+        <p className="text-lg font-medium text-textMain mb-2">
           No se encontraron productos
         </p>
-        <p className="text-sm text-textSecondary mt-2">
-          Intenta ajustar los filtros de búsqueda
+        <p className="text-textSecondary mb-4">
+          {searchTerm ||
+          filterCategoria !== "Todo" ||
+          filterDisponibilidad !== "Todos"
+            ? "Intenta ajustar los filtros de búsqueda"
+            : "Comienza agregando tu primer producto"}
         </p>
+        {!searchTerm &&
+          filterCategoria === "Todo" &&
+          filterDisponibilidad === "Todos" &&
+          onCreate && (
+            <PermissionButton
+              permission={PERMISSIONS.PRODUCTOS.CREATE}
+              onClick={onCreate}
+              variant="primary"
+              className="mx-auto"
+            >
+              Agregar Producto
+            </PermissionButton>
+          )}
       </div>
     );
   }

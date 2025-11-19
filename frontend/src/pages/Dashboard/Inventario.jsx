@@ -9,6 +9,8 @@ import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useInventario } from "../../hooks/useInventario";
 import { Package, Plus, AlertTriangle, XCircle } from "lucide-react";
+import PermissionButton from "../../components/PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 const Inventario = () => {
   // Estados locales del componente (UI)
@@ -113,13 +115,14 @@ const Inventario = () => {
             <p className="text-textSecondary">Control de stock y suministros</p>
           </div>
         </div>
-        <button
+        <PermissionButton
+          permission={PERMISSIONS.INVENTARIO.CREATE}
           onClick={() => handleOpenModal()}
-          className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
+          variant="primary"
         >
           <Plus className="w-5 h-5" />
           Agregar Item
-        </button>
+        </PermissionButton>
       </div>
 
       {/* Stats */}

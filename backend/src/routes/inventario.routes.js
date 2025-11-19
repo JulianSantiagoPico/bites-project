@@ -9,8 +9,8 @@ import {
   getEstadisticas,
   getAlertas,
 } from "../controllers/inventario.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreateInventario,
   validateUpdateInventario,
@@ -30,12 +30,16 @@ router.get("/alertas", getAlertas);
 router
   .route("/")
   .get(getInventario) // Cualquier usuario autenticado puede ver el inventario
-  .post(authorize(ROLES.ADMIN), validateCreateInventario, createItem); // Solo admin puede crear
+  .post(
+    checkPermission(PERMISSIONS.INVENTARIO.CREATE),
+    validateCreateInventario,
+    createItem
+  );
 
-// Ruta para ajustar stock - Admin y Cocinero
+// Ruta para ajustar stock - Requiere permiso de actualizar inventario
 router.post(
   "/:id/ajustar",
-  authorize(ROLES.ADMIN, ROLES.COCINERO),
+  checkPermission(PERMISSIONS.INVENTARIO.UPDATE),
   validateStockAdjustment,
   adjustStock
 );
@@ -44,7 +48,11 @@ router.post(
 router
   .route("/:id")
   .get(getItemById) // Cualquier usuario autenticado puede ver un item
-  .put(authorize(ROLES.ADMIN), validateUpdateInventario, updateItem) // Solo admin puede actualizar
-  .delete(authorize(ROLES.ADMIN), deleteItem); // Solo admin puede eliminar
+  .put(
+    checkPermission(PERMISSIONS.INVENTARIO.UPDATE),
+    validateUpdateInventario,
+    updateItem
+  )
+  .delete(checkPermission(PERMISSIONS.INVENTARIO.DELETE), deleteItem);
 
 export default router;

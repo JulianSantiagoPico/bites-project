@@ -9,8 +9,8 @@ import {
   cancelPedido,
   getEstadisticas,
 } from "../controllers/pedido.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreatePedido,
   validateUpdatePedido,
@@ -33,15 +33,15 @@ router
   .route("/")
   .get(getPedidos) // Todos los usuarios autenticados pueden ver pedidos
   .post(
-    authorize(ROLES.ADMIN, ROLES.MESERO),
+    checkPermission(PERMISSIONS.TOMAR_PEDIDO.CREATE),
     validateCreatePedido,
     createPedido
-  ); // Admin y Mesero pueden crear
+  );
 
-// Ruta para cambiar estado - Admin, Mesero, Cocinero, Cajero
+// Ruta para cambiar estado - Requiere permiso de tomar pedido
 router.patch(
   "/:id/estado",
-  authorize(ROLES.ADMIN, ROLES.MESERO, ROLES.COCINERO, ROLES.CAJERO),
+  checkPermission(PERMISSIONS.TOMAR_PEDIDO.CREATE),
   validateChangeEstadoPedido,
   changeEstado
 );
@@ -49,8 +49,12 @@ router.patch(
 // Rutas por ID
 router
   .route("/:id")
-  .get(getPedidoById) // Todos los usuarios autenticados pueden ver un pedido
-  .put(authorize(ROLES.ADMIN, ROLES.MESERO), validateUpdatePedido, updatePedido) // Admin y Mesero pueden actualizar
-  .delete(authorize(ROLES.ADMIN, ROLES.MESERO), cancelPedido); // Admin y Mesero pueden cancelar
+  .get(getPedidoById)
+  .put(
+    checkPermission(PERMISSIONS.TOMAR_PEDIDO.CREATE),
+    validateUpdatePedido,
+    updatePedido
+  )
+  .delete(checkPermission(PERMISSIONS.TOMAR_PEDIDO.CREATE), cancelPedido);
 
 export default router;

@@ -8,6 +8,7 @@ import {
   formatDateTime,
   getTagColor,
 } from "../../utils/productosUtils";
+import { UtensilsCrossed, X } from "lucide-react";
 
 /**
  * Modal para ver detalles completos de un producto
@@ -30,39 +31,27 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
 
       {/* Modal */}
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl animate-scale-in bg-white">
-        {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b bg-white border-secondary/20">
+        {/* Header con título morado y línea divisora */}
+        <div className="sticky top-0 z-10 bg-primary px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="text-4xl w-14 h-14 rounded-full flex items-center justify-center bg-background">
+            <div className="text-3xl w-12 h-12 rounded-full flex items-center justify-center bg-white/20">
               {producto.imagen || getCategoryIcon(producto.categoria)}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-primary">
+              <h2 className="text-xl font-bold text-white">
                 {producto.nombre}
               </h2>
-              <p className="text-sm text-textSecondary">
+              <p className="text-sm text-white/80">
                 {getCategoryLabel(producto.categoria)}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-textSecondary"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
             aria-label="Cerrar modal"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -81,7 +70,7 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
           {/* Información Principal */}
           <div className="grid grid-cols-2 gap-4">
             {/* Precio */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm font-medium mb-1 text-textSecondary">
                 Precio
               </p>
@@ -91,7 +80,7 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
             </div>
 
             {/* Tiempo de Preparación */}
-            <div className="p-4 rounded-lg bg-background">
+            <div className="p-4 rounded-lg bg-gray-50">
               <p className="text-sm font-medium mb-1 text-textSecondary">
                 Tiempo de Preparación
               </p>
@@ -104,7 +93,7 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
           {/* Estados y Badges */}
           <div className="space-y-3">
             {/* Disponibilidad */}
-            <div className="flex items-center justify-between p-3 rounded-lg bg-background">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
               <span className="text-sm font-medium text-textMain">
                 Disponibilidad
               </span>
@@ -116,7 +105,7 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
             </div>
 
             {/* Estado */}
-            <div className="flex items-center justify-between p-3 rounded-lg bg-background">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
               <span className="text-sm font-medium text-textMain">Estado</span>
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor.bg} ${statusColor.text}`}
@@ -126,7 +115,7 @@ const ProductoDetailModal = ({ isOpen, onClose, producto }) => {
             </div>
 
             {/* Destacado */}
-            <div className="flex items-center justify-between p-3 rounded-lg bg-background">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
               <span className="text-sm font-medium text-textMain">
                 Producto Destacado
               </span>

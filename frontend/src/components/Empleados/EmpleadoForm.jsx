@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PasswordInput, { validatePassword } from "../PasswordInput";
 
 const EmpleadoForm = ({
   employee,
@@ -65,8 +66,11 @@ const EmpleadoForm = ({
     if (!employee) {
       if (!formData.password) {
         newErrors.password = "La contraseña es requerida";
-      } else if (formData.password.length < 6) {
-        newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+      } else {
+        const passwordValidation = validatePassword(formData.password);
+        if (!passwordValidation.cumpleTodos) {
+          newErrors.password = passwordValidation.mensaje;
+        }
       }
     }
 
@@ -279,24 +283,17 @@ const EmpleadoForm = ({
 
       {/* Password */}
       {!employee && (
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-textMain">
-            Contraseña <span className="text-primary">*</span>
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={`px-3 py-2.5 rounded-lg border text-sm bg-white outline-none transition-all text-textMain ${
-              errors.password ? "border-primary" : "border-secondary"
-            }`}
-            placeholder="Mínimo 6 caracteres"
-          />
-          {errors.password && (
-            <span className="text-xs text-primary">{errors.password}</span>
-          )}
-        </div>
+        <PasswordInput
+          value={formData.password}
+          onChange={handleChange}
+          name="password"
+          label="Contraseña"
+          error={errors.password}
+          showRequirements={true}
+          disabled={isSubmitting}
+          required={true}
+          className="outline-none border transition-all"
+        />
       )}
 
       {/* Rol */}
@@ -311,7 +308,7 @@ const EmpleadoForm = ({
               className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all text-textMain ${
                 formData.rol === role.value
                   ? "border-accent bg-backgroundSecondary shadow-[0_0_0_3px_rgba(230,175,46,0.2)]"
-                  : "border-secondary bg-background"
+                  : "border-secondary bg-gray-50"
               }`}
             >
               <input

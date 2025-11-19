@@ -11,6 +11,8 @@ import Notification from "../../components/Notification";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useReservas } from "../../hooks/useReservas";
 import { useOcasiones } from "../../hooks/useOcasiones";
+import PermissionButton from "../../components/PermissionButton";
+import { PERMISSIONS } from "../../utils/permissions";
 
 const Reservas = () => {
   // Estados locales del componente (UI)
@@ -120,21 +122,23 @@ const Reservas = () => {
           </div>
         </div>
         <div className="flex gap-3">
-          <button
+          <PermissionButton
+            permission={PERMISSIONS.RESERVAS.MANAGE_OCCASIONS}
             onClick={() => setShowOcasionesModal(true)}
-            className="px-4 py-3 rounded-lg font-medium text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all flex items-center gap-2"
+            variant="secondary"
             title="Gestionar Ocasiones"
           >
             <PartyPopper className="w-5 h-5" />
             <span className="hidden md:inline">Gestionar Ocasiones</span>
-          </button>
-          <button
+          </PermissionButton>
+          <PermissionButton
+            permission={PERMISSIONS.RESERVAS.CREATE}
             onClick={() => handleOpenModal()}
-            className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity flex items-center gap-2 bg-primary"
+            variant="primary"
           >
             <Plus className="w-5 h-5" />
             Nueva Reserva
-          </button>
+          </PermissionButton>
         </div>
       </div>
       {/* Stats */}
@@ -195,12 +199,14 @@ const Reservas = () => {
                   : "Comienza agregando tu primera reserva"}
               </p>
               {!searchTerm && filterEstado === "Todos" && !filterFecha && (
-                <button
+                <PermissionButton
+                  permission={PERMISSIONS.RESERVAS.CREATE}
                   onClick={() => handleOpenModal()}
-                  className="px-6 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-opacity bg-primary"
+                  variant="primary"
+                  className="mx-auto"
                 >
                   Agregar Reserva
-                </button>
+                </PermissionButton>
               )}
             </div>
           )}

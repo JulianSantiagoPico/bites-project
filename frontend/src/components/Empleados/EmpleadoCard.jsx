@@ -15,6 +15,8 @@ import {
   getRoleIcon,
   getCurrentRoles,
 } from "../../utils/empleadosUtils";
+import PermissionGuard from "../PermissionGuard";
+import { PERMISSIONS } from "../../utils/permissions";
 
 /**
  * Componente de tarjeta individual para mostrar información de un empleado
@@ -88,40 +90,51 @@ const EmpleadoCard = ({
                   </button>
                   {employee.rol !== "admin" && (
                     <>
-                      <button
-                        onClick={() => {
-                          onEdit(employee);
-                          setShowMenu(false);
-                        }}
-                        className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2 text-sm text-textMain"
+                      <PermissionGuard
+                        permission={PERMISSIONS.EMPLEADOS.UPDATE}
                       >
-                        <Edit2 className="w-4 h-4" />
-                        Editar
-                      </button>
-                      <hr className="my-1" style={{ borderColor: "#E5E7EB" }} />
-                      {employee.activo ? (
                         <button
                           onClick={() => {
-                            onDelete(employee);
+                            onEdit(employee);
                             setShowMenu(false);
                           }}
-                          className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 text-sm"
+                          className="w-full text-left px-3 py-2 hover:bg-gray-50 flex items-center gap-2 text-sm text-textMain"
                         >
-                          <UserX className="w-4 h-4" />
-                          Desactivar
+                          <Edit2 className="w-4 h-4" />
+                          Editar
                         </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            onReactivate(employee);
-                            setShowMenu(false);
-                          }}
-                          className="w-full text-left px-3 py-2 hover:bg-green-50 text-green-600 flex items-center gap-2 text-sm"
-                        >
-                          <CheckCircle className="w-4 h-4" />
-                          Reactivar
-                        </button>
-                      )}
+                      </PermissionGuard>
+                      <PermissionGuard
+                        permission={PERMISSIONS.EMPLEADOS.DELETE}
+                      >
+                        <hr
+                          className="my-1"
+                          style={{ borderColor: "#E5E7EB" }}
+                        />
+                        {employee.activo ? (
+                          <button
+                            onClick={() => {
+                              onDelete(employee);
+                              setShowMenu(false);
+                            }}
+                            className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2 text-sm"
+                          >
+                            <UserX className="w-4 h-4" />
+                            Desactivar
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              onReactivate(employee);
+                              setShowMenu(false);
+                            }}
+                            className="w-full text-left px-3 py-2 hover:bg-green-50 text-green-600 flex items-center gap-2 text-sm"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            Reactivar
+                          </button>
+                        )}
+                      </PermissionGuard>
                     </>
                   )}
                 </div>

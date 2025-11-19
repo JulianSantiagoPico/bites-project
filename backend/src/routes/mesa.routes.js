@@ -10,8 +10,8 @@ import {
   getEstadisticas,
   getMesasDisponibles,
 } from "../controllers/mesa.controller.js";
-import { protect, authorize } from "../middlewares/auth.js";
-import { ROLES } from "../config/roles.js";
+import { protect, checkPermission } from "../middlewares/auth.js";
+import { PERMISSIONS } from "../config/roles.js";
 import {
   validateCreateMesa,
   validateUpdateMesa,
@@ -32,20 +32,24 @@ router.get("/disponibles", getMesasDisponibles);
 router
   .route("/")
   .get(getMesas) // Cualquier usuario autenticado puede ver las mesas
-  .post(authorize(ROLES.ADMIN), validateCreateMesa, createMesa); // Solo admin puede crear
+  .post(
+    checkPermission(PERMISSIONS.MESAS.CREATE),
+    validateCreateMesa,
+    createMesa
+  );
 
-// Ruta para cambiar estado - Admin, Mesero y Gerente
+// Ruta para cambiar estado - Requiere permiso de actualizar mesas
 router.patch(
   "/:id/estado",
-  authorize(ROLES.ADMIN, ROLES.MESERO, ROLES.GERENTE),
+  checkPermission(PERMISSIONS.MESAS.UPDATE),
   validateChangeEstado,
   changeEstado
 );
 
-// Ruta para asignar mesero - Admin y Gerente
+// Ruta para asignar mesero - Requiere permiso de actualizar mesas
 router.patch(
   "/:id/asignar",
-  authorize(ROLES.ADMIN, ROLES.GERENTE),
+  checkPermission(PERMISSIONS.MESAS.UPDATE),
   validateAsignarMesero,
   asignarMesero
 );
@@ -54,7 +58,11 @@ router.patch(
 router
   .route("/:id")
   .get(getMesaById) // Cualquier usuario autenticado puede ver una mesa
-  .put(authorize(ROLES.ADMIN), validateUpdateMesa, updateMesa) // Solo admin puede actualizar
-  .delete(authorize(ROLES.ADMIN), deleteMesa); // Solo admin puede eliminar
+  .put(
+    checkPermission(PERMISSIONS.MESAS.UPDATE),
+    validateUpdateMesa,
+    updateMesa
+  )
+  .delete(checkPermission(PERMISSIONS.MESAS.DELETE), deleteMesa);
 
 export default router;
