@@ -1,0 +1,21 @@
+# Archivo docker-compose.override.yml
+# Este archivo se usa para sobrescribir configuraciones localmente
+# NO lo subas al repositorio (está en .gitignore)
+
+version: '3.8'
+
+services:
+  # Ejemplo: Exponer MongoDB en un puerto diferente
+  # mongodb:
+  #   ports:
+  #     - "27018:27017"
+
+  # Ejemplo: Montar volúmenes adicionales para desarrollo
+  # backend:
+  #   volumes:
+  #     - ./backend/logs:/app/logs
+
+  # Ejemplo: Variables de entorno adicionales
+  # frontend:
+  #   environment:
+  #     - VITE_DEBUG=true
