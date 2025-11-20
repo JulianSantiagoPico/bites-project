@@ -11,7 +11,7 @@ WORKDIR /app
 COPY backend/package*.json ./
 
 # Instalar dependencias
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Etapa de producción
 FROM node:20-alpine
