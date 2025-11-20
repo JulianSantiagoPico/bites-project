@@ -46,8 +46,17 @@ export const SocketProvider = ({ children }) => {
 
     // Crear nueva conexión
     restauranteIdRef.current = user.restauranteId;
-    const SOCKET_URL =
-      import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+    // Determinar la URL del Socket
+    let socketUrl = import.meta.env.VITE_SOCKET_URL;
+
+    if (!socketUrl) {
+      // Si no hay VITE_SOCKET_URL, intentar usar VITE_API_URL
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      // Si la API URL termina en /api, se lo quitamos para obtener la raíz
+      socketUrl = apiUrl.replace(/\/api\/?$/, "");
+    }
+
+    const SOCKET_URL = socketUrl;
 
     const newSocket = io(SOCKET_URL, {
       transports: ["websocket", "polling"],
