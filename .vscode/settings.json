@@ -1,5 +1,0 @@
-{
-  "eslint.enable": true,
-  "eslint.workingDirectories": ["./backend"],
-  "eslint.validate": ["javascript"]
-}
