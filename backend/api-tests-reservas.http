@@ -208,13 +208,22 @@ Authorization: Bearer {{token}}
   "mesaId": "673a8c1234567890abcdef01"
 }
 
-### Desasignar mesa de reserva
+### Desasignar mesa de reserva (con null)
 PATCH {{baseURL}}/reservas/{{reservaId}}/asignar-mesa
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
   "mesaId": null
+}
+
+### Desasignar mesa de reserva (con cadena vacía)
+PATCH {{baseURL}}/reservas/{{reservaId}}/asignar-mesa
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "mesaId": ""
 }
 
 ### ============================================

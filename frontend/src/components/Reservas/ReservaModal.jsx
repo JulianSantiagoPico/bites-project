@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Calendar, Save } from "lucide-react";
+import { X, Calendar, Save, MapPin } from "lucide-react";
 import { mesasService } from "../../services/api";
 import {
   getCurrentOcasiones,
@@ -14,7 +14,13 @@ import {
 /**
  * Modal para crear o editar una reserva
  */
-const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
+const ReservaModal = ({
+  isOpen,
+  reserva,
+  onSubmit,
+  onClose,
+  onAsignarMesa,
+}) => {
   const [formData, setFormData] = useState({
     nombreCliente: "",
     telefonoCliente: "",
@@ -446,28 +452,50 @@ const ReservaModal = ({ isOpen, reserva, onSubmit, onClose }) => {
                 >
                   Mesa Asignada (Opcional)
                 </label>
-                <select
-                  name="mesaAsignada"
-                  value={formData.mesaAsignada}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2"
-                  style={{
-                    borderColor: "#d1d5db",
-                    color: textMain,
-                  }}
-                >
-                  <option value="">Sin asignar</option>
-                  {mesas.map((mesa, index) => {
-                    // Intentar ambas formas de acceder al ID
-                    const mesaId = mesa["_id"] || mesa._id || mesa.id;
-                    return (
-                      <option key={mesaId || `mesa-${index}`} value={mesaId}>
-                        Mesa {mesa.numero} - Capacidad: {mesa.capacidad} -{" "}
-                        {mesa.ubicacion}
-                      </option>
-                    );
-                  })}
-                </select>
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <MapPin size={20} style={{ color: "#3b82f6" }} />
+                  <div className="flex-1">
+                    {formData.mesaAsignada ? (
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium" style={{ color: textMain }}>
+                          {(() => {
+                            const mesa = mesas.find(
+                              (m) =>
+                                (m["_id"] || m._id || m.id) ===
+                                formData.mesaAsignada
+                            );
+                            return mesa
+                              ? `Mesa ${mesa.numero} - Capacidad: ${mesa.capacidad}`
+                              : "Mesa asignada";
+                          })()}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => onAsignarMesa?.(reserva || formData)}
+                          className="text-sm px-3 py-1.5 rounded-lg font-medium transition-all hover:opacity-80"
+                          style={{
+                            color: "#7c3aed",
+                            backgroundColor: "rgba(124, 58, 237, 0.1)",
+                          }}
+                        >
+                          Cambiar
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => onAsignarMesa?.(reserva || formData)}
+                        className="text-sm px-3 py-1.5 rounded-lg font-medium transition-all hover:opacity-80"
+                        style={{
+                          color: "#7c3aed",
+                          backgroundColor: "rgba(124, 58, 237, 0.1)",
+                        }}
+                      >
+                        Asignar Mesa
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Notas */}

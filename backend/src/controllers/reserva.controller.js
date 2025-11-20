@@ -504,8 +504,8 @@ export const asignarMesa = async (req, res) => {
       });
     }
 
-    // Si se está desasignando la mesa
-    if (!mesaId) {
+    // Si se está desasignando la mesa (mesaId puede ser null, undefined o cadena vacía)
+    if (!mesaId || mesaId === "") {
       reserva.mesaAsignada = null;
       reserva.modificadoPor = req.user._id;
       await reserva.save();

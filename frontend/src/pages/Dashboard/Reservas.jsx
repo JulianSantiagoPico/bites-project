@@ -103,6 +103,8 @@ const Reservas = () => {
     const success = await asignarMesa(reserva, mesaId);
     if (success) {
       handleCloseAsignarModal();
+      // Cerrar también el modal de detalles si está abierto
+      handleCloseDetailModal();
       // Si estamos editando una reserva, actualizar el estado
       if (editingReserva && editingReserva._id === reserva._id) {
         setEditingReserva((prev) => ({

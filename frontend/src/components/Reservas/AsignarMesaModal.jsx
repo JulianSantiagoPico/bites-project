@@ -81,36 +81,24 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div
-          className="sticky top-0 px-6 py-4 border-b flex items-center justify-between"
-          style={{
-            backgroundColor: "#ffffff",
-            borderColor: "#e5e7eb",
-            zIndex: 10,
-          }}
-        >
+        {/* Header con título morado */}
+        <div className="sticky top-0 z-10 bg-primary px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
-            >
-              <MapPin size={20} style={{ color: "#3b82f6" }} />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20">
+              <MapPin size={20} className="text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold" style={{ color: textMain }}>
-                Asignar Mesa
-              </h2>
-              <p className="text-sm" style={{ color: textSecondary }}>
+              <h2 className="text-xl font-bold text-white">Asignar Mesa</h2>
+              <p className="text-sm text-white/80">
                 {reserva.nombreCliente} - {reserva.numeroPersonas} personas
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
           >
-            <X size={24} style={{ color: textSecondary }} />
+            <X size={20} />
           </button>
         </div>
 
@@ -134,14 +122,14 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                   mesaSeleccionada === "" ? "ring-2" : ""
                 }`}
                 style={{
-                  borderColor: mesaSeleccionada === "" ? "#3b82f6" : "#e5e7eb",
+                  borderColor: mesaSeleccionada === "" ? "#7c3aed" : "#e5e7eb",
                   backgroundColor:
                     mesaSeleccionada === ""
-                      ? "rgba(59, 130, 246, 0.05)"
+                      ? "rgba(124, 58, 237, 0.05)"
                       : "#ffffff",
                   boxShadow:
                     mesaSeleccionada === ""
-                      ? "0 0 0 3px rgba(59, 130, 246, 0.1)"
+                      ? "0 0 0 3px rgba(124, 58, 237, 0.1)"
                       : "none",
                 }}
                 onClick={() => setMesaSeleccionada("")}
@@ -150,9 +138,9 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                   <div className="flex items-center gap-3">
                     <div
                       className="w-12 h-12 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: "rgba(107, 114, 128, 0.1)" }}
+                      style={{ backgroundColor: "rgba(124, 58, 237, 0.1)" }}
                     >
-                      <X size={24} style={{ color: "#6b7280" }} />
+                      <X size={24} style={{ color: "#7c3aed" }} />
                     </div>
                     <div>
                       <p className="font-semibold" style={{ color: textMain }}>
@@ -164,7 +152,7 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                     </div>
                   </div>
                   {mesaSeleccionada === "" && (
-                    <CheckCircle size={24} style={{ color: "#3b82f6" }} />
+                    <CheckCircle size={24} style={{ color: "#7c3aed" }} />
                   )}
                 </div>
               </div>
@@ -189,17 +177,17 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                       } ${!capacidadSuficiente ? "opacity-50" : ""}`}
                       style={{
                         borderColor: esSeleccionada
-                          ? "#3b82f6"
+                          ? "#7c3aed"
                           : esRecomendada
                           ? "#10b981"
                           : "#e5e7eb",
                         backgroundColor: esSeleccionada
-                          ? "rgba(59, 130, 246, 0.05)"
+                          ? "rgba(124, 58, 237, 0.05)"
                           : esRecomendada
                           ? "rgba(16, 185, 129, 0.05)"
                           : "#ffffff",
                         boxShadow: esSeleccionada
-                          ? "0 0 0 3px rgba(59, 130, 246, 0.1)"
+                          ? "0 0 0 3px rgba(124, 58, 237, 0.1)"
                           : "none",
                         cursor: capacidadSuficiente ? "pointer" : "not-allowed",
                       }}
@@ -216,13 +204,13 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                             style={{
                               backgroundColor: esRecomendada
                                 ? "rgba(16, 185, 129, 0.1)"
-                                : "rgba(59, 130, 246, 0.1)",
+                                : "rgba(124, 58, 237, 0.1)",
                             }}
                           >
                             <MapPin
                               size={24}
                               style={{
-                                color: esRecomendada ? "#10b981" : "#3b82f6",
+                                color: esRecomendada ? "#10b981" : "#7c3aed",
                               }}
                             />
                           </div>
@@ -275,7 +263,7 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
                           </div>
                         </div>
                         {esSeleccionada && (
-                          <CheckCircle size={24} style={{ color: "#3b82f6" }} />
+                          <CheckCircle size={24} style={{ color: "#7c3aed" }} />
                         )}
                       </div>
                     </div>
@@ -314,22 +302,7 @@ const AsignarMesaModal = ({ isOpen, reserva, onConfirm, onClose }) => {
           <button
             onClick={handleAsignar}
             disabled={loading || cargandoMesas}
-            className="px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-            style={{
-              color: "#ffffff",
-              backgroundColor: loading || cargandoMesas ? "#9ca3af" : "#3b82f6",
-              cursor: loading || cargandoMesas ? "not-allowed" : "pointer",
-            }}
-            onMouseOver={(e) => {
-              if (!loading && !cargandoMesas) {
-                e.currentTarget.style.backgroundColor = "#2563eb";
-              }
-            }}
-            onMouseOut={(e) => {
-              if (!loading && !cargandoMesas) {
-                e.currentTarget.style.backgroundColor = "#3b82f6";
-              }
-            }}
+            className="px-6 py-2.5 rounded-lg font-medium transition-all hover:opacity-90 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed bg-success text-white"
           >
             <MapPin size={18} />
             {loading ? "Asignando..." : "Confirmar"}
