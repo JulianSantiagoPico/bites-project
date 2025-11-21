@@ -63,10 +63,10 @@ export const SocketProvider = ({ children }) => {
       transports: ["websocket", "polling"],
       upgrade: true,
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 10, // Más intentos para Railway
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      timeout: 20000,
+      timeout: 30000, // Aumentado para coincidir con el servidor
       autoConnect: true,
       withCredentials: true,
     });

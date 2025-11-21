@@ -48,8 +48,8 @@ const io = new Server(httpServer, {
   // Configuración para Railway y producción
   transports: ["websocket", "polling"],
   allowUpgrades: true,
-  pingTimeout: 60000,
-  pingInterval: 25000,
+  pingTimeout: 120000, // 2 minutos - aumentado para Railway
+  pingInterval: 30000, // 30 segundos
 });
 
 // Hacer io accesible globalmente en la aplicación
@@ -131,18 +131,36 @@ io.on("connection", (socket) => {
 
   // Unirse a una sala por restaurante
   socket.on("join:restaurante", (restauranteId) => {
-    socket.join(`restaurante:${restauranteId}`);
-    console.log(`📡 Socket ${socket.id} unido a restaurante:${restauranteId}`);
+    // Convertir a string si es un objeto
+    const idString =
+      typeof restauranteId === "object"
+        ? restauranteId._id || restauranteId.toString()
+        : String(restauranteId);
+
+    socket.join(`restaurante:${idString}`);
+    console.log(`📡 Socket ${socket.id} unido a restaurante:${idString}`);
     // Confirmar unión
-    socket.emit("joined:restaurante", { restauranteId, socketId: socket.id });
+    socket.emit("joined:restaurante", {
+      restauranteId: idString,
+      socketId: socket.id,
+    });
   });
 
   // Unirse a sala de cocina
   socket.on("join:cocina", (restauranteId) => {
-    socket.join(`cocina:${restauranteId}`);
-    console.log(`👨‍🍳 Socket ${socket.id} unido a cocina:${restauranteId}`);
+    // Convertir a string si es un objeto
+    const idString =
+      typeof restauranteId === "object"
+        ? restauranteId._id || restauranteId.toString()
+        : String(restauranteId);
+
+    socket.join(`cocina:${idString}`);
+    console.log(`👨‍🍳 Socket ${socket.id} unido a cocina:${idString}`);
     // Confirmar unión
-    socket.emit("joined:cocina", { restauranteId, socketId: socket.id });
+    socket.emit("joined:cocina", {
+      restauranteId: idString,
+      socketId: socket.id,
+    });
   });
 
   socket.on("disconnect", (reason) => {
