@@ -40,7 +40,12 @@ export const SocketProvider = ({ children }) => {
     }
 
     // Crear nueva conexión
-    restauranteIdRef.current = user.restauranteId;
+    // Asegurar que restauranteId sea un string
+    const restauranteId =
+      typeof user.restauranteId === "object"
+        ? user.restauranteId._id || user.restauranteId.toString()
+        : String(user.restauranteId);
+    restauranteIdRef.current = restauranteId;
 
     // Determinar la URL del Socket
     let socketUrl = import.meta.env.VITE_SOCKET_URL;
@@ -74,7 +79,7 @@ export const SocketProvider = ({ children }) => {
       // Unirse a la sala del restaurante
       if (restauranteIdRef.current) {
         console.log("📡 Uniéndose a restaurante:", restauranteIdRef.current);
-        newSocket.emit("join:restaurante", restauranteIdRef.current);
+        newSocket.emit("join:restaurante", String(restauranteIdRef.current));
       }
     });
 
@@ -96,7 +101,7 @@ export const SocketProvider = ({ children }) => {
       // Re-unirse a la sala del restaurante
       if (restauranteIdRef.current) {
         console.log("📡 Re-uniéndose a restaurante:", restauranteIdRef.current);
-        newSocket.emit("join:restaurante", restauranteIdRef.current);
+        newSocket.emit("join:restaurante", String(restauranteIdRef.current));
       }
     });
 
@@ -127,7 +132,11 @@ export const SocketProvider = ({ children }) => {
    */
   const joinCocina = () => {
     if (socketRef.current && user?.restauranteId) {
-      socketRef.current.emit("join:cocina", user.restauranteId);
+      const restauranteId =
+        typeof user.restauranteId === "object"
+          ? user.restauranteId._id || user.restauranteId.toString()
+          : String(user.restauranteId);
+      socketRef.current.emit("join:cocina", restauranteId);
     }
   };
 
