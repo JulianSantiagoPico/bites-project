@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { pedidosService } from "../services/api";
 import { filterPedidos, calculatePedidosStats } from "../utils/pedidosUtils";
+import { useSocket } from "./useSocket";
 
 export const usePedidos = () => {
   // Estados
@@ -19,10 +20,68 @@ export const usePedidos = () => {
     type: "warning",
   });
 
+  // Hook de WebSocket
+  const { on, off } = useSocket();
+
   // Cargar pedidos al montar
   useEffect(() => {
     loadPedidos();
   }, []);
+
+  // Escuchar eventos de WebSocket
+  useEffect(() => {
+    if (!on || !off) return;
+
+    // Evento: Nuevo pedido creado
+    const handleNuevoPedido = (data) => {
+      console.log("🆕 Nuevo pedido recibido:", data.pedido);
+      setPedidos((prevPedidos) => [data.pedido, ...prevPedidos]);
+    };
+
+    // Evento: Cambio de estado de pedido
+    const handleCambioEstado = (data) => {
+      console.log("🔄 Cambio de estado recibido:", data.pedido);
+      setPedidos((prevPedidos) =>
+        prevPedidos.map((p) =>
+          p.id === data.pedido.id ? { ...p, ...data.pedido } : p
+        )
+      );
+    };
+
+    // Evento: Pedido actualizado
+    const handlePedidoActualizado = (data) => {
+      console.log("✏️ Pedido actualizado recibido:", data.pedido);
+      setPedidos((prevPedidos) =>
+        prevPedidos.map((p) =>
+          p.id === data.pedido.id ? { ...p, ...data.pedido } : p
+        )
+      );
+    };
+
+    // Evento: Pedido cancelado
+    const handlePedidoCancelado = (data) => {
+      console.log("❌ Pedido cancelado recibido:", data.pedido);
+      setPedidos((prevPedidos) =>
+        prevPedidos.map((p) =>
+          p.id === data.pedido.id ? { ...p, ...data.pedido } : p
+        )
+      );
+    };
+
+    // Suscribirse a eventos
+    on("pedido:nuevo", handleNuevoPedido);
+    on("pedido:cambioEstado", handleCambioEstado);
+    on("pedido:actualizado", handlePedidoActualizado);
+    on("pedido:cancelado", handlePedidoCancelado);
+
+    // Cleanup: desuscribirse al desmontar
+    return () => {
+      off("pedido:nuevo", handleNuevoPedido);
+      off("pedido:cambioEstado", handleCambioEstado);
+      off("pedido:actualizado", handlePedidoActualizado);
+      off("pedido:cancelado", handlePedidoCancelado);
+    };
+  }, [on, off]);
 
   // Cargar pedidos desde la API
   const loadPedidos = async (filters = {}) => {
