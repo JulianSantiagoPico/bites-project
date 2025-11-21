@@ -223,11 +223,6 @@ export const createPedido = async (req, res) => {
       });
     }
 
-    // Generar número de pedido único
-    const numeroPedido = await Pedido.generarNumeroPedido(
-      req.user.restauranteId
-    );
-
     // Calcular subtotales de items
     itemsProcessed.forEach((item) => {
       item.subtotal = item.cantidad * item.precioUnitario;
@@ -242,22 +237,58 @@ export const createPedido = async (req, res) => {
     const propinaValue = propina || 0;
     const total = subtotal + impuestos + propinaValue;
 
-    // Crear el pedido
-    const pedido = await Pedido.create({
-      numeroPedido,
-      mesaId,
-      meseroId: req.user._id,
-      items: itemsProcessed,
-      subtotal,
-      impuestos,
-      propina: propinaValue,
-      total,
-      nombreCliente: nombreCliente?.trim() || null,
-      notas: notas?.trim() || null,
-      restauranteId: req.user.restauranteId,
-      creadoPor: req.user._id,
-      estado: "pendiente",
-    });
+    // Generar número de pedido único y crear el pedido con reintentos
+    let pedido = null;
+    const MAX_REINTENTOS = 5;
+    let intentos = 0;
+    let errorDuplicado = null;
+    do {
+      try {
+        const numeroPedido = await Pedido.generarNumeroPedido(
+          req.user.restauranteId
+        );
+        pedido = await Pedido.create({
+          numeroPedido,
+          mesaId,
+          meseroId: req.user._id,
+          items: itemsProcessed,
+          subtotal,
+          impuestos,
+          propina: propinaValue,
+          total,
+          nombreCliente: nombreCliente?.trim() || null,
+          notas: notas?.trim() || null,
+          restauranteId: req.user.restauranteId,
+          creadoPor: req.user._id,
+          estado: "pendiente",
+        });
+        errorDuplicado = null; // ¡Éxito!
+      } catch (error) {
+        if (
+          error.code === 11000 &&
+          error.keyPattern &&
+          error.keyPattern.numeroPedido
+        ) {
+          // Número repetido: volvemos a intentar
+          errorDuplicado = error;
+          intentos++;
+        } else {
+          throw error;
+        }
+      }
+    } while (!pedido && intentos < MAX_REINTENTOS);
+
+    if (!pedido && errorDuplicado) {
+      console.error(
+        "No se pudo crear un pedido único tras varios intentos:",
+        errorDuplicado
+      );
+      return res.status(500).json({
+        success: false,
+        message:
+          "No se pudo generar un número de pedido único. Por favor intenta nuevamente.",
+      });
+    }
 
     // Actualizar estado de la mesa a ocupada si no lo está
     if (mesa.estado === "disponible") {
