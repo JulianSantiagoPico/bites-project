@@ -14,11 +14,19 @@ export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const restauranteIdRef = useRef(null);
 
+  // Normalizar el restauranteId para evitar reconexiones innecesarias
+  const restauranteIdValue = user?.restauranteId
+    ? typeof user.restauranteId === "object"
+      ? user.restauranteId._id || user.restauranteId.toString()
+      : String(user.restauranteId)
+    : null;
+
   useEffect(() => {
     // Solo conectar si el usuario está autenticado
-    if (!isAuthenticated || !user?.restauranteId) {
+    if (!isAuthenticated || !restauranteIdValue) {
       // Desconectar si existe una conexión previa
       if (socketRef.current) {
+        console.log("🔌 Desconectando socket (usuario no autenticado)");
         socketRef.current.disconnect();
         socketRef.current = null;
         setSocket(null);
@@ -29,23 +37,20 @@ export const SocketProvider = ({ children }) => {
     }
 
     // Si ya existe una conexión y el restauranteId no ha cambiado, no hacer nada
-    if (socketRef.current && restauranteIdRef.current === user.restauranteId) {
+    if (socketRef.current && restauranteIdRef.current === restauranteIdValue) {
+      console.log("🔌 Socket ya conectado, reutilizando conexión");
       return;
     }
 
     // Si cambió el restauranteId, desconectar y limpiar
-    if (socketRef.current && restauranteIdRef.current !== user.restauranteId) {
+    if (socketRef.current && restauranteIdRef.current !== restauranteIdValue) {
+      console.log("🔌 Restaurante cambió, reconectando...");
       socketRef.current.disconnect();
       socketRef.current = null;
     }
 
-    // Crear nueva conexión
-    // Asegurar que restauranteId sea un string
-    const restauranteId =
-      typeof user.restauranteId === "object"
-        ? user.restauranteId._id || user.restauranteId.toString()
-        : String(user.restauranteId);
-    restauranteIdRef.current = restauranteId;
+    // Guardar el restauranteId normalizado
+    restauranteIdRef.current = restauranteIdValue;
 
     // Determinar la URL del Socket
     let socketUrl = import.meta.env.VITE_SOCKET_URL;
@@ -57,7 +62,8 @@ export const SocketProvider = ({ children }) => {
       socketUrl = apiUrl.replace(/\/api\/?$/, "");
     }
 
-    console.log("🔌 Conectando a WebSocket:", socketUrl);
+    console.log("🔌 Creando nueva conexión WebSocket:", socketUrl);
+    console.log("📍 Restaurante ID:", restauranteIdValue);
 
     const newSocket = io(socketUrl, {
       transports: ["websocket", "polling"],
@@ -120,12 +126,13 @@ export const SocketProvider = ({ children }) => {
     // Cleanup al desmontar
     return () => {
       if (socketRef.current) {
+        console.log("🔌 Limpiando conexión WebSocket");
         socketRef.current.disconnect();
         socketRef.current = null;
         restauranteIdRef.current = null;
       }
     };
-  }, [isAuthenticated, user?.restauranteId]);
+  }, [isAuthenticated, restauranteIdValue]);
 
   /**
    * Unirse a la sala de cocina
