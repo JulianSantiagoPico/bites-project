@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDashboard } from "../../hooks/useDashboard";
-import { useSocket } from "../../context/SocketContext";
+import { useSocket } from "../../hooks/useSocket";
 import DashboardStats from "../../components/DashboardHome/DashboardStats";
 import RecentOrdersList from "../../components/DashboardHome/RecentOrdersList";
 import TopProductsWidget from "../../components/DashboardHome/TopProductsWidget";

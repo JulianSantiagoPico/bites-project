@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import cocinaService from "../services/cocina.service";
-import { useSocket } from "../context/SocketContext";
+import { useSocket } from "./useSocket";
 
 /**
  * Hook personalizado para gestionar el módulo de cocina

@@ -1,16 +1,11 @@
-import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext(null);
 
-export const useSocket = () => {
-  const context = useContext(SocketContext);
-  if (!context) {
-    throw new Error("useSocket debe ser usado dentro de un SocketProvider");
-  }
-  return context;
-};
+// Exportar el contexto para que pueda ser usado por el hook
+export { SocketContext };
 
 export const SocketProvider = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
@@ -46,6 +41,7 @@ export const SocketProvider = ({ children }) => {
 
     // Crear nueva conexión
     restauranteIdRef.current = user.restauranteId;
+
     // Determinar la URL del Socket
     let socketUrl = import.meta.env.VITE_SOCKET_URL;
 
@@ -56,21 +52,28 @@ export const SocketProvider = ({ children }) => {
       socketUrl = apiUrl.replace(/\/api\/?$/, "");
     }
 
-    const SOCKET_URL = socketUrl;
+    console.log("🔌 Conectando a WebSocket:", socketUrl);
 
-    const newSocket = io(SOCKET_URL, {
+    const newSocket = io(socketUrl, {
       transports: ["websocket", "polling"],
+      upgrade: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      autoConnect: true,
+      withCredentials: true,
     });
 
     // Eventos de conexión
     newSocket.on("connect", () => {
+      console.log("✅ WebSocket conectado:", newSocket.id);
       setConnected(true);
 
       // Unirse a la sala del restaurante
       if (restauranteIdRef.current) {
+        console.log("📡 Uniéndose a restaurante:", restauranteIdRef.current);
         newSocket.emit("join:restaurante", restauranteIdRef.current);
       }
     });
@@ -82,16 +85,28 @@ export const SocketProvider = ({ children }) => {
 
     newSocket.on("connect_error", (error) => {
       console.error("❌ Error de conexión WebSocket:", error.message);
+      console.error("Detalles del error:", error);
       setConnected(false);
     });
 
     newSocket.on("reconnect", (attemptNumber) => {
+      console.log(`🔄 WebSocket reconectado (intento ${attemptNumber})`);
       setConnected(true);
 
       // Re-unirse a la sala del restaurante
       if (restauranteIdRef.current) {
+        console.log("📡 Re-uniéndose a restaurante:", restauranteIdRef.current);
         newSocket.emit("join:restaurante", restauranteIdRef.current);
       }
+    });
+
+    // Confirmaciones de unión a salas
+    newSocket.on("joined:restaurante", (data) => {
+      console.log("✅ Unido a sala de restaurante:", data);
+    });
+
+    newSocket.on("joined:cocina", (data) => {
+      console.log("✅ Unido a sala de cocina:", data);
     });
 
     socketRef.current = newSocket;

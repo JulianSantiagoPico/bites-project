@@ -34,11 +34,22 @@ const app = express();
 const httpServer = createServer(app);
 
 // Configurar Socket.IO
+// Soportar múltiples orígenes (desarrollo y producción)
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : ["http://localhost:5173"];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
+    methods: ["GET", "POST"],
   },
+  // Configuración para Railway y producción
+  transports: ["websocket", "polling"],
+  allowUpgrades: true,
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Hacer io accesible globalmente en la aplicación
@@ -51,8 +62,9 @@ connectDB();
 app.use(helmet()); // Seguridad HTTP headers
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   })
 );
 app.use(morgan("dev")); // Logger de peticiones HTTP
@@ -113,22 +125,32 @@ app.use(errorHandler);
 
 // Configurar Socket.IO
 io.on("connection", (socket) => {
-  console.log(`✅ Cliente conectado: ${socket.id}`);
+  console.log(
+    `✅ Cliente conectado: ${socket.id} desde ${socket.handshake.address}`
+  );
 
   // Unirse a una sala por restaurante
   socket.on("join:restaurante", (restauranteId) => {
     socket.join(`restaurante:${restauranteId}`);
     console.log(`📡 Socket ${socket.id} unido a restaurante:${restauranteId}`);
+    // Confirmar unión
+    socket.emit("joined:restaurante", { restauranteId, socketId: socket.id });
   });
 
   // Unirse a sala de cocina
   socket.on("join:cocina", (restauranteId) => {
     socket.join(`cocina:${restauranteId}`);
     console.log(`👨‍🍳 Socket ${socket.id} unido a cocina:${restauranteId}`);
+    // Confirmar unión
+    socket.emit("joined:cocina", { restauranteId, socketId: socket.id });
   });
 
-  socket.on("disconnect", () => {
-    console.log(`❌ Cliente desconectado: ${socket.id}`);
+  socket.on("disconnect", (reason) => {
+    console.log(`❌ Cliente desconectado: ${socket.id} - Razón: ${reason}`);
+  });
+
+  socket.on("error", (error) => {
+    console.error(`⚠️ Error en socket ${socket.id}:`, error);
   });
 });
 
