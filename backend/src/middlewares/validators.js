@@ -35,7 +35,7 @@ export const validateRegister = [
     .withMessage("El nombre debe tener al menos 2 caracteres"),
 
   body("apellido")
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ min: 2 })
     .withMessage("El apellido debe tener al menos 2 caracteres"),
@@ -100,7 +100,7 @@ export const validateCreateEmployee = [
     .withMessage("El nombre debe tener al menos 2 caracteres"),
 
   body("apellido")
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ min: 2 })
     .withMessage("El apellido debe tener al menos 2 caracteres"),
