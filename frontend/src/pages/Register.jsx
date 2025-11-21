@@ -60,7 +60,20 @@ function Register() {
     const newErrors = {};
 
     // Validar campos requeridos
-    if (!formData.name.trim()) newErrors.nombre = "El nombre es requerido";
+    // Validar nombre y apellido
+    if (!formData.name.trim()) {
+      newErrors.nombre = "El nombre es requerido";
+    } else {
+      const nameParts = formData.name.trim().split(" ");
+      const nombre = nameParts[0];
+      const apellido = nameParts.slice(1).join(" ");
+
+      if (nombre.length < 2) {
+        newErrors.nombre = "El nombre debe tener al menos 2 caracteres";
+      } else if (apellido.length > 0 && apellido.length < 2) {
+        newErrors.nombre = "El apellido debe tener al menos 2 caracteres";
+      }
+    }
     if (!formData.email.trim()) newErrors.email = "El email es requerido";
     if (!formData.restaurantName.trim())
       newErrors["restaurante.nombre"] =
@@ -99,7 +112,7 @@ function Register() {
         // Separar nombre y apellido
         const nameParts = formData.name.trim().split(" ");
         const nombre = nameParts[0] || "";
-        const apellido = nameParts.slice(1).join(" ") || "N/A"; // Usar "N/A" si no hay apellido
+        const apellido = nameParts.slice(1).join(" "); // Apellido opcional
 
         // Preparar datos para el backend
         const userData = {

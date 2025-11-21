@@ -35,9 +35,8 @@ export const validateRegister = [
     .withMessage("El nombre debe tener al menos 2 caracteres"),
 
   body("apellido")
+    .optional()
     .trim()
-    .notEmpty()
-    .withMessage("El apellido es requerido")
     .isLength({ min: 2 })
     .withMessage("El apellido debe tener al menos 2 caracteres"),
 
@@ -61,6 +60,17 @@ export const validateRegister = [
     .withMessage("El nombre del restaurante es requerido")
     .isLength({ min: 2 })
     .withMessage("El nombre del restaurante debe tener al menos 2 caracteres"),
+
+  body("restaurante.telefono")
+    .trim()
+    .notEmpty()
+    .withMessage("El teléfono del restaurante es requerido")
+    .isLength({ min: 10, max: 15 })
+    .withMessage("El teléfono debe tener entre 10 y 15 dígitos")
+    .matches(/^[0-9+\-\s()]+$/)
+    .withMessage(
+      "El teléfono solo puede contener números, +, -, espacios y paréntesis"
+    ),
 
   handleValidationErrors,
 ];
@@ -90,9 +100,8 @@ export const validateCreateEmployee = [
     .withMessage("El nombre debe tener al menos 2 caracteres"),
 
   body("apellido")
+    .optional()
     .trim()
-    .notEmpty()
-    .withMessage("El apellido es requerido")
     .isLength({ min: 2 })
     .withMessage("El apellido debe tener al menos 2 caracteres"),
 
